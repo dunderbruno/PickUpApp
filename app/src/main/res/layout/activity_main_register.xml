@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="@string/voc"
+            android:text="@string/deseja_se_cadastrar_como"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="18sp"

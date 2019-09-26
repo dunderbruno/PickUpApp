@@ -9,4 +9,10 @@
     <string name="voc">Você é?</string>
     <string name="jogador">Jogador</string>
     <string name="locador">Locador</string>
+    <string name="nome">Nome</string>
+    <string name="sobrenome">Sobrenome</string>
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="voltar">Voltar</string>
+    <string name="deseja_se_cadastrar_como">Deseja se cadastrar como?</string>
 </resources>
