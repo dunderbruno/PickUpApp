@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Pick Up App</string>
     <string name="splash_project">splash project</string>
+    <string name="textoacessar">Já possui acesso a nossa plataforma, então realize o acesso e parta para o proximo jogo!</string>
+    <string name="textocadastro">Ainda não tem cadastro na nossa plataforma? clique no botão a baixo e se torne um membro!</string>
+    <string name="acessar">Acessar</string>
+    <string name="cadastrar_se">Cadastrar-se</string>
+    <string name="logo">logo</string>
+    <string name="voc">Você é?</string>
+    <string name="jogador">Jogador</string>
+    <string name="locador">Locador</string>
 </resources>
