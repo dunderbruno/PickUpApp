@@ -13,7 +13,8 @@ import com.pickupapp.infra.PickUpApp;
 public class UserDAO {
     private SQLiteDatabase banco;
     public UserDAO(){
-        habilitarBanco(PickUpApp.getContext());
+        Context context = PickUpApp.getContext();
+        habilitarBanco(context);
     }
 
     private SQLiteDatabase habilitarBanco(Context ctx){
@@ -31,7 +32,7 @@ public class UserDAO {
     }
 
     public boolean existeUsuario(String login){
-        Cursor cursor = banco.query("usuario", new String[]{"*"}, "login = ?", new String[]{login}, null, null, null);
+        Cursor cursor = banco.query("usuario", new String[]{"*"}, "username = ?", new String[]{login}, null, null, null);
         boolean resposta = false;
         if(cursor.getCount() > 0){
             resposta = true;
