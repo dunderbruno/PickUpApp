@@ -10,7 +10,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.Person;
+import com.pickupapp.dominio.User;
+import com.pickupapp.infra.Criptografia;
 import com.pickupapp.infra.ValidacaoGui;
+import com.pickupapp.negocio.UserNegocio;
 
 public class Register extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -39,25 +43,51 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 boolean validacao = validarCampos();
                 if(validacao){
-                    //classe de negocio inserida para realizar o registro.
-                    //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
-//                    RegisterNegocio registro = new RegisterNegocio();
-//                    boolean cadastro = registro.registrarUsuario() ;
-//                    if (cadastro){
-//                        Intent i = new Intent(Register.this, MainLogin.class);
-//                        startActivity(i);
-//                        finish();
-//                    }else{
-//                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-//                    }
+                    criarConta();
                 }
             }
         });
+    }
+
+    private void criarConta() {
+        UserNegocio negocio = new UserNegocio();
+        User usuario = new User();
+        String loginString = login.getText().toString().trim();
+        String password = senha.getText().toString();
+        usuario.setPassword(password);
+        usuario.setUsername(loginString);
+        if (negocio.existeUsuario(loginString)) {
+            Toast.makeText(this, "Cpf já registrado", Toast.LENGTH_SHORT).show();
+
+        }else{
+            inserirUsuario();
+
+        }
     }
 
     public boolean validarCampos(){
         ValidacaoGui validacao = new ValidacaoGui();
         return validacao.validarCampoLogin(login) & validacao.validarCampoSenha(senha)
                 & validacao.validarCampoNome(nome) & validacao.validarCampoNome(sobrenome);
+    }
+
+    private void inserirUsuario(){
+
+        String nomeRegistro = nome.getText().toString().trim();
+        String sobrenomeRegistro = sobrenome.getText().toString();
+        String loginRegistro = login.getText().toString().trim();
+        String senhaRegistro = senha.getText().toString().trim();
+        User usuario = new User();
+        usuario.setUsername(loginRegistro);
+        Criptografia criptografia = new Criptografia();
+        String senhaCriptografada = criptografia.criptografarString(senhaRegistro);
+        usuario.setPassword(senhaCriptografada);
+        Person pessoa = new Person();
+        pessoa.setName(nomeRegistro);
+        pessoa.setSurname(sobrenomeRegistro);
+        UserNegocio negocio = new UserNegocio();
+        negocio.inserirUsuario(usuario, pessoa);
+        Toast.makeText(Register.this, "Usuario registrado", Toast.LENGTH_SHORT).show();
+        Register.this.finish();
     }
 }

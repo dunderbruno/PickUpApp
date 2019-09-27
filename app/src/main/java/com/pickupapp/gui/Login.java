@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.User;
 import com.pickupapp.infra.ValidacaoGui;
+import com.pickupapp.negocio.UserNegocio;
 
 public class Login extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -36,21 +39,25 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 boolean validacao = validarCampos();
                 if(validacao){
-                    //classe de negocio inserida para realizar o login.
-                    //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
-//                    LoginNegocio login = new LoginNegocio();
-//                    User acesso = login.logarUsuario() ;
-//                    if (acesso.getNome() != ""){
-//                        Intent i = new Intent(Login.this, Welcome.class);
-//                        startActivity(i);
-                    //    Welcome.nome = acesso.getNome() + " " + acesso.getSobrenome();
-//                        finish();
-//                    }else{
-//                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-//                    }
+                    if(logar() != null){
+                        Toast.makeText(Login.this,"Usuário logado",Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        Toast.makeText(Login.this,"Usuário não cadastrado",Toast.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    Toast.makeText(Login.this,"Cpf/Senha incorreto(s).",Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private User logar(){
+        UserNegocio negocio = new UserNegocio();
+        String username = login.getText().toString().trim();
+        String password = senha.getText().toString();
+        return negocio.login(username, password);
     }
 
     public boolean validarCampos(){

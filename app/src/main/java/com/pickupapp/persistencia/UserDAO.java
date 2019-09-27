@@ -1,45 +1,100 @@
 package com.pickupapp.persistencia;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.pickupapp.dominio.User;
-import com.pickupapp.infra.Session;
+import com.pickupapp.infra.DB;
+import com.pickupapp.infra.PickUpApp;
+
 
 public class UserDAO {
-
-    private Context context;
-    private String host = "https://pickupbsiapi.herokuapp.com";
-
-
-    public long register(User user) throws JSONException {
-        String url = host + "/user";
-        JSONObject postparams = new JSONObject();
-        postparams.put("x-access-token", Session.instance.getToken());
-        postparams.put("username", user.getUsername());
-        postparams.put("password", user.getPassword());
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                // TODO: o que fazer quando a requisição funcionar
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO: Handle error
-            }
-        });
-        return 0; // TODO: retornar o id gerado
+    private SQLiteDatabase banco;
+    public UserDAO(){
+        habilitarBanco(PickUpApp.getContext());
     }
 
+    private SQLiteDatabase habilitarBanco(Context ctx){
+        DB auxDB = new DB(ctx);
+        banco = auxDB.getWritableDatabase();
+        return banco;
+    }
+
+    public void inserirUsuario(User usuario){
+        ContentValues valores = new ContentValues();
+        valores.put("username", usuario.getUsername());
+        valores.put("password", usuario.getPassword());
+        banco.insert("usuario", null, valores);
+        banco.close();
+    }
+
+    public boolean existeUsuario(String login){
+        Cursor cursor = banco.query("usuario", new String[]{"*"}, "login = ?", new String[]{login}, null, null, null);
+        boolean resposta = false;
+        if(cursor.getCount() > 0){
+            resposta = true;
+        }
+        banco.close();
+        cursor.close();
+        return resposta;
+    }
+
+    public User verificarLogin(String username, String password){
+        User usuario;
+        Cursor cursor = banco.query("usuario", new String[]{"*"}, "username = ? and password = ?", new String[]{username, password}, null, null, null);
+        if(cursor.getCount() > 0){
+            usuario = montarUsuario(cursor);
+        }else{
+            usuario = null;
+        }
+        cursor.close();
+        banco.close();
+        return usuario;
+    }
+
+    private User montarUsuario(Cursor cursor) {
+        User usuario = new User();
+        cursor.moveToFirst();
+        usuario.setId(cursor.getInt(0));
+        usuario.setPassword(cursor.getString(1));
+        usuario.setUsername(cursor.getString(2));
+        return usuario;
+    }
+
+    public User recuperarUsuario(String username){
+        User usuario;
+        Cursor cursor = banco.query("usuario", new String[]{"*"}, "username = ?", new String[]{username}, null, null, null);
+        if(cursor.getCount() > 0){
+            usuario = montarUsuario(cursor);
+        }else{
+            usuario = null;
+        }
+        cursor.close();
+        banco.close();
+        return usuario;
+    }
+
+    public User recuperarUsuario(int id){
+        User usuario;
+        Cursor cursor = banco.query("usuario", new String[]{"*"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if(cursor.getCount()>0){
+            usuario = montarUsuario(cursor);
+        }else{
+            usuario = null;
+        }
+        banco.close();
+        cursor.close();
+        return usuario;
+    }
+
+    public void alterarSenhaUsuario(User usuario) {
+        String where = "id = ?";
+        ContentValues valores = new ContentValues();
+        valores.put("username", usuario.getUsername());
+        valores.put("password", usuario.getPassword());
+        banco.update("usuario", valores, where, new String[]{String.valueOf(usuario.getId())});
+        banco.close();
+    }
 }

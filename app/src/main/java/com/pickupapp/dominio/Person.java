@@ -4,6 +4,15 @@ public class Person {
     private int id;
     private String name;
     private String surname;
+    private User usuario;
+
+    public User getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
+    }
 
     public int getId() {
         return id;

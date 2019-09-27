@@ -4,7 +4,6 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private Person person;
     private Contact contact;
     private Group group;
 
@@ -20,9 +19,6 @@ public class User {
         return password;
     }
 
-    public Person getPerson() {
-        return person;
-    }
 
     public Contact getContact() {
         return contact;
@@ -44,9 +40,6 @@ public class User {
         this.password = password;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
 
     public void setContact(Contact contact) {
         this.contact = contact;
