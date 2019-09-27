@@ -15,6 +15,7 @@ import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Session;
 
 public class UserDAO {
+
     private Context context;
     private String host = "https://pickupbsiapi.herokuapp.com";
 
