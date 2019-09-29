@@ -10,7 +10,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.Person;
+import com.pickupapp.dominio.User;
 import com.pickupapp.infra.ValidacaoGui;
+import com.pickupapp.persistencia.UserDAO;
+
+import org.json.JSONException;
 
 public class Register extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -37,12 +42,22 @@ public class Register extends AppCompatActivity {
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getBaseContext(),"teste",Toast.LENGTH_LONG).show();
                 boolean validacao = validarCampos();
-                if(validacao){
-                    //classe de negocio inserida para realizar o registro.
-                    //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
-//                    RegisterNegocio registro = new RegisterNegocio();
-//                    boolean cadastro = registro.registrarUsuario() ;
+//                if(validacao){
+                    User usuario = new User();
+                    usuario.setUsername(login.getText().toString());
+                    usuario.setPassword(senha.getText().toString());
+                    Person pessoa = new Person();
+                    pessoa.setName(nome.getText().toString());
+                    pessoa.setSurname(sobrenome.getText().toString());
+                    usuario.setPerson(pessoa);
+                    UserDAO registro = new UserDAO(getBaseContext());
+                    try {
+                        registro.register(usuario) ;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 //                    if (cadastro){
 //                        Intent i = new Intent(Register.this, MainLogin.class);
 //                        startActivity(i);
@@ -50,7 +65,7 @@ public class Register extends AppCompatActivity {
 //                    }else{
 //                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
 //                    }
-                }
+//                }
             }
         });
     }
