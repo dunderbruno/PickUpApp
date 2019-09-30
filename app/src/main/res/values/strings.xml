@@ -15,4 +15,16 @@
     <string name="senha">Senha</string>
     <string name="voltar">Voltar</string>
     <string name="deseja_se_cadastrar_como">Deseja se cadastrar como?</string>
+    <string name="cadastro_de_espacos">Cadastro de Espaços</string>
+    <string name="nome_do_espaco">Nome do espaço</string>
+    <string name="telefone">Telefone</string>
+    <string name="rua">Rua</string>
+    <string name="logradouro">Logradouro</string>
+    <string name="numero">Número</string>
+    <string name="bairro">Bairro</string>
+    <string name="cep">Cep</string>
+    <string name="email">Email</string>
+    <string name="cidade">Cidade</string>
+    <string name="estado">Estado</string>
+    <string name="cadastrar">Cadastrar</string>
 </resources>
