@@ -80,6 +80,7 @@ public class UserDAO {
                         PersonDAO pessoa = new PersonDAO(context);
                         try {
                             pessoa.criarPessoa(user);
+                            setGrupoUsuario(user);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -88,6 +89,51 @@ public class UserDAO {
             }
         });
         return user;
+    }
+
+    private void setGrupoUsuario(final User user) throws JSONException {
+        String url = host + "/user/"+ String.valueOf(user.getId())+ "/group";
+        JSONObject postparams = new JSONObject();
+        postparams.put("group", user.getGroup().getGroup_name());
+        final AtomicInteger requestsCounter = new AtomicInteger(0);
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("resposta setgroup", String.valueOf(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    setGrupoUsuario(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String credentials = user.getUsername()+":"+user.getPassword();
+                String auth = "Basic "
+                        + Base64.encodeToString(credentials.getBytes(),
+                        Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y");
+                return params;
+            }};
+        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue.add(jsonObjectRequest);
+        requestsCounter.incrementAndGet();
+        requestQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
+            @Override
+            public void onRequestFinished(Request<Object> request) {
+                requestsCounter.decrementAndGet();
+                if (requestsCounter.get() == 0) {
+                    return;
+                }
+            }
+        });
     }
 
 }

@@ -28,12 +28,12 @@ public class PersonDAO {
         this.context = contexto;
     }
 
-    public User criarPessoa(final User user) throws JSONException {
+    public void criarPessoa(final User user) throws JSONException {
         user.getPerson().setId(0);
         String url = host + "/person";
         JSONObject postparams = new JSONObject();
-        postparams.put("name", user.getUsername());
-        postparams.put("surname", user.getPassword());
+        postparams.put("name", user.getPerson().getName());
+        postparams.put("surname", user.getPerson().getSurname());
         final AtomicInteger requestsCounter = new AtomicInteger(0);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
             @Override
@@ -48,7 +48,12 @@ public class PersonDAO {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("resposta criarpessoa", String.valueOf(error));
+                try {
+                    Log.d("resposta", "onErrorResponse: " + error);
+                    criarPessoa(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }){
             @Override
@@ -80,14 +85,12 @@ public class PersonDAO {
                 }
             }
         });
-        return user;
     }
 
     private void setPessoaUsuario(final User user) throws JSONException {
         String url = host + "/user/"+ String.valueOf(user.getId())+ "/person";
         JSONObject postparams = new JSONObject();
         postparams.put("person_id", user.getPerson().getId());
-
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -96,7 +99,11 @@ public class PersonDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("resposta setpessoa", String.valueOf(error));
+                try {
+                    setPessoaUsuario(user);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }){
             @Override

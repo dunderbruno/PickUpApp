@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.Group;
 import com.pickupapp.dominio.Person;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.ValidacaoGui;
@@ -52,6 +53,9 @@ public class Register extends AppCompatActivity {
                     pessoa.setName(nome.getText().toString());
                     pessoa.setSurname(sobrenome.getText().toString());
                     usuario.setPerson(pessoa);
+                    Group grupo = new Group();
+                    usuario.setGroup(grupo);
+                    usuario.getGroup().setGroup_name(tipoUsuario);
                     UserDAO registro = new UserDAO(getBaseContext());
                     try {
                         registro.register(usuario) ;

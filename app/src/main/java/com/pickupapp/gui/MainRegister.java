@@ -21,7 +21,7 @@ public class MainRegister extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainRegister.this, Register.class);
                 startActivity(i);
-                Register.tipoUsuario = "0";
+                Register.tipoUsuario = "jogador";
             }
         });
         locador = findViewById(R.id.button_go_registerLocador);
@@ -30,7 +30,7 @@ public class MainRegister extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainRegister.this, Register.class);
                 startActivity(i);
-                Register.tipoUsuario = "1";
+                Register.tipoUsuario = "locador";
             }
         });
     }
