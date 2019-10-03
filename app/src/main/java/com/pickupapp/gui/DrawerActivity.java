@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
@@ -29,6 +30,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 
 import com.pickupapp.R;
+import com.pickupapp.gui.fragments.ListSpacesFragment;
+import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 
 public class DrawerActivity extends AppCompatActivity
@@ -70,6 +73,16 @@ public class DrawerActivity extends AppCompatActivity
         }
     }
 
+    private void changeFragment(Fragment fragment){
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
+
+
+    }
+
 
 
     @Override
@@ -101,9 +114,10 @@ public class DrawerActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_home){
-            Intent intent = new Intent(this, MainLogin.class);
-            startActivity(intent);
+        if (id == R.id.nav_gallery){
+            //Intent intent = new Intent(this, MainLogin.class);
+            //startActivity(intent);
+            changeFragment(new ListSpacesFragment());
         }
 
 
