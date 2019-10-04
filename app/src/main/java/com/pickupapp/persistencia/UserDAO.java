@@ -14,6 +14,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.pickupapp.dominio.User;
+import com.pickupapp.infra.Sessao;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -149,7 +150,9 @@ public class UserDAO {
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("aqui", String.valueOf(response.get("token").toString()));
-                    user.setId(Integer.parseInt(response.get("token").toString()));
+                    user.setToken(response.get("token").toString());
+                    Sessao sessao = new Sessao();
+                    sessao.editSessao(user, context);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

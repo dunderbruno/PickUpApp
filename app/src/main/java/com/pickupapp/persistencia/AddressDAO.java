@@ -32,7 +32,7 @@ public class AddressDAO {
 
     public void criarEndereco(final Space space) throws JSONException {
         space.getAddress().setId(0);
-        String url = host + "/person";
+        String url = host + "/spot";
         JSONObject postparams = new JSONObject();
         postparams.put("street", space.getAddress().getStreet());
         postparams.put("number", space.getAddress().getNumber());
@@ -92,13 +92,48 @@ public class AddressDAO {
     }
 
     private void setEnderecoEspaco(final Space space) throws JSONException {
-        String url = host + "/user/"+ String.valueOf(space.getId())+ "/person";
+        String url = host + "/spot/"+ String.valueOf(space.getId())+ "/address";
         JSONObject postparams = new JSONObject();
         postparams.put("person_id", space.getAddress().getId());
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("resposta setpessoa", String.valueOf(response));
+                Log.d("resposta setEndereco", String.valueOf(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    setEnderecoEspaco(space);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                User usuarioSessao = Sessao.getSessao(context);
+                String credentials = usuarioSessao.getUsername()+":"+usuarioSessao.getPassword();
+                String auth = "Basic "
+                        + Base64.encodeToString(credentials.getBytes(),
+                        Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y");
+                return params;
+            }};
+        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getEnderecoEspaco(final Space space) throws JSONException {
+        String url = host + "/spot/"+ String.valueOf(space.getId())+ "/address";
+        JSONObject postparams = new JSONObject();
+        postparams.put("person_id", space.getAddress().getId());
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("resposta getEndereco", String.valueOf(response));
             }
         }, new Response.ErrorListener() {
             @Override

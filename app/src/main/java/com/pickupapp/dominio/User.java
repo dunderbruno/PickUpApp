@@ -3,6 +3,7 @@ package com.pickupapp.dominio;
 public class User {
     private int id;
     private String username;
+    private String token;
     private String password;
     private Person person;
     private Contact contact;
@@ -54,5 +55,13 @@ public class User {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
