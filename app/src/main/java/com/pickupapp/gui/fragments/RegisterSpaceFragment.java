@@ -20,6 +20,10 @@ import com.pickupapp.dominio.State;
 import com.pickupapp.infra.EnumSpaceType;
 import com.pickupapp.infra.MonetaryMask;
 import com.pickupapp.infra.ValidacaoGui;
+import com.pickupapp.persistencia.SpaceDAO;
+import com.pickupapp.persistencia.UserDAO;
+
+import org.json.JSONException;
 
 import java.math.BigDecimal;
 
@@ -48,10 +52,14 @@ public class RegisterSpaceFragment extends Fragment {
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                try{
-                    register();
-                }catch (Exception exception){
-                    exception.printStackTrace();
+                if (checkFields()) {
+                    Space space = createSpace();
+                    SpaceDAO spaceDAO = new SpaceDAO(getContext());
+                    try {
+                        spaceDAO.register(space);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -75,12 +83,7 @@ public class RegisterSpaceFragment extends Fragment {
         radioButton = (radioButton).findViewById(radioId);
         return getType(radioButton.getText().toString());
     }
-    private void register(){
-        if (checkFields()){
-            return;
-        }
-        Space space = createSpace();
-    }
+
     private boolean checkFields(){
         ValidacaoGui validacao = new ValidacaoGui();
         if (!validacao.verificarTamanhoCampo(nomeEspaco.getText().toString())){
