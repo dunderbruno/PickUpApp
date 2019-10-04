@@ -118,6 +118,10 @@ public class DrawerActivity extends AppCompatActivity
             //Intent intent = new Intent(this, MainLogin.class);
             //startActivity(intent);
             changeFragment(new ListSpacesFragment());
+        }else if (id == R.id.nav_home){
+            //Intent intent = new Intent(this, MainLogin.class);
+            //startActivity(intent);
+            changeFragment(new WelcomeFragment());
         }
 
 
