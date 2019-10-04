@@ -43,4 +43,14 @@ public class ValidacaoGui {
         return true;
     }
 
+    public boolean verificarTamanhoCampo(String campo) {
+        return campo.length()!=0;
+    }
+
+    public boolean verificarCampoEmail(String email) {
+        String regex = "^((?!.*?\\.\\.)[A-Za-z0-9.\\!#\\$\\%\\&\\'*\\+\\-\\" +
+                "/\\=\\?\\^_`\\{\\|\\}\\~]+@[A-Za-z0-9]+[A-Za-z0-9\\" +
+                "-\\.]+\\.[A-Za-z0-9\\-\\.]+[A-Za-z0-9]+)$";
+        return email.matches(regex);
+    }
 }

@@ -1,5 +1,7 @@
 package com.pickupapp.dominio;
 
+import com.pickupapp.infra.EnumSpaceType;
+
 import java.math.BigDecimal;
 
 public class Space {
@@ -8,6 +10,15 @@ public class Space {
     private String phone;
     private Address address;
     private BigDecimal priceHour;
+    private EnumSpaceType spaceType;
+
+    public EnumSpaceType getSpaceType() {
+        return spaceType;
+    }
+
+    public void setSpaceType(EnumSpaceType spaceType) {
+        this.spaceType = spaceType;
+    }
 
     public long getId() {
         return id;

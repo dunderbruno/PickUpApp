@@ -27,4 +27,10 @@
     <string name="cidade">Cidade</string>
     <string name="estado">Estado</string>
     <string name="cadastrar">Cadastrar</string>
+    <string name="quadra">Quadra</string>
+    <string name="valor_por_hora">Valor por hora</string>
+    <string name="tipo_de_espa_o">Tipo de espaço:</string>
+    <string name="gramado">Gramado</string>
+    <string name="society">Society</string>
+    <string name="terra">Terra</string>
 </resources>
