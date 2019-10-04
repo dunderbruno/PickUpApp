@@ -137,26 +137,24 @@ public class UserDAO {
         });
     }
 
-    public User login(final User user) throws JSONException{
-        user.setId(0);
-        String url = host + "/user";
+    public String login(final String username, final String password) throws JSONException{
+        String url = host + "/login";
         JSONObject postparams = new JSONObject();
-        final String[] idusuario = {""};
-        postparams.put("username", user.getUsername());
-        postparams.put("password", user.getPassword());
+
         final AtomicInteger requestsCounter = new AtomicInteger(0);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("aqui", String.valueOf(response.get("token").toString()));
-                    user.setToken(response.get("token").toString());
-                    Sessao sessao = new Sessao();
-                    sessao.editSessao(user, context);
+                    String token = new String();
+                    token = response.get("token").toString();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -166,7 +164,7 @@ public class UserDAO {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                String credentials = user.getUsername()+":"+user.getPassword();
+                String credentials = username+":"+password;
                 String auth = "Basic "
                         + Base64.encodeToString(credentials.getBytes(),
                         Base64.NO_WRAP);
@@ -176,7 +174,8 @@ public class UserDAO {
             }};
         RequestQueue requestQueue = Volley.newRequestQueue(this.context);
         requestQueue.add(jsonObjectRequest);
-        return user;
+
+//        return response.get("token").toString();
     }
 
 }
