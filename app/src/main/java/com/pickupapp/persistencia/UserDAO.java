@@ -136,4 +136,44 @@ public class UserDAO {
         });
     }
 
+    public User login(final User user) throws JSONException{
+        user.setId(0);
+        String url = host + "/user";
+        JSONObject postparams = new JSONObject();
+        final String[] idusuario = {""};
+        postparams.put("username", user.getUsername());
+        postparams.put("password", user.getPassword());
+        final AtomicInteger requestsCounter = new AtomicInteger(0);
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("aqui", String.valueOf(response.get("token").toString()));
+                    user.setId(Integer.parseInt(response.get("token").toString()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("resposta", String.valueOf(error));
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                String credentials = user.getUsername()+":"+user.getPassword();
+                String auth = "Basic "
+                        + Base64.encodeToString(credentials.getBytes(),
+                        Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y");
+                return params;
+            }};
+        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue.add(jsonObjectRequest);
+        return user;
+    }
+
 }
