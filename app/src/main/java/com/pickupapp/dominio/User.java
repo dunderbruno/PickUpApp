@@ -9,6 +9,11 @@ public class User {
     private Contact contact;
     private Group group;
 
+    public User(){
+        token = "";
+        id = 0;
+    }
+
     public int getId() {
         return id;
     }

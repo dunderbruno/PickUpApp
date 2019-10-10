@@ -7,9 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.User;
 import com.pickupapp.infra.ValidacaoGui;
+import com.pickupapp.persistencia.UserDAO;
+
+import org.json.JSONException;
 
 public class Login extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -38,16 +43,24 @@ public class Login extends AppCompatActivity {
                 if(validacao){
                     //classe de negocio inserida para realizar o login.
                     //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
-//                    LoginNegocio login = new LoginNegocio();
-//                    User acesso = login.logarUsuario() ;
-//                    if (acesso.getNome() != ""){
-//                        Intent i = new Intent(Login.this, Welcome.class);
-//                        startActivity(i);
-                    //    Welcome.nome = acesso.getNome() + " " + acesso.getSobrenome();
-//                        finish();
-//                    }else{
-//                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-//                    }
+                    User usuario =new User();
+                    usuario.setUsername(login.getText().toString());
+                    usuario.setPassword(senha.getText().toString());
+                    UserDAO login = new UserDAO(getBaseContext());
+                    User acesso = null;
+                    try {
+                        acesso = login.login(usuario);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (!acesso.getToken().equals("")){
+                        Intent i = new Intent(Login.this, Welcome.class);
+                        startActivity(i);
+                        Welcome.nome = acesso.getUsername() + " " + acesso.getPassword();
+                        finish();
+                    }else{
+                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu login.",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

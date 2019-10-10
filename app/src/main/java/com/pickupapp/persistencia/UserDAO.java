@@ -6,6 +6,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -14,15 +15,15 @@ import android.content.Context;
 import android.util.Log;
 
 import com.pickupapp.dominio.User;
+import com.pickupapp.gui.Register;
 import com.pickupapp.infra.Sessao;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.util.Base64;
-//import com.pickupapp.infra.Session;
 
 public class UserDAO {
     private Context context;
@@ -40,12 +41,14 @@ public class UserDAO {
         postparams.put("username", user.getUsername());
         postparams.put("password", user.getPassword());
         final AtomicInteger requestsCounter = new AtomicInteger(0);
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.d("aqui", String.valueOf(response.get("new_user_id").toString()));
+                    Log.d("respostacadastro", String.valueOf(response.get("new_user_id").toString()));
                     user.setId(Integer.parseInt(response.get("new_user_id").toString()));
+                    countDownLatch.countDown();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -53,7 +56,9 @@ public class UserDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("resposta", String.valueOf(error));
+                Log.d("respostaCadastroerro", String.valueOf(error));
+                user.setId(-1);
+                countDownLatch.countDown();
             }
         }){
             @Override
@@ -75,9 +80,7 @@ public class UserDAO {
             public void onRequestFinished(Request<Object> request) {
                 requestsCounter.decrementAndGet();
                 if (requestsCounter.get() == 0) {
-                    Log.d("aqui", String.valueOf(user.getId()));
                     if (user.getId() != 0) {
-                        Log.d("aqui", "chegou2");
                         PersonDAO pessoa = new PersonDAO(context);
                         try {
                             pessoa.criarPessoa(user);
@@ -138,18 +141,16 @@ public class UserDAO {
     }
 
     public User login(final User user) throws JSONException{
-        user.setId(0);
         String url = host + "/user";
         JSONObject postparams = new JSONObject();
-        final String[] idusuario = {""};
         postparams.put("username", user.getUsername());
         postparams.put("password", user.getPassword());
         final AtomicInteger requestsCounter = new AtomicInteger(0);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.d("aqui", String.valueOf(response.get("token").toString()));
+                    Log.d("token login", String.valueOf(response.get("token").toString()));
                     user.setToken(response.get("token").toString());
                     Sessao sessao = new Sessao();
                     sessao.editSessao(user, context);
@@ -160,7 +161,7 @@ public class UserDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("resposta", String.valueOf(error));
+                Log.d("resposta login", String.valueOf(error));
             }
         }){
             @Override

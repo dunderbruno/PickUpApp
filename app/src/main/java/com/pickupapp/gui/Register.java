@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,7 @@ import com.pickupapp.R;
 import com.pickupapp.dominio.Group;
 import com.pickupapp.dominio.Person;
 import com.pickupapp.dominio.User;
+import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.UserDAO;
 
@@ -45,8 +47,8 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getBaseContext(),"teste",Toast.LENGTH_LONG).show();
                 boolean validacao = validarCampos();
-//                if(validacao){
-                    User usuario = new User();
+                if(validacao){
+                    final User usuario = new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
                     Person pessoa = new Person();
@@ -56,20 +58,30 @@ public class Register extends AppCompatActivity {
                     Group grupo = new Group();
                     usuario.setGroup(grupo);
                     usuario.getGroup().setGroup_name(tipoUsuario);
-                    UserDAO registro = new UserDAO(getBaseContext());
-                    try {
-                        registro.register(usuario) ;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    final UserDAO registro = new UserDAO(getBaseContext());
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                User response = registro.register(usuario);
+                                Sessao sessao= new Sessao();
+                                sessao.editSessao(response, getBaseContext());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    thread.start();
+                    Log.d("resposta", "onClick: "+ Sessao.getSessao(getBaseContext()).getId());
+                    if(Sessao.getSessao(getBaseContext()).getId()!= -1 && Sessao.getSessao(getBaseContext()).getId()!= 0){
+                        Intent i = new Intent(Register.this, MainScreen.class);
+                        startActivity(i);
+                        finish();
+                    }else{
+                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
                     }
-//                    if (cadastro){
-//                        Intent i = new Intent(Register.this, MainLogin.class);
-//                        startActivity(i);
-//                        finish();
-//                    }else{
-//                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-//                    }
-//                }
+                }
             }
         });
     }

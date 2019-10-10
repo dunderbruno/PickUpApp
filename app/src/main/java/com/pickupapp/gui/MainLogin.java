@@ -24,6 +24,7 @@ public class MainLogin extends AppCompatActivity {
                 Intent i = new Intent(MainLogin.this, Login.class);
                 startActivity(i);
                 Login.tipoUsuario = "jogador";
+                finish();
             }
         });
         locador = findViewById(R.id.button_go_loginLocador);
@@ -33,6 +34,7 @@ public class MainLogin extends AppCompatActivity {
                 Intent i = new Intent(MainLogin.this, Login.class);
                 startActivity(i);
                 Login.tipoUsuario = "locador";
+                finish();
             }
         });
     }

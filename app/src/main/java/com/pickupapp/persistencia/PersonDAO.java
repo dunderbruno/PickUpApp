@@ -125,7 +125,7 @@ public class PersonDAO {
         String url = host + "/user/"+ String.valueOf(user.getId())+ "/person";
         JSONObject postparams = new JSONObject();
         postparams.put("person_id", user.getPerson().getId());
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {

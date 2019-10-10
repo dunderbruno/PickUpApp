@@ -130,7 +130,7 @@ public class AddressDAO {
         String url = host + "/spot/"+ String.valueOf(space.getId())+ "/address";
         JSONObject postparams = new JSONObject();
         postparams.put("person_id", space.getAddress().getId());
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("resposta getEndereco", String.valueOf(response));

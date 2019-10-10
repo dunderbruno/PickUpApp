@@ -22,6 +22,7 @@ public class MainRegister extends AppCompatActivity {
                 Intent i = new Intent(MainRegister.this, Register.class);
                 startActivity(i);
                 Register.tipoUsuario = "jogador";
+                finish();
             }
         });
         locador = findViewById(R.id.button_go_registerLocador);
@@ -31,6 +32,7 @@ public class MainRegister extends AppCompatActivity {
                 Intent i = new Intent(MainRegister.this, Register.class);
                 startActivity(i);
                 Register.tipoUsuario = "locador";
+                finish();
             }
         });
     }

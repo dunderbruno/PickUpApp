@@ -23,140 +23,158 @@
             android:id="@+id/ImageButtonEspaco"
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:layout_marginStart="29sp"/>
+            android:layout_gravity="center_horizontal" />
 
         <EditText
             android:id="@+id/inputNomeEspaco"
-            android:layout_marginTop="10sp"
-            android:layout_width="200sp"
+            android:layout_width="match_parent"
             android:layout_height="40sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10sp"
             android:hint="@string/nome_do_espaco"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <EditText
+            android:id="@+id/inputValorEspacos"
             android:layout_width="200sp"
             android:layout_height="40sp"
             android:hint="@string/valor_por_hora"
-            android:id="@+id/inputValorEspacos"
-            android:inputType="number"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no"
+            android:inputType="number" />
 
         <EditText
+            android:id="@+id/inputTelefoneEspacos"
             android:layout_width="200sp"
             android:layout_height="40sp"
             android:hint="@string/telefone"
-            android:id="@+id/inputTelefoneEspacos"
-            android:inputType="phone"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no"
+            android:inputType="phone" />
 
         <EditText
-            android:layout_width="200sp"
-            android:layout_height="40sp"
-            android:hint="@string/email"
             android:id="@+id/inputEmailEspacos"
-            android:inputType="textEmailAddress"
-            android:importantForAutofill="no"/>
-
-        <EditText
-            android:layout_width="200sp"
+            android:layout_width="match_parent"
             android:layout_height="40sp"
-            android:hint="@string/logradouro"
-            android:id="@+id/inputLogradouroEspacos"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no">
-        </EditText>
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/email"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress" />
 
         <EditText
+            android:id="@+id/inputLogradouroEspacos"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/logradouro"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"></EditText>
+
+        <EditText
+            android:id="@+id/inputNumeroEspacos"
             android:layout_width="200sp"
             android:layout_height="40sp"
             android:hint="@string/numero"
-            android:id="@+id/inputNumeroEspacos"
-            android:inputType="number"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no"
+            android:inputType="number" />
 
         <EditText
-            android:layout_width="200sp"
-            android:layout_height="40sp"
-            android:hint="@string/bairro"
             android:id="@+id/inputBairroEspacos"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"/>
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/bairro"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <EditText
-            android:layout_width="200sp"
-            android:layout_height="40sp"
             android:id="@+id/inputCepEspacos"
+            android:layout_width="200sp"
+            android:layout_height="40sp"
             android:hint="@string/cep"
-            android:inputType="number"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no"
+            android:inputType="number" />
 
         <EditText
-            android:layout_width="200sp"
-            android:layout_height="40sp"
-            android:hint="@string/cidade"
             android:id="@+id/inputCidadeEspacos"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"/>
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/cidade"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <EditText
-            android:layout_width="200sp"
-            android:layout_height="40sp"
-            android:hint="@string/estado"
             android:id="@+id/inputEstadoEspacos"
-            android:inputType="textPersonName"
-            android:importantForAutofill="no"/>
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/estado"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <RadioGroup
+            android:id="@+id/radioGroupEspacos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/radioGroupEspacos">
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tipo_de_espa_o"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="@string/tipo_de_espa_o"
+                android:textColor="@android:color/black" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <RadioButton
                         android:id="@+id/radioGramadoEspacos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/gramado"
                         android:checked="true"
-                        android:onClick="checkButton"/>
+                        android:onClick="checkButton"
+                        android:text="@string/gramado" />
+
                     <RadioButton
                         android:id="@+id/radioSocietyEspacos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/society"
-                        android:onClick="checkButton"/>
+                        android:onClick="checkButton"
+                        android:text="@string/society" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:layout_marginStart="50dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
                     android:orientation="vertical">
+
                     <RadioButton
                         android:id="@+id/radioQuadraEspacos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/quadra"
-                        android:onClick="checkButton"/>
+                        android:onClick="checkButton"
+                        android:text="@string/quadra" />
+
                     <RadioButton
                         android:id="@+id/radioTerraEspacos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/terra"
-                        android:onClick="checkButton"/>
+                        android:onClick="checkButton"
+                        android:text="@string/terra" />
                 </LinearLayout>
             </LinearLayout>
+
         </RadioGroup>
         <LinearLayout
             android:layout_width="match_parent"
