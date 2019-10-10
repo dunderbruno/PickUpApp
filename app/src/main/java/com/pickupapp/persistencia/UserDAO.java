@@ -141,11 +141,8 @@ public class UserDAO {
     }
 
     public User login(final User user) throws JSONException{
-        String url = host + "/user";
+        String url = host + "/login";
         JSONObject postparams = new JSONObject();
-        postparams.put("username", user.getUsername());
-        postparams.put("password", user.getPassword());
-        final AtomicInteger requestsCounter = new AtomicInteger(0);
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
