@@ -64,7 +64,7 @@ public class Register extends AppCompatActivity {
                         public void run() {
                             try {
                                 User response = registro.register(usuario);
-                                Sessao sessao= new Sessao();
+                                Sessao sessao = new Sessao();
                                 sessao.editSessao(response, getBaseContext());
                             } catch (JSONException e) {
                                 e.printStackTrace();

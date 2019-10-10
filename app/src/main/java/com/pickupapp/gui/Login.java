@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.User;
+import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.UserDAO;
 
@@ -43,20 +44,27 @@ public class Login extends AppCompatActivity {
                 if(validacao){
                     //classe de negocio inserida para realizar o login.
                     //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
-                    User usuario =new User();
+                    final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
-                    UserDAO login = new UserDAO(getBaseContext());
-                    User acesso = null;
-                    try {
-                        acesso = login.login(usuario);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    if (!acesso.getToken().equals("")){
-                        Intent i = new Intent(Login.this, Welcome.class);
+                    final UserDAO login = new UserDAO(getBaseContext());
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                User response = login.login(usuario);
+                                Sessao sessao= new Sessao();
+                                sessao.editSessao(response, getBaseContext());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    thread.start();
+                    if (!Sessao.getSessao(getBaseContext()).getToken().equals("")){
+                        Intent i = new Intent(Login.this, DrawerActivity.class);
                         startActivity(i);
-                        Welcome.nome = acesso.getUsername() + " " + acesso.getPassword();
                         finish();
                     }else{
                         Toast.makeText(getBaseContext(),"Não foi possivel realizar seu login.",Toast.LENGTH_SHORT).show();
