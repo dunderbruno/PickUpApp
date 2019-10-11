@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.se.omapi.Session;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.Group;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
@@ -47,6 +50,9 @@ public class Login extends AppCompatActivity {
                     final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
+                    Group group = new Group();
+                    group.setGroup_name(tipoUsuario);
+                    usuario.setGroup(group);
                     final UserDAO login = new UserDAO(getBaseContext());
                     Thread thread = new Thread(new Runnable() {
                         @Override
@@ -62,6 +68,7 @@ public class Login extends AppCompatActivity {
                         }
                     });
                     thread.start();
+                    Log.d("Resposta", "onClick: "+ Sessao.getSessao(getBaseContext()).getToken());
                     if (!Sessao.getSessao(getBaseContext()).getToken().equals("")){
                         Intent i = new Intent(Login.this, DrawerActivity.class);
                         startActivity(i);

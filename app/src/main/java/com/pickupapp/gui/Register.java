@@ -45,7 +45,6 @@ public class Register extends AppCompatActivity {
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getBaseContext(),"teste",Toast.LENGTH_LONG).show();
                 boolean validacao = validarCampos();
                 if(validacao){
                     final User usuario = new User();
@@ -73,8 +72,8 @@ public class Register extends AppCompatActivity {
                         }
                     });
                     thread.start();
-                    Log.d("resposta", "onClick: "+ Sessao.getSessao(getBaseContext()).getId());
                     if(Sessao.getSessao(getBaseContext()).getId()!= -1 && Sessao.getSessao(getBaseContext()).getId()!= 0){
+                        Toast.makeText(getBaseContext(),tipoUsuario + " cadastrado com sucesso.",Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(Register.this, MainScreen.class);
                         startActivity(i);
                         finish();

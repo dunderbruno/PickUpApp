@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import android.widget.ListView;
 import com.pickupapp.R;
 import com.pickupapp.dominio.Space;
 import com.pickupapp.dominio.SpaceAdapter;
+import com.pickupapp.persistencia.SpaceDAO;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -31,15 +35,8 @@ public class ListSpacesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-
-        //ListView lista = (ListView) getView().findViewById(R.id.lista_spaces_fragment);
-        ///ArrayAdapter<Space> adapter = new SpaceAdapter(getActivity(), retornarSpaces());
-        ///lista.setAdapter(adapter);
-
-
-        return inflater.inflate(R.layout.fragment_list_spaces, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_list_spaces, container, false);
+        return inflate;
 
 
     }
@@ -52,16 +49,23 @@ public class ListSpacesFragment extends Fragment {
     }
 
     private ArrayList<Space> retornarSpaces(){
-        ArrayList<Space> espacos = new ArrayList<Space>();
-        Space espaco = new Space();
-        espaco.setName("Espaco 1");
-        espaco.setPhone("12345");
-        espacos.add(espaco);
-        espaco.setName("Espaco 2");
-        espaco.setPhone("56789");
-        espacos.add(espaco);
+        final SpaceDAO spaceDAO = new SpaceDAO(getContext());
+        final ArrayList<Space>[] response = new ArrayList[]{new ArrayList<>()};
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    response[0] = spaceDAO.getSpaces();
+                    Log.d("resposta", "retornarSpaces: "+ response[0].toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        return espacos;
+            }
+        });
+        thread.start();
+        Log.d("resposta", "retornarSpaces: "+ response[0].toString());
+        return response[0];
 
 
 

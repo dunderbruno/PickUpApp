@@ -10,16 +10,24 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 import com.pickupapp.dominio.Space;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Sessao;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpaceDAO {
@@ -142,5 +150,61 @@ public class SpaceDAO {
             }
         });
         return space;
+    }
+
+    public ArrayList<Space> getSpaces() throws JSONException {
+        final ArrayList<Space> space = new ArrayList<>();
+        String url = host + "/spot";
+        final JSONObject[] resposta = new JSONObject[1];
+        JSONObject postparams = new JSONObject();
+        final AtomicInteger requestsCounter = new AtomicInteger(0);
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, postparams, future,future){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                User usuarioSessao = Sessao.getSessao(context);
+                String credentials = usuarioSessao.getUsername()+":"+usuarioSessao.getPassword();
+                String auth = "Basic "
+                        + Base64.encodeToString(credentials.getBytes(),
+                        Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                params.put("x-access-token", Sessao.getSessao(context).getToken());
+                return params;
+            }};
+        RequestQueue requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue.add(jsonObjectRequest);
+        try {
+            boolean status = future.isDone();
+            while (!status){
+                Log.d("resposta", "register: "+ future.isDone());
+                status = future.isDone();
+            }
+            JSONObject response = future.get();
+            if (response.get("spots") != "") {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray= response.getJSONArray("spots");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try{
+                        JSONObject explrObject = jsonArray.getJSONObject(i);
+                        Space space1 = new Space();
+                        space1.setName(explrObject.getString("name"));
+                        space1.setId(Long.parseLong(explrObject.getString("id")));
+                        space.add(space1);
+                        Log.d("Resposta", "onRequestFinished: "+explrObject.toString());
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return space;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return space;
+        }
     }
 }

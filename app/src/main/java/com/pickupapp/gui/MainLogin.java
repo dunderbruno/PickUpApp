@@ -23,7 +23,7 @@ public class MainLogin extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainLogin.this, Login.class);
                 startActivity(i);
-                Login.tipoUsuario = "jogador";
+                Login.tipoUsuario = "1";
                 finish();
             }
         });
@@ -33,7 +33,7 @@ public class MainLogin extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainLogin.this, Login.class);
                 startActivity(i);
-                Login.tipoUsuario = "locador";
+                Login.tipoUsuario = "2";
                 finish();
             }
         });

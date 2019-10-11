@@ -21,6 +21,9 @@ import com.pickupapp.infra.Sessao;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.util.Base64;
@@ -41,26 +44,8 @@ public class UserDAO {
         postparams.put("username", user.getUsername());
         postparams.put("password", user.getPassword());
         final AtomicInteger requestsCounter = new AtomicInteger(0);
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    Log.d("respostacadastro", String.valueOf(response.get("new_user_id").toString()));
-                    user.setId(Integer.parseInt(response.get("new_user_id").toString()));
-                    countDownLatch.countDown();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("respostaCadastroerro", String.valueOf(error));
-                user.setId(-1);
-                countDownLatch.countDown();
-            }
-        }){
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, postparams, future,future){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -74,25 +59,30 @@ public class UserDAO {
             }};
         RequestQueue requestQueue = Volley.newRequestQueue(this.context);
         requestQueue.add(jsonObjectRequest);
-        requestsCounter.incrementAndGet();
-        requestQueue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
-            @Override
-            public void onRequestFinished(Request<Object> request) {
-                requestsCounter.decrementAndGet();
-                if (requestsCounter.get() == 0) {
-                    if (user.getId() != 0) {
-                        PersonDAO pessoa = new PersonDAO(context);
-                        try {
-                            pessoa.criarPessoa(user);
-                            setGrupoUsuario(user);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        try {
+            boolean status = future.isDone();
+            while (!status){
+                Log.d("resposta", "register: "+ future.isDone());
+                status = future.isDone();
+            }
+            JSONObject response = future.get();
+            if (response.get("new_user_id") != "") {
+                user.setId(Integer.parseInt(response.get("new_user_id").toString()));
+                if (user.getId() != 0) {
+                    PersonDAO pessoa = new PersonDAO(context);
+                    try {
+                        pessoa.criarPessoa(user);
+                        setGrupoUsuario(user);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-        });
-        return user;
+            return user;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return user;
+        }
     }
 
     private void setGrupoUsuario(final User user) throws JSONException {
@@ -158,7 +148,7 @@ public class UserDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("resposta login", String.valueOf(error));
+                Log.d("resposta login", String.valueOf(error.networkResponse.allHeaders));
             }
         }){
             @Override

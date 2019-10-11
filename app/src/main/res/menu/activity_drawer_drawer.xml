@@ -9,14 +9,19 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/menu_home" />
     <item
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_locais"
         android:icon="@drawable/ic_location_on_black_24dp"
         android:title="@string/menu_spaces" />
 
     <item
-        android:id="@+id/nav_tools"
-        android:icon="@drawable/ic_menu_manage"
+        android:id="@+id/nov_local"
+        android:icon="@drawable/ic_add"
         android:title="@string/menu_tools" />
+
+    <item
+        android:id="@+id/nov_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/sair" />
 
     </group>
 
