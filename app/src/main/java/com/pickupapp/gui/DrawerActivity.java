@@ -103,6 +103,8 @@ public class DrawerActivity extends AppCompatActivity
             changeFragment(new ListSpacesFragment());
         }else if (id == R.id.nav_home){
             changeFragment(new WelcomeFragment());
+        }else if (id == R.id.nav_new_addspace) {
+            changeFragment(new RegisterSpaceFragment());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

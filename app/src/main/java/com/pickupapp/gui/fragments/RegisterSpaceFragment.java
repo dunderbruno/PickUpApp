@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Address;
@@ -47,12 +48,13 @@ public class RegisterSpaceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_register_space, container, false);
-        Button voltar;
+
         Button cadastrar = inflate.findViewById(R.id.button_cadastrar);
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 if (checkFields()) {
+                    checkRadio();
                     Space space = createSpace();
                     SpaceDAO spaceDAO = new SpaceDAO(getContext());
                     try {
@@ -78,10 +80,11 @@ public class RegisterSpaceFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_register_space, container, false);
     }
 
-    public EnumSpaceType checkButton (View v){
-        int radioId = radioGroup.getCheckedRadioButtonId();
-        radioButton = (radioButton).findViewById(radioId);
-        return getType(radioButton.getText().toString());
+    private void checkRadio(){
+        int id = radioGroup.getCheckedRadioButtonId();
+        radioButton = (radioButton).findViewById(id);
+        String a = (String) radioButton.getText();
+        Toast.makeText(getActivity(), a, Toast.LENGTH_LONG).show();
     }
 
     private boolean checkFields(){
@@ -122,9 +125,7 @@ public class RegisterSpaceFragment extends Fragment {
             cidade.setError("Campo obrigatório");
             return false;
         }
-
         return true;
-
     }
 
     private Space createSpace(){

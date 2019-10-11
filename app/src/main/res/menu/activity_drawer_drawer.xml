@@ -19,6 +19,11 @@
         android:title="@string/menu_tools" />
 
     <item
+        android:id="@+id/nav_new_addspace"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        android:title="@string/cadastrarespaco" />
+
+    <item
         android:id="@+id/nov_logout"
         android:icon="@drawable/ic_logout"
         android:title="@string/sair" />
