@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.se.omapi.Session;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +18,18 @@ import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.UserDAO;
+import com.pickupapp.persistencia.UserInterface;
+import com.pickupapp.persistencia.retorno.Token;
 
 import org.json.JSONException;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Login extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -45,37 +56,46 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 boolean validacao = validarCampos();
                 if(validacao){
-                    //classe de negocio inserida para realizar o login.
-                    //Alterar nome da classe e função abaixo de acordo com a criada, e habilitar o codigo
                     final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
                     Group group = new Group();
                     group.setGroup_name(tipoUsuario);
                     usuario.setGroup(group);
-                    final UserDAO login = new UserDAO(getBaseContext());
-                    Thread thread = new Thread(new Runnable() {
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://pickupbsiapi.herokuapp.com")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    UserInterface userInterface = retrofit.create(UserInterface.class);
+                    String credentials = Sessao.getSessao(getBaseContext()).getUsername()+":"+
+                                         Sessao.getSessao(getBaseContext()).getPassword();
+                    String auth = "Basic "
+                            + Base64.encodeToString(credentials.getBytes(),
+                            Base64.NO_WRAP);
+                    String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y";
+                    Call<Token> call = userInterface.login(auth,token);
+                    call.enqueue(new Callback<Token>() {
                         @Override
-                        public void run() {
-                            try {
-                                User response = login.login(usuario);
-                                Sessao sessao= new Sessao();
-                                sessao.editSessao(response, getBaseContext());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        public void onResponse(Call<Token> call, Response<Token> response) {
+                            if (!response.isSuccessful()){
+                                Log.d("resposta", "login: "+response);
+                                return;
                             }
+                            Token token = response.body();
+                            usuario.setToken(token.getToken());
+                            Sessao sessao = new Sessao();
+                            sessao.editSessao(usuario, getApplicationContext());
+                            Log.d("resposta", "token: "+response.body());
+                            Intent i = new Intent(Login.this, DrawerActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
 
+                        @Override
+                        public void onFailure(Call<Token> call, Throwable t) {
+                            Log.d("resposta", "erro: "+t);
                         }
                     });
-                    thread.start();
-                    Log.d("Resposta", "onClick: "+ Sessao.getSessao(getBaseContext()).getToken());
-                    if (!Sessao.getSessao(getBaseContext()).getToken().equals("")){
-                        Intent i = new Intent(Login.this, DrawerActivity.class);
-                        startActivity(i);
-                        finish();
-                    }else{
-                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu login.",Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
         });

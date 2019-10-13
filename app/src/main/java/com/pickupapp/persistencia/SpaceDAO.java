@@ -175,11 +175,11 @@ public class SpaceDAO {
         RequestQueue requestQueue = Volley.newRequestQueue(this.context);
         requestQueue.add(jsonObjectRequest);
         try {
-            boolean status = future.isDone();
-            while (!status){
-                Log.d("resposta", "register: "+ future.isDone());
-                status = future.isDone();
-            }
+//            boolean status = future.isDone();
+//            while (!status){
+//                Log.d("resposta", "register: "+ future.isDone());
+//                status = future.isDone();
+//            }
             JSONObject response = future.get();
             if (response.get("spots") != "") {
                 JSONArray jsonArray = null;
