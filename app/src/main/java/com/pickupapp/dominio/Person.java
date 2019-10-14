@@ -1,8 +1,14 @@
 package com.pickupapp.dominio;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Person {
+
+    @SerializedName("person_id")
     private int id;
+
     private String name;
+
     private String surname;
 
     public int getId() {

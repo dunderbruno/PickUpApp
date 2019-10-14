@@ -22,7 +22,6 @@ import com.pickupapp.infra.EnumSpaceType;
 import com.pickupapp.infra.MonetaryMask;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.SpaceDAO;
-import com.pickupapp.persistencia.UserDAO;
 
 import org.json.JSONException;
 

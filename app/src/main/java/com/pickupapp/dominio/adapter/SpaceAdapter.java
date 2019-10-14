@@ -1,4 +1,4 @@
-package com.pickupapp.dominio;
+package com.pickupapp.dominio.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.pickupapp.R;
+import com.pickupapp.dominio.Space;
 
 import java.net.ConnectException;
 import java.util.ArrayList;

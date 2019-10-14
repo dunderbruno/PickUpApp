@@ -14,11 +14,18 @@ import com.pickupapp.R;
 import com.pickupapp.dominio.Group;
 import com.pickupapp.dominio.Person;
 import com.pickupapp.dominio.User;
-import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
-import com.pickupapp.persistencia.UserDAO;
+import com.pickupapp.persistencia.PersonInterface;
+import com.pickupapp.persistencia.UserInterface;
 
-import org.json.JSONException;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Register extends AppCompatActivity {
     protected static String tipoUsuario;
@@ -57,32 +64,130 @@ public class Register extends AppCompatActivity {
                     Group grupo = new Group();
                     usuario.setGroup(grupo);
                     usuario.getGroup().setGroup_name(tipoUsuario);
-                    final UserDAO registro = new UserDAO(getBaseContext());
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                User response = registro.register(usuario);
-                                Sessao sessao = new Sessao();
-                                sessao.editSessao(response, getBaseContext());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-                    thread.start();
-                    if(Sessao.getSessao(getBaseContext()).getId()!= -1 && Sessao.getSessao(getBaseContext()).getId()!= 0){
-                        Toast.makeText(getBaseContext(),tipoUsuario + " cadastrado com sucesso.",Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(Register.this, MainScreen.class);
-                        startActivity(i);
-                        finish();
-                    }else{
-                        Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-                    }
+                    cadastrarUsuario(usuario);
                 }
             }
         });
+    }
+
+    private void cadastrarUsuario(final User usuario) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserInterface userInterface = retrofit.create(UserInterface.class);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("username", usuario.getUsername());
+        params.put("password", usuario.getPassword());
+        Call<User> call = userInterface.register(params);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "cadastro Usuario: "+response);
+                    return;
+                }
+                User user = response.body();
+                setGrupoUsuario(user, usuario);
+                criarPessoa(user, usuario);
+                Intent i = new Intent(Register.this, MainScreen.class);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("resposta", "erro: "+t);
+                Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
+
+                cadastrar.setEnabled(true);
+                voltar.setEnabled(true);
+                login.setEnabled(true);
+                senha.setEnabled(true);
+            }
+        });
+    }
+
+    private void criarPessoa(final User user, final User usuario) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PersonInterface personInterface = retrofit.create(PersonInterface.class);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("name", usuario.getUsername());
+        params.put("surname", usuario.getUsername());
+        Call<Person> call = personInterface.criarPessoa(params);
+        call.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "cadastro Pessoa: "+response);
+                    return;
+                }
+                Log.d("resposta", "cadastro Pessoa: "+response.body());
+                Person pessoa = response.body();
+                pessoa.getId();
+                Log.d("resposta", "cadastro Pessoa: "+pessoa.getId());
+                setPessoaUsuario(pessoa, user);
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+            }
+        });
+    }
+
+    private void setGrupoUsuario(User user, User usuario) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserInterface userInterface = retrofit.create(UserInterface.class);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("group", usuario.getGroup().getGroup_name());
+        Call<User> callset = userInterface.setGrupoUsuario(params, user.getId());
+        callset.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "set Grupo: "+response);
+                    return;
+                }
+                Log.d("resposta", "set Grupo: "+response);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("resposta", "onResponse: "+t);
+            }
+        });
+    }
+
+    private void setPessoaUsuario(Person person, User usuario) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PersonInterface personInterface = retrofit.create(PersonInterface.class);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("person_id", String.valueOf(person.getId()));
+        Call<Person> callset = personInterface.setPessoaUsuario(params, usuario.getId());
+        callset.enqueue(new Callback<Person>() {
+            @Override
+            public void onResponse(Call<Person> call, Response<Person> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "set Pessoa: "+response);
+                    return;
+                }
+                Log.d("resposta", "set Pessoa: "+response);
+            }
+
+            @Override
+            public void onFailure(Call<Person> call, Throwable t) {
+            }
+        });
+
     }
 
     public boolean validarCampos(){

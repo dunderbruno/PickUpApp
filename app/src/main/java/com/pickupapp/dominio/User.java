@@ -1,12 +1,21 @@
 package com.pickupapp.dominio;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("new_user_id")
     private int id;
+
     private String username;
+
     private String token;
+
     private String password;
+
     private Person person;
+
     private Contact contact;
+
     private Group group;
 
     public User(){

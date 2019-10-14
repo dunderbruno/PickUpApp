@@ -4,26 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.se.omapi.Session;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Group;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
-import com.pickupapp.persistencia.UserDAO;
 import com.pickupapp.persistencia.UserInterface;
 import com.pickupapp.persistencia.retorno.Token;
-
-import org.json.JSONException;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,11 +46,17 @@ public class Login extends AppCompatActivity {
             }
         });
         acessar = findViewById(R.id.buttonAcessarAcesso);
+        final FrameLayout progress = findViewById(R.id.progressBarHolder);
         acessar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
                 boolean validacao = validarCampos();
                 if(validacao){
+                    acessar.setEnabled(false);
+                    voltar.setEnabled(false);
+                    login.setEnabled(false);
+                    senha.setEnabled(false);
                     final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
@@ -67,8 +68,8 @@ public class Login extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     UserInterface userInterface = retrofit.create(UserInterface.class);
-                    String credentials = Sessao.getSessao(getBaseContext()).getUsername()+":"+
-                                         Sessao.getSessao(getBaseContext()).getPassword();
+                    String credentials = usuario.getUsername()+":"+
+                                         usuario.getPassword();
                     String auth = "Basic "
                             + Base64.encodeToString(credentials.getBytes(),
                             Base64.NO_WRAP);
@@ -94,9 +95,14 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<Token> call, Throwable t) {
                             Log.d("resposta", "erro: "+t);
+                            acessar.setEnabled(true);
+                            voltar.setEnabled(true);
+                            login.setEnabled(true);
+                            senha.setEnabled(true);
                         }
                     });
                 }
+                progress.setVisibility(View.GONE);
             }
         });
     }
