@@ -24,6 +24,11 @@
         android:title="@string/cadastrarespaco" />
 
     <item
+        android:id="@+id/nav_perfil_user"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/sair" />
+
+    <item
         android:id="@+id/nov_logout"
         android:icon="@drawable/ic_logout"
         android:title="@string/sair" />
