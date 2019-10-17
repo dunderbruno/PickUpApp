@@ -1,11 +1,16 @@
 package com.pickupapp.gui.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Address;
@@ -27,6 +33,7 @@ import com.pickupapp.persistencia.SpaceDAO;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 public class RegisterSpaceFragment extends Fragment {
@@ -52,7 +59,7 @@ public class RegisterSpaceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_register_space, container, false);
 
-        Button cadastrar = inflate.findViewById(R.id.button_cadastrar);
+        Button cadastrar = inflate.findViewById(R.id.buttonCadastrarEspaco);
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -71,15 +78,32 @@ public class RegisterSpaceFragment extends Fragment {
         imageView = inflate.findViewById(R.id.ImageViewEspaco);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
-
             }
         });
+/*        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    requestPermissions(
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            2000);
+                }
+                else {
+                    startGallery();
+                }
+            }
+        });
+
+ */
+
+
         nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
         telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
         email = inflate.findViewById(R.id.inputEmailEspacos);
@@ -92,8 +116,66 @@ public class RegisterSpaceFragment extends Fragment {
         cep = inflate.findViewById(R.id.inputCepEspacos);
         valor = inflate.findViewById(R.id.inputValorEspacos);
         valor.addTextChangedListener(new MonetaryMask(valor));
-        return inflater.inflate(R.layout.fragment_register_space, container, false);
+
+        //return inflater.inflate(R.layout.fragment_register_space, container, false);
+        return inflate;
     }
+
+    private void startGallery() {
+        Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        cameraIntent.setType("image/*");
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, 1000);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap bitmaps = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                imageView.setImageBitmap(bitmaps);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void onActivityResult2(int requestCode, int resultCode, Intent data) {
+        //super method removed
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == 1000) {
+                try{
+                    Uri returnUri = data.getData();
+                    Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+                    imageView.setImageBitmap(bitmapImage);
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+                    //SALVA NO BANCO
+
+
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        //Uri returnUri;
+        //returnUri = data.getData();
+    }
+
+
 
 
 
