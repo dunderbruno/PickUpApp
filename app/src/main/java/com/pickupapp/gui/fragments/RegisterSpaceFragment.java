@@ -1,5 +1,7 @@
 package com.pickupapp.gui.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Address;
@@ -39,9 +41,11 @@ public class RegisterSpaceFragment extends Fragment {
     private EditText estado;
     private EditText valor;
     private EditText cep;
-
+    private ImageView imageView;
+    private Bitmap reducedImage;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
+    public static final int RESULT_LOAD_IMAGE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +68,18 @@ public class RegisterSpaceFragment extends Fragment {
                 }
             }
         });
+        imageView = inflate.findViewById(R.id.ImageViewEspaco);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+            }
+        });
         nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
         telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
         email = inflate.findViewById(R.id.inputEmailEspacos);
@@ -79,11 +95,11 @@ public class RegisterSpaceFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_register_space, container, false);
     }
 
+
+
     private void checkRadio(){
         int id = radioGroup.getCheckedRadioButtonId();
         radioButton = (radioButton).findViewById(id);
-        String a = (String) radioButton.getText();
-        Toast.makeText(getActivity(), a, Toast.LENGTH_LONG).show();
     }
 
     private boolean checkFields(){
