@@ -55,4 +55,9 @@ public class Address {
     public void setCep(String cep) {
         this.cep = cep;
     }
+
+    @Override
+    public String toString(){
+        return "Rua " + this.getStreet() + " número " + this.getNumber() + ", bairro " + this.getNeighboorhood();
+    }
 }
