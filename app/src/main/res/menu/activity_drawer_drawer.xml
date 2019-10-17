@@ -24,7 +24,7 @@
         android:title="@string/cadastrarespaco" />
 
     <item
-        android:id="@+id/nav_perfil_user"
+        android:id="@+id/nav_profile_user"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/sair" />
 

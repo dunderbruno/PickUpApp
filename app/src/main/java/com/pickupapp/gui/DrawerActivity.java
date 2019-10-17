@@ -1,24 +1,15 @@
 package com.pickupapp.gui;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -32,6 +23,7 @@ import android.view.Menu;
 import com.pickupapp.R;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
+import com.pickupapp.gui.fragments.UserProfileFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 
 public class DrawerActivity extends AppCompatActivity
@@ -105,6 +97,8 @@ public class DrawerActivity extends AppCompatActivity
             changeFragment(new WelcomeFragment());
         }else if (id == R.id.nav_new_addspace) {
             changeFragment(new RegisterSpaceFragment());
+        }else if (id == R.id.nav_profile_user) {
+            changeFragment(new UserProfileFragment());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
