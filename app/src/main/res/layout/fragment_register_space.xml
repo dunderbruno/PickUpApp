@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,15 @@
             android:layout_height="wrap_content"
             android:text="@string/cadastro_de_espacos"
             android:textSize="24sp"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:textColor="@android:color/black"/>
+
+        <ImageView
+            android:id="@+id/ImageViewEspaco"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
         <EditText
             android:id="@+id/inputNomeEspaco"
@@ -27,7 +36,9 @@
             android:layout_marginTop="10sp"
             android:hint="@string/nome_do_espaco"
             android:importantForAutofill="no"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="#EB000000"
+            android:textColorHint="@android:color/black" />
 
         <EditText
             android:id="@+id/inputValorEspacos"
@@ -35,7 +46,9 @@
             android:layout_height="40sp"
             android:hint="@string/valor_por_hora"
             android:importantForAutofill="no"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="#EB000000"
+            android:textColorHint="@android:color/black" />
 
         <EditText
             android:id="@+id/inputTelefoneEspacos"
@@ -43,7 +56,9 @@
             android:layout_height="40sp"
             android:hint="@string/telefone"
             android:importantForAutofill="no"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:textColor="#EB000000"
+            android:textColorHint="@android:color/black" />
 
         <EditText
             android:id="@+id/inputEmailEspacos"
@@ -52,21 +67,28 @@
             android:layout_gravity="center_horizontal"
             android:hint="@string/email"
             android:importantForAutofill="no"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="#EB000000"
+            android:textColorHint="@android:color/black"
+            android:textColorLink="#00FFFFFF" />
 
         <EditText
             android:id="@+id/inputLogradouroEspacos"
             android:layout_width="match_parent"
+            android:textColor="#EB000000"
             android:layout_height="40sp"
             android:layout_gravity="center_horizontal"
             android:hint="@string/logradouro"
             android:importantForAutofill="no"
+            android:textColorHint="@android:color/black"
             android:inputType="textPersonName"></EditText>
 
         <EditText
             android:id="@+id/inputNumeroEspacos"
             android:layout_width="200sp"
             android:layout_height="40sp"
+            android:textColorHint="@android:color/black"
+            android:textColor="#EB000000"
             android:hint="@string/numero"
             android:importantForAutofill="no"
             android:inputType="number" />
@@ -74,7 +96,9 @@
         <EditText
             android:id="@+id/inputBairroEspacos"
             android:layout_width="match_parent"
+            android:textColorHint="@android:color/black"
             android:layout_height="40sp"
+            android:textColor="#EB000000"
             android:layout_gravity="center_horizontal"
             android:hint="@string/bairro"
             android:importantForAutofill="no"
@@ -83,7 +107,9 @@
         <EditText
             android:id="@+id/inputCepEspacos"
             android:layout_width="200sp"
+            android:textColorHint="@android:color/black"
             android:layout_height="40sp"
+            android:textColor="#EB000000"
             android:hint="@string/cep"
             android:importantForAutofill="no"
             android:inputType="number" />
@@ -94,13 +120,17 @@
             android:layout_height="40sp"
             android:layout_gravity="center_horizontal"
             android:hint="@string/cidade"
+            android:textColor="#EB000000"
             android:importantForAutofill="no"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColorHint="@android:color/black"/>
 
         <EditText
             android:id="@+id/inputEstadoEspacos"
             android:layout_width="match_parent"
             android:layout_height="40sp"
+            android:textColor="#EB000000"
+            android:textColorHint="@android:color/black"
             android:layout_gravity="center_horizontal"
             android:hint="@string/estado"
             android:importantForAutofill="no"
@@ -169,9 +199,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="100sp">
-
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/buttonVoltarCadastro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:text="@string/voltar" />
             <Button
                 android:id="@+id/buttonCadastrarEspaco"
                 android:layout_width="wrap_content"
