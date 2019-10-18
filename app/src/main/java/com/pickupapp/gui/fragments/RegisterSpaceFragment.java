@@ -1,25 +1,24 @@
 package com.pickupapp.gui.fragments;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Address;
@@ -36,7 +35,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-public class RegisterSpaceFragment extends Fragment {
+public class RegisterSpaceFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private EditText nomeEspaco;
     private EditText telefone;
@@ -44,8 +43,8 @@ public class RegisterSpaceFragment extends Fragment {
     private EditText logradouro;
     private EditText numero;
     private EditText bairro;
-    private EditText cidade;
-    private EditText estado;
+    private Spinner cidade;
+    private Spinner estado;
     private EditText valor;
     private EditText cep;
     private ImageView imageView;
@@ -103,7 +102,6 @@ public class RegisterSpaceFragment extends Fragment {
 
  */
 
-
         nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
         telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
         email = inflate.findViewById(R.id.inputEmailEspacos);
@@ -116,9 +114,18 @@ public class RegisterSpaceFragment extends Fragment {
         cep = inflate.findViewById(R.id.inputCepEspacos);
         valor = inflate.findViewById(R.id.inputValorEspacos);
         valor.addTextChangedListener(new MonetaryMask(valor));
-
+        setSpinnerAdapter();
         //return inflater.inflate(R.layout.fragment_register_space, container, false);
         return inflate;
+    }
+
+    private void setSpinnerAdapter() {
+        ArrayAdapter<CharSequence> estadoAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(), R.array.states, android.R.layout.simple_spinner_item);
+        estadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        estado.setAdapter(estadoAdapter);
+        ArrayAdapter<CharSequence> cidadeAdapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),R.array.cities_pernambuco, android.R.layout.simple_spinner_item);
+        cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        cidade.setAdapter(cidadeAdapter);
     }
 
     private void startGallery() {
@@ -176,9 +183,6 @@ public class RegisterSpaceFragment extends Fragment {
     }
 
 
-
-
-
     private void checkRadio(){
         int id = radioGroup.getCheckedRadioButtonId();
         radioButton = (radioButton).findViewById(id);
@@ -213,14 +217,7 @@ public class RegisterSpaceFragment extends Fragment {
         if (validacao.verificarTamanhoCampo(numero.getText().toString())){
             numero.setError("Campo obrigatório");
             return false;
-        }
-        if (validacao.verificarTamanhoCampo(estado.getText().toString())){
-            estado.setError("Campo obrigatório");
-            return false;
-        }
-        if (validacao.verificarTamanhoCampo(cidade.getText().toString())){
-            cidade.setError("Campo obrigatório");
-            return false;
+
         }
         return true;
     }
@@ -241,9 +238,9 @@ public class RegisterSpaceFragment extends Fragment {
         address.setNeighboorhood(bairro.getText().toString());
         address.setNumber(Integer.parseInt(numero.getText().toString()));
         State state = new State();
-        state.setName(estado.getText().toString());
+        state.setName(estado.getPrompt().toString());
         City city = new City();
-        city.setName(cidade.getText().toString());
+        city.setName(cidade.getPrompt().toString());
         address.setCity(city);
         address.setStreet(logradouro.getText().toString());
         return address;
@@ -262,5 +259,15 @@ public class RegisterSpaceFragment extends Fragment {
         else{
             return EnumSpaceType.COURT;
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

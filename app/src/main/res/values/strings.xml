@@ -86,8 +86,5 @@
 
     <string-array name="states">
         <item>Pernambuco</item>
-        <item>Bahia</item>
-        <item>Alagoas</item>
-        <item>Paraiba</item>
     </string-array>
 </resources>
