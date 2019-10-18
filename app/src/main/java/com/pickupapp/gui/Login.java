@@ -90,7 +90,12 @@ public class Login extends AppCompatActivity {
                             Sessao sessao = new Sessao();
                             sessao.editSessao(usuario, getApplicationContext());
                             Log.d("resposta", "token: "+response.body());
-                            Intent i = new Intent(Login.this, DrawerLocador.class);
+                            Intent i = null;
+                            if (tipoUsuario.equals("1")){
+                                i = new Intent(Login.this, DrawerJogador.class);
+                            }else {
+                                i = new Intent(Login.this, DrawerLocador.class);
+                            }
                             startActivity(i);
                             finish();
                         }

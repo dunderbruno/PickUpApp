@@ -8,6 +8,7 @@ public class Space {
     private long id;
     private String name;
     private String phone;
+    private String email;
     private Address address;
     private BigDecimal priceHour;
     private EnumSpaceType spaceType;
@@ -40,6 +41,10 @@ public class Space {
         return phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
 
@@ -59,5 +64,9 @@ public class Space {
 
     public void setPriceHour(BigDecimal priceHour) {
         this.priceHour = priceHour;
+    }
+
+    public void setEmail(String mail) {
+        this.email = mail;
     }
 }

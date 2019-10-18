@@ -59,7 +59,12 @@ public class ListSpacesFragment extends Fragment {
                 + Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<Spots> call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
+        Call<Spots> call = null;
+        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+            call = spaceInterface.getMySpaces(auth, Sessao.getSessao(getContext()).getToken());
+        }else{
+            call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
+        }
         call.enqueue(new Callback<Spots>() {
             @Override
             public void onResponse(Call<Spots> call, Response<Spots> response) {

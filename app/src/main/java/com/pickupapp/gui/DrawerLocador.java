@@ -33,6 +33,7 @@ import com.pickupapp.R;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
+import com.pickupapp.infra.Sessao;
 
 public class DrawerLocador extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -105,6 +106,12 @@ public class DrawerLocador extends AppCompatActivity
             changeFragment(new WelcomeFragment());
         }else if (id == R.id.nav_new_addspace) {
             changeFragment(new RegisterSpaceFragment());
+        } else if (id == R.id.nov_logout) {
+            new Sessao().clear(getApplicationContext());
+            Intent i = new Intent(DrawerLocador.this, Login.class);
+            startActivity(i);
+            finish();
+            return true;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
