@@ -24,8 +24,8 @@
     <string name="bairro">Bairro</string>
     <string name="cep">Cep</string>
     <string name="email">Email</string>
-    <string name="cidade">Cidade</string>
-    <string name="estado">Estado</string>
+    <string name="cidade_">Cidade: </string>
+    <string name="estado_">Estado: </string>
     <string name="cadastrar">Cadastrar</string>
     <string name="title_activity_drawer">DrawerActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -50,6 +50,42 @@
     <string name="gramado">Gramado</string>
     <string name="society">Society</string>
     <string name="terra">Terra</string>
-    <string name="cadastrarespaco">Cadastrar Espaços</string>
     <string name="sair">sair</string>
+    <string name="estado">Estado</string>
+    <string-array name="cities_pernambuco">
+        <item>Jaboatão dos Guararapes</item>
+        <item>Olinda</item>
+        <item>Paulista</item>
+        <item>Igarassu</item>
+        <item>Abreu e Lima</item>
+        <item>Camaragibe</item>
+        <item>Cabo de Santo Agostinho</item>
+        <item>Goiana</item>
+        <item>São Lourenço da mata</item>
+        <item>Araçoiaba</item>
+        <item>Ilha de Itamaracá</item>
+        <item>Ipojuca</item>
+        <item>Moreno</item>
+        <item>Itapissuma</item>
+        <item>Recife</item>
+    </string-array>
+    
+    <string-array name="cities_bahia">
+        <item>Salvador</item>
+    </string-array>
+    
+    <string-array name="cities_alagoas">
+        <item>Maceió</item>
+    </string-array>
+    
+    <string-array name="cities_paraiba">
+        <item>João Pessoa</item>
+    </string-array>
+
+    <string-array name="states">
+        <item>Pernambuco</item>
+        <item>Bahia</item>
+        <item>Alagoas</item>
+        <item>Paraiba</item>
+    </string-array>
 </resources>
