@@ -56,6 +56,7 @@
     <string name="estado">Estado</string>
     <string name="endere_o">Endereço</string>
     <string name="pre_o">Preço</string>
+    <string name="title_activity_drawer_jogador">title activity drawer jogador</string>
     <string-array name="cities_pernambuco">
         <item>Jaboatão dos Guararapes</item>
         <item>Olinda</item>

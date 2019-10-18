@@ -115,8 +115,8 @@ public class Register extends AppCompatActivity {
                 .build();
         PersonInterface personInterface = retrofit.create(PersonInterface.class);
         Map<String, String> params = new HashMap<String, String>();
-        params.put("name", usuario.getUsername());
-        params.put("surname", usuario.getUsername());
+        params.put("name", usuario.getPerson().getName());
+        params.put("surname", usuario.getPerson().getName());
         Call<Person> call = personInterface.criarPessoa(params);
         call.enqueue(new Callback<Person>() {
             @Override

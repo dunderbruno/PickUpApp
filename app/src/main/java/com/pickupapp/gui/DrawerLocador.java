@@ -34,7 +34,7 @@ import com.pickupapp.gui.fragments.ListSpacesFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 
-public class DrawerActivity extends AppCompatActivity
+public class DrawerLocador extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentManager fragmentManager;

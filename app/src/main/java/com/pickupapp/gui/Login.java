@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Group;
@@ -19,9 +18,6 @@ import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.UserInterface;
 import com.pickupapp.persistencia.retorno.Token;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,14 +73,16 @@ public class Login extends AppCompatActivity {
                             + Base64.encodeToString(credentials.getBytes(),
                             Base64.NO_WRAP);
                     String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y";
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("user_group", tipoUsuario);
-                    Call<Token> call = userInterface.login(auth,token,params);
+                    Call<Token> call = userInterface.login(auth,token,tipoUsuario);
                     call.enqueue(new Callback<Token>() {
                         @Override
                         public void onResponse(Call<Token> call, Response<Token> response) {
                             if (!response.isSuccessful()){
                                 Log.d("resposta", "login: "+response);
+                                acessar.setEnabled(true);
+                                voltar.setEnabled(true);
+                                login.setEnabled(true);
+                                senha.setEnabled(true);
                                 return;
                             }
                             Token token = response.body();
@@ -92,7 +90,7 @@ public class Login extends AppCompatActivity {
                             Sessao sessao = new Sessao();
                             sessao.editSessao(usuario, getApplicationContext());
                             Log.d("resposta", "token: "+response.body());
-                            Intent i = new Intent(Login.this, DrawerActivity.class);
+                            Intent i = new Intent(Login.this, DrawerLocador.class);
                             startActivity(i);
                             finish();
                         }
