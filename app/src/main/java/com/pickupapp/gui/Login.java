@@ -20,6 +20,9 @@ import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.UserInterface;
 import com.pickupapp.persistencia.retorno.Token;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,7 +77,9 @@ public class Login extends AppCompatActivity {
                             + Base64.encodeToString(credentials.getBytes(),
                             Base64.NO_WRAP);
                     String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y";
-                    Call<Token> call = userInterface.login(auth,token);
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("user_group", tipoUsuario);
+                    Call<Token> call = userInterface.login(auth,token,params);
                     call.enqueue(new Callback<Token>() {
                         @Override
                         public void onResponse(Call<Token> call, Response<Token> response) {

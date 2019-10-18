@@ -18,7 +18,7 @@ import retrofit2.http.QueryMap;
 public interface UserInterface {
 
     @GET("login")
-    Call<Token> login(@Header("Authorization") String token, @Header("x-access-token") String token1);
+    Call<Token> login(@Header("Authorization") String token, @Header("x-access-token") String token1, @Body Map<String,String> parameters);
 
     @POST("user")
     Call<User> register(@Body Map<String,String> parameters);
