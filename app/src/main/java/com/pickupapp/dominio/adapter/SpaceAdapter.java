@@ -18,6 +18,7 @@ public class SpaceAdapter extends ArrayAdapter<Space> {
     private final Context context;
     private final ArrayList<Space> espacos;
 
+
     public SpaceAdapter(Context context, ArrayList<Space> espacos){
         super(context, R.layout.linha_spaces, espacos);
         this.context = context;
@@ -29,11 +30,13 @@ public class SpaceAdapter extends ArrayAdapter<Space> {
         View rowView = inflater.inflate(R.layout.linha_spaces, parent, false);
 
         TextView nameSpace = rowView.findViewById(R.id.id_nome);
-        TextView phoneSpace = rowView.findViewById(R.id.id_phone);
+        TextView addressSpace = rowView.findViewById(R.id.id_address_list_spaces);
+        TextView priceSpace = rowView.findViewById(R.id.id_price_list_spaces);
 
         nameSpace.setText(espacos.get(position).getName());
-        phoneSpace.setText(espacos.get(position).getPhone());
-
+        addressSpace.setText(espacos.get(position).getPhone());
+        String preco = "R$" + espacos.get(position).getPriceHour();
+        priceSpace.setText(preco);
         return rowView;
 
     }
