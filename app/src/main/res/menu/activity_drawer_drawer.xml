@@ -24,6 +24,12 @@
         android:title="@string/cadastrarespaco" />
 
     <item
+        android:id="@+id/nav_list_space"
+        android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+        android:title="@string/listarespaco" />
+
+
+        <item
         android:id="@+id/nov_logout"
         android:icon="@drawable/ic_logout"
         android:title="@string/sair" />

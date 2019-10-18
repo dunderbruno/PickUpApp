@@ -50,6 +50,8 @@
     <string name="gramado">Gramado</string>
     <string name="society">Society</string>
     <string name="terra">Terra</string>
+    <string name="cadastrarespaco">Cadastrar Espaços</string>
+    <string name="listarespaco">Listar Espaços</string>
     <string name="sair">sair</string>
     <string name="estado">Estado</string>
     <string-array name="cities_pernambuco">

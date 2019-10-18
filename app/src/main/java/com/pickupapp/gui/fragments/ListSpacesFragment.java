@@ -1,6 +1,7 @@
 package com.pickupapp.gui.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,17 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Space;
 import com.pickupapp.dominio.adapter.SpaceAdapter;
+import com.pickupapp.gui.SpaceActivity;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.Spots;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +36,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A simple {@link Fragment} subclass.
  */
 public class ListSpacesFragment extends Fragment {
-    private ArrayList<Space> spaces;
+    private List<Space> spacesList;
+    private ListView lista;
+    private ArrayAdapter<Space> adapter;
 
     public ListSpacesFragment() {
         // Required empty public constructor
@@ -63,10 +69,20 @@ public class ListSpacesFragment extends Fragment {
                 }
                 Log.d("resposta", "onResponse: "+response.body());
                 Spots spaces = response.body();
-                ListView lista = (ListView) inflate.findViewById(R.id.lista_spaces_fragment);
-                ArrayAdapter<Space> adapter = null;
+                lista = (ListView) inflate.findViewById(R.id.lista_spaces_fragment);
+                adapter = null;
                 adapter = new SpaceAdapter(getActivity(), spaces.getSpaces());
                 lista.setAdapter(adapter);
+                spacesList = spaces.getSpaces();
+                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getContext(), SpaceActivity.class);
+                        intent.putExtra("Nome", String.valueOf(spacesList.get(position).getName()));
+                        intent.putExtra("Phone", String.valueOf(spacesList.get(position).getPhone()));
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override
@@ -80,6 +96,10 @@ public class ListSpacesFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
+
+    }
+
+    private void clickListView(int position){
 
     }
 
