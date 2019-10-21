@@ -1,23 +1,21 @@
 package com.pickupapp.gui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+
 
 import com.google.android.material.navigation.NavigationView;
 import com.pickupapp.R;
@@ -37,6 +35,9 @@ import android.view.Menu;
 public class DrawerJogador extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private FragmentManager fragmentManager;
+    private static final int PERMISSAO_REQUERIDA = 1;
+    private View hView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class DrawerJogador extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        hView = navigationView.getHeaderView(0);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.nav_host_fragment, new WelcomeFragment());
@@ -88,6 +90,23 @@ public class DrawerJogador extends AppCompatActivity implements NavigationView.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_jogador);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSAO_REQUERIDA: {
+                // Se a solicitação de permissão foi cancelada o array vem vazio.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permissão cedida, recria a activity para carregar o mapa, só será executado uma vez
+                    this.recreate();
+
+                }
+
+            }
+        }
     }
 
 }
