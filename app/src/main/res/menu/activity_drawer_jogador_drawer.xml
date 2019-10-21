@@ -12,6 +12,12 @@
             android:id="@+id/nav_locais_jogador"
             android:icon="@drawable/ic_location_on_black_24dp"
             android:title="@string/menu_spaces" />
+
+        <item
+            android:id="@+id/nav_new_maps_acess"
+            android:icon="@drawable/ic_map_black_24dp"
+            android:title="@string/acessoaomapa" />
+
         <item
             android:id="@+id/nav_logout_jogador"
             android:icon="@drawable/ic_logout"

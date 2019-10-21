@@ -51,6 +51,7 @@
     <string name="society">Society</string>
     <string name="terra">Terra</string>
     <string name="cadastrarespaco">Cadastrar Espaços</string>
+    <string name="acessoaomapa">Mapa</string>
     <string name="listarespaco">Listar Espaços</string>
     <string name="sair">sair</string>
     <string name="estado">Estado</string>
@@ -75,15 +76,15 @@
         <item>Itapissuma</item>
         <item>Recife</item>
     </string-array>
-    
+
     <string-array name="cities_bahia">
         <item>Salvador</item>
     </string-array>
-    
+
     <string-array name="cities_alagoas">
         <item>Maceió</item>
     </string-array>
-    
+
     <string-array name="cities_paraiba">
         <item>João Pessoa</item>
     </string-array>

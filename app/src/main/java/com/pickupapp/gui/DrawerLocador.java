@@ -31,6 +31,7 @@ import android.view.Menu;
 
 import com.pickupapp.R;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
+import com.pickupapp.gui.fragments.MapsFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 import com.pickupapp.infra.Sessao;
@@ -106,7 +107,9 @@ public class DrawerLocador extends AppCompatActivity
             changeFragment(new WelcomeFragment());
         }else if (id == R.id.nav_new_addspace) {
             changeFragment(new RegisterSpaceFragment());
-        } else if (id == R.id.nov_logout) {
+        }else if (id == R.id.nav_new_maps_acess){
+            changeFragment(new MapsFragment());
+        }else if (id == R.id.nov_logout) {
             new Sessao().clear(getApplicationContext());
             Intent i = new Intent(DrawerLocador.this, Login.class);
             startActivity(i);

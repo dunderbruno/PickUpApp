@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.pickupapp.R;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
+import com.pickupapp.gui.fragments.MapsFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 import com.pickupapp.infra.Sessao;
@@ -72,6 +73,8 @@ public class DrawerJogador extends AppCompatActivity implements NavigationView.O
 //            fragment = new ListSpacesFragment();
         }else if (id == R.id.nav_locais_jogador){
             fragment = new ListSpacesFragment();
+        }else if (id == R.id.nav_new_maps_acess){
+            fragment = new MapsFragment();
         }else if (id == R.id.nav_logout_jogador) {
             new Sessao().clear(getApplicationContext());
             Intent i = new Intent(DrawerJogador.this, Login.class);
