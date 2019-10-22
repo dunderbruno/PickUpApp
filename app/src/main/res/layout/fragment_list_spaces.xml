@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gui.fragments.ListSpacesFragment">
+    tools:context=".gui.fragments.ListSpacesFragment"
+    android:id="@+id/list_spaces_fragment">
 
     <ListView
         android:id="@+id/lista_spaces_fragment"

@@ -1,10 +1,11 @@
 package com.pickupapp.gui.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Base64;
 import android.util.Log;
@@ -18,12 +19,10 @@ import android.widget.ListView;
 import com.pickupapp.R;
 import com.pickupapp.dominio.Space;
 import com.pickupapp.dominio.adapter.SpaceAdapter;
-import com.pickupapp.gui.SpaceActivity;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.Spots;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -82,10 +81,11 @@ public class ListSpacesFragment extends Fragment {
                 lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getContext(), SpaceActivity.class);
-                        intent.putExtra("Nome", String.valueOf(spacesList.get(position).getName()));
-                        intent.putExtra("Phone", String.valueOf(spacesList.get(position).getPhone()));
-                        startActivity(intent);
+                        Fragment fragment = new SpaceFragment();
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction transaction = fm.beginTransaction();
+                        transaction.replace(getId(), fragment);
+                        transaction.commit();
                     }
                 });
             }
