@@ -145,7 +145,7 @@ public class Register extends AppCompatActivity {
                 .build();
         UserInterface userInterface = retrofit.create(UserInterface.class);
         Map<String, String> params = new HashMap<String, String>();
-        params.put("group", usuario.getGroup().getGroup_name());
+        params.put("group", tipoUsuario);
         Call<User> callset = userInterface.setGrupoUsuario(params, user.getId());
         callset.enqueue(new Callback<User>() {
             @Override
