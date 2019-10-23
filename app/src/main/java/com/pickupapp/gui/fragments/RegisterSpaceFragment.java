@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.pickupapp.R;
@@ -65,28 +66,22 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private EditText valor;
     private EditText cep;
     private ImageView imageView;
+    private ImageView imageView1;
+    private ImageView imageView2;
+    private ImageView imageView3;
+    private ImageView imageView4;
+    private ImageView imageView5;
     private Bitmap reducedImage;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
+    private String imagemAtual;
     public static final int RESULT_LOAD_IMAGE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_register_space, container, false);
-        nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
-        telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
-        email = inflate.findViewById(R.id.inputEmailEspacos);
-        logradouro = inflate.findViewById(R.id.inputLogradouroEspacos);
-        numero = inflate.findViewById(R.id.inputNumeroEspacos);
-        bairro = inflate.findViewById(R.id.inputBairroEspacos);
-        cidade = inflate.findViewById(R.id.inputCidadeEspacos);
-        estado = inflate.findViewById(R.id.inputEstadoEspacos);
-        radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
-        cep = inflate.findViewById(R.id.inputCepEspacos);
-        valor = inflate.findViewById(R.id.inputValorEspacos);
-        valor.addTextChangedListener(new MonetaryMask(valor));
-        setSpinnerAdapter();
+        setarVariaveis(inflate);
         Button cadastrar = inflate.findViewById(R.id.buttonCadastrarEspaco);
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -117,36 +112,78 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 }
             }
         });
+        imageOnClick();
+        return inflate;
+    }
+
+    private void setarVariaveis(View inflate) {
+        nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
+        telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
+        email = inflate.findViewById(R.id.inputEmailEspacos);
+        logradouro = inflate.findViewById(R.id.inputLogradouroEspacos);
+        numero = inflate.findViewById(R.id.inputNumeroEspacos);
+        bairro = inflate.findViewById(R.id.inputBairroEspacos);
+        cidade = inflate.findViewById(R.id.inputCidadeEspacos);
+        estado = inflate.findViewById(R.id.inputEstadoEspacos);
+        radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
+        cep = inflate.findViewById(R.id.inputCepEspacos);
+        valor = inflate.findViewById(R.id.inputValorEspacos);
+        valor.addTextChangedListener(new MonetaryMask(valor));
+        setSpinnerAdapter();
         imageView = inflate.findViewById(R.id.ImageViewEspaco);
+        imageView1 = inflate.findViewById(R.id.imageViewSpace1);
+        imageView2 = inflate.findViewById(R.id.imageViewEspaco2);
+        imageView3 = inflate.findViewById(R.id.imageViewEspaco3);
+        imageView4 = inflate.findViewById(R.id.imageViewEspaco4);
+        imageView5 = inflate.findViewById(R.id.imageViewEspaco5);
+        imagemAtual = "0";
+    }
+
+    private void imageOnClick() {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                buscarImagem("0");
             }
         });
-/*        imageView.setOnClickListener(new View.OnClickListener() {
+        imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if(ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestPermissions(
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            2000);
-                }
-                else {
-                    startGallery();
-                }
+            public void onClick(View v) {
+                buscarImagem("1");
             }
         });
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buscarImagem("2");
+            }
+        });
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buscarImagem("3");
+            }
+        });
+        imageView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buscarImagem("4");
+            }
+        });
+        imageView5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buscarImagem("5");
+            }
+        });
+    }
 
- */
-
-        //return inflater.inflate(R.layout.fragment_register_space, container, false);
-        return inflate;
+    private void buscarImagem(String posicao) {
+        imagemAtual = posicao;
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
     private void cadastrarEspaco(final Space space) {
@@ -176,127 +213,12 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 Toast.makeText(getContext(),"Local Cadastrado Com Sucesso",Toast.LENGTH_LONG).show();
                 SpotCall resposta = response.body();
                 space.setId(Long.parseLong(resposta.getSpot_id()));
-                cadastrarEndereco(space, auth, token);
             }
 
             @Override
             public void onFailure(Call<SpotCall> call, Throwable t) {
                 Log.d("resposta", "cadastro space: "+t);
                 Toast.makeText(getContext(),"Local Não Cadastrado",Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void cadastrarEndereco(final Space space, final String auth, final String token) {
-        Retrofit retrofita = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        AddressInterface addressInterface = retrofita.create(AddressInterface.class);
-        Map<String, String> parames = new HashMap<String, String>();
-        parames.put("street", space.getAddress().getStreet());
-        parames.put("number", String.valueOf(space.getAddress().getNumber()));
-        parames.put("neighborhood", space.getAddress().getNeighboorhood());
-        parames.put("cep", space.getAddress().getCep());
-        Call<AddressCall> callC = addressInterface.registerAddress(auth,token,parames);
-        callC.enqueue(new Callback<AddressCall>() {
-            @Override
-            public void onResponse(Call<AddressCall> call, Response<AddressCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "cadastro Address: "+response);
-                    return;
-                }
-                Log.d("resposta", "cadastro Address: "+response);
-                AddressCall addressCall = response.body();
-                space.getAddress().setId(Long.parseLong(addressCall.getAddress_id()));
-                setSpaceAddress(auth, token, space);
-            }
-
-            @Override
-            public void onFailure(Call<AddressCall> call, Throwable t) {
-                Log.d("resposta", "cadastro Address: "+t);
-            }
-        });
-    }
-
-    private void setSpaceAddress(final String auth, final String token, final Space space) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        SpaceInterface spaceInterface2 = retrofit.create(SpaceInterface.class);
-        Map<String, String> paramet = new HashMap<String, String>();
-        paramet.put("address_id", String.valueOf(space.getAddress().getId()));
-        Call<SetCall> callS = spaceInterface2.setSpaceAdress(auth,token,String.valueOf(space.getId()), paramet);
-        callS.enqueue(new Callback<SetCall>() {
-            @Override
-            public void onResponse(Call<SetCall> call, Response<SetCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "set space address: "+response);
-                    return;
-                }
-                Log.d("resposta", "set space address: "+response);
-                registerContact(space, auth, token);
-
-            }
-
-            @Override
-            public void onFailure(Call<SetCall> call, Throwable t) {
-                Log.d("resposta", "set space address: "+t);
-            }
-        });
-    }
-
-    private void registerContact(final Space space, final String auth, final String token) {
-        Retrofit retrofit3 = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ContactInterface contactInterface = retrofit3.create(ContactInterface.class);
-        Map<String, String> paramet = new HashMap<String, String>();
-        paramet.put("email", String.valueOf(space.getEmail()));
-        paramet.put("prone", String.valueOf(space.getPhone()));
-        Call<ContactCall> callCall= contactInterface.registerContact(auth,token, paramet);
-        callCall.enqueue(new Callback<ContactCall>() {
-            @Override
-            public void onResponse(Call<ContactCall> call, Response<ContactCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "cadastro Contato: "+response);
-                    return;
-                }
-                ContactCall contactCall = response.body();
-                setContactSpace(contactCall, auth, token, space);
-            }
-
-            @Override
-            public void onFailure(Call<ContactCall> call, Throwable t) {
-                Log.d("resposta", "cadastro Contato: "+t);
-            }
-        });
-    }
-
-    private void setContactSpace(ContactCall contactCall, String auth, String token, Space space) {
-        Retrofit retrofit4 = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        SpaceInterface spaceInterface2 = retrofit4.create(SpaceInterface.class);
-        Map<String, String> paramet = new HashMap<String, String>();
-        paramet.put("contact_id", contactCall.getContact_id());
-        Call<SetCall> callSet = spaceInterface2.setSpaceAdress(auth,token,String.valueOf(space.getId()), paramet);
-        callSet.enqueue(new Callback<SetCall>() {
-            @Override
-            public void onResponse(Call<SetCall> call, Response<SetCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "set space contact: "+response);
-                    return;
-                }
-                Log.d("resposta", "set space contact: "+response);
-            }
-
-            @Override
-            public void onFailure(Call<SetCall> call, Throwable t) {
-                Log.d("resposta", "set space contact: "+t);
             }
         });
     }
@@ -310,14 +232,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         cidade.setAdapter(cidadeAdapter);
     }
 
-    private void startGallery() {
-        Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        cameraIntent.setType("image/*");
-        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(cameraIntent, 1000);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -328,42 +242,32 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             Uri selectedImage = data.getData();
             try {
                 Bitmap bitmaps = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                imageView.setImageBitmap(bitmaps);
+                switch (imagemAtual) {
+                    case "0":
+                        imageView.setImageBitmap(bitmaps);
+                        break;
+                    case "1":
+                        imageView1.setImageBitmap(bitmaps);
+                        break;
+                    case "2":
+                        imageView2.setImageBitmap(bitmaps);
+                        break;
+                    case "3":
+                        imageView3.setImageBitmap(bitmaps);
+                        break;
+                    case "4":
+                        imageView4.setImageBitmap(bitmaps);
+                        break;
+                    case "5":
+                        imageView5.setImageBitmap(bitmaps);
+                        break;
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-
-
-    public void onActivityResult2(int requestCode, int resultCode, Intent data) {
-        //super method removed
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == 1000) {
-                try{
-                    Uri returnUri = data.getData();
-                    Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
-                    imageView.setImageBitmap(bitmapImage);
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-                    //SALVA NO BANCO
-
-
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        //Uri returnUri;
-        //returnUri = data.getData();
-    }
-
 
     private void checkRadio(){
         int id = radioGroup.getCheckedRadioButtonId();
