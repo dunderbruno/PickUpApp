@@ -88,16 +88,11 @@
             android:textColor="#EB000000"
             android:textColorHint="@android:color/black" />
 
-        <EditText
-            android:id="@+id/inputBairroEspacos"
+        <fragment
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_gravity="center_horizontal"
-            android:hint="@string/bairro"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
-            android:textColor="#EB000000"
-            android:textColorHint="@android:color/black" />
+            android:layout_height="match_parent" />
 
         <EditText
             android:id="@+id/inputCepEspacos"

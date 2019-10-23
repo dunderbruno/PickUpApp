@@ -3,8 +3,10 @@ package com.pickupapp.gui.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -24,6 +26,12 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.pickupapp.R;
 import com.pickupapp.dominio.Address;
 import com.pickupapp.dominio.City;
@@ -44,6 +52,7 @@ import com.pickupapp.persistencia.retorno.SpotCall;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,13 +84,33 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private String imagemAtual;
-    public static final int RESULT_LOAD_IMAGE = 1;
+    private AutocompleteSupportFragment autocompleteSupportFragment;
+    private static final int RESULT_LOAD_IMAGE = 1;
+    private PlacesClient placesClient;
+    private String autocompleteBairro;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_register_space, container, false);
         setarVariaveis(inflate);
+        openAutoComplete();
+
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+
+                autocompleteBairro = place.getAddress();
+                //getAdress é string - joga lá no lugar de bairro, aí pra retornar o geoding faz a conversão
+
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+
         Button cadastrar = inflate.findViewById(R.id.buttonCadastrarEspaco);
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -105,7 +134,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                     city.setName("");
                     city.setId(1);
                     address.setCity(city);
-                    address.setNeighboorhood(bairro.getText().toString());
+                    //address.setNeighboorhood(bairro.getText().toString());
+                    address.setNeighboorhood(autocompleteBairro);
                     address.setStreet(logradouro.getText().toString());
                     space.setAddress(address);
                     cadastrarEspaco(space);
@@ -113,6 +143,10 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             }
         });
         imageOnClick();
+
+
+
+
         return inflate;
     }
 
@@ -122,7 +156,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         email = inflate.findViewById(R.id.inputEmailEspacos);
         logradouro = inflate.findViewById(R.id.inputLogradouroEspacos);
         numero = inflate.findViewById(R.id.inputNumeroEspacos);
-        bairro = inflate.findViewById(R.id.inputBairroEspacos);
+        //bairro = inflate.findViewById(R.id.inputBairroEspacos);
+        autocompleteSupportFragment  = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
         cidade = inflate.findViewById(R.id.inputCidadeEspacos);
         estado = inflate.findViewById(R.id.inputEstadoEspacos);
         radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
@@ -296,14 +331,18 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             logradouro.setError("Campo obrigatório");
             return false;
         }
-        if (validacao.verificarTamanhoCampo(bairro.getText().toString())){
+        /*if (validacao.verificarTamanhoCampo(bairro.getText().toString())){
             bairro.setError("Campo obrigatório");
             return false;
-        }
+        }*/
         if (validacao.verificarTamanhoCampo(numero.getText().toString())){
             numero.setError("Campo obrigatório");
             return false;
 
+        }
+        //validação do autocomplete
+        if (autocompleteBairro.isEmpty()){
+            return false;
         }
         return true;
     }
@@ -321,7 +360,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private Address createAddress(){
         Address address = new Address();
         address.setCep(cep.getText().toString());
-        address.setNeighboorhood(bairro.getText().toString());
+        //address.setNeighboorhood(bairro.getText().toString());
+        address.setNeighboorhood(autocompleteBairro);
         address.setNumber(Integer.parseInt(numero.getText().toString()));
         State state = new State();
         state.setName(estado.getPrompt().toString());
@@ -346,6 +386,25 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             return EnumSpaceType.COURT;
         }
     }
+
+    private void openAutoComplete() {
+
+        //String apiKey = "AIzaSyDv8_UTCi8upqXd85vEn3mz1s-FZYBXTg8";
+        String apiKey = "AIzaSyC9SolfTyKKTNoBHgbAo4GIjRtLna0wvDE";
+
+        if(!Places.isInitialized()){
+            Places.initialize(getActivity().getApplicationContext(), apiKey);
+        }
+
+        placesClient = Places.createClient(getActivity().getApplicationContext());
+
+        //final AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+
+    }
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
