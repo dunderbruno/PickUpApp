@@ -547,31 +547,31 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 Log.d("resposta", "cadastro space: "+resposta.getSpot_id());
 //                galeria.forEach((n) -> cadastrarFoto(String.valueOf(space.getId()), n));
                 if(segunda.isChecked()){
-                    cadastrarFuncionamento("segunda",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("2",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(terca.isChecked()){
-                    cadastrarFuncionamento("terca",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("3",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(quarta.isChecked()){
-                    cadastrarFuncionamento("quarta",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("4",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(quinta.isChecked()){
-                    cadastrarFuncionamento("quinta",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("5",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(sexta.isChecked()){
-                    cadastrarFuncionamento("sexta",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("6",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(sabado.isChecked()){
-                    cadastrarFuncionamento("sabado",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("7",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 if(domingo.isChecked()){
-                    cadastrarFuncionamento("domingo",inicioSegunda.getText().toString(),
+                    cadastrarFuncionamento("1",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
                 Fragment fragment = new ListSpacesFragment();
@@ -603,9 +603,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 Base64.NO_WRAP);
         final String token = Sessao.getSessao(getContext()).getToken();
         final Map<String, String> params = new HashMap<String, String>();
-        params.put("day", dia);
-        params.put("start_time", inicio);
-        params.put("end_time", fim);
+        params.put("week_day", dia);
+        params.put("opening_time", inicio);
+        params.put("closing_time", fim);
         params.put("spot_id", id);
         Call<SetCall> call = bookingInterface.registrarBooking(auth,token,params);
         call.enqueue(new Callback<SetCall>() {
