@@ -39,7 +39,7 @@ public class Register extends AppCompatActivity {
         sobrenome = findViewById(R.id.inputSobrenomeCadastro);
         login = findViewById(R.id.inputLoginCadastro);
         senha = findViewById(R.id.inputSenhaCadastro);
-        voltar = findViewById(R.id.buttonVoltarCadastro);
+        voltar = findViewById(R.id.buttonVoltarCadastroSpot);
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +71,12 @@ public class Register extends AppCompatActivity {
     }
 
     private void cadastrarUsuario(final User usuario) {
+        cadastrar.setEnabled(false);
+        voltar.setEnabled(false);
+        login.setEnabled(false);
+        senha.setEnabled(false);
+        nome.setEnabled(false);
+        sobrenome.setEnabled(false);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -79,17 +85,23 @@ public class Register extends AppCompatActivity {
         Map<String, String> params = new HashMap<String, String>();
         params.put("username", usuario.getUsername());
         params.put("password", usuario.getPassword());
+        params.put("name", usuario.getPerson().getName());
+        params.put("surname", usuario.getPerson().getSurname());
+        params.put("group_id", tipoUsuario);
         Call<User> call = userInterface.register(params);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "cadastro Usuario: "+response);
+                    cadastrar.setEnabled(true);
+                    voltar.setEnabled(true);
+                    login.setEnabled(true);
+                    senha.setEnabled(true);
+                    nome.setEnabled(true);
+                    sobrenome.setEnabled(true);
                     return;
                 }
-                User user = response.body();
-                setGrupoUsuario(user, usuario);
-                criarPessoa(user, usuario);
                 Intent i = new Intent(Register.this, MainScreen.class);
                 startActivity(i);
                 finish();
@@ -99,95 +111,14 @@ public class Register extends AppCompatActivity {
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d("resposta", "erro: "+t);
                 Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-
                 cadastrar.setEnabled(true);
                 voltar.setEnabled(true);
                 login.setEnabled(true);
                 senha.setEnabled(true);
+                nome.setEnabled(true);
+                sobrenome.setEnabled(true);
             }
         });
-    }
-
-    private void criarPessoa(final User user, final User usuario) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        PersonInterface personInterface = retrofit.create(PersonInterface.class);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("name", usuario.getPerson().getName());
-        params.put("surname", usuario.getPerson().getName());
-        Call<Person> call = personInterface.criarPessoa(params);
-        call.enqueue(new Callback<Person>() {
-            @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "cadastro Pessoa: "+response);
-                    return;
-                }
-                Log.d("resposta", "cadastro Pessoa: "+response.body());
-                Person pessoa = response.body();
-                pessoa.getId();
-                Log.d("resposta", "cadastro Pessoa: "+pessoa.getId());
-                setPessoaUsuario(pessoa, user);
-            }
-
-            @Override
-            public void onFailure(Call<Person> call, Throwable t) {
-            }
-        });
-    }
-
-    private void setGrupoUsuario(User user, User usuario) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        UserInterface userInterface = retrofit.create(UserInterface.class);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("group", tipoUsuario);
-        Call<User> callset = userInterface.setGrupoUsuario(params, user.getId());
-        callset.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "set Grupo: "+response);
-                    return;
-                }
-                Log.d("resposta", "set Grupo: "+response);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("resposta", "onResponse: "+t);
-            }
-        });
-    }
-
-    private void setPessoaUsuario(Person person, User usuario) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        PersonInterface personInterface = retrofit.create(PersonInterface.class);
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("person_id", String.valueOf(person.getId()));
-        Call<Person> callset = personInterface.setPessoaUsuario(params, usuario.getId());
-        callset.enqueue(new Callback<Person>() {
-            @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "set Pessoa: "+response);
-                    return;
-                }
-                Log.d("resposta", "set Pessoa: "+response);
-            }
-
-            @Override
-            public void onFailure(Call<Person> call, Throwable t) {
-            }
-        });
-
     }
 
     public boolean validarCampos(){

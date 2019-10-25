@@ -21,7 +21,7 @@ public interface UserInterface {
     @GET("login")
     Call<Token> login(@Header("Authorization") String token, @Header("x-access-token") String token1, @Query("user_group") String group);
 
-    @POST("user")
+    @POST("signup")
     Call<User> register(@Body Map<String,String> parameters);
 
     @POST("user/{id}/group")
