@@ -31,6 +31,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pickupapp.R;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class MapsFragment extends Fragment {
     private LocationManager locationManager;
     private Double latitude,longitude;
     private GeoPoint pontoInicial;
+    private FloatingActionButton localizacao;
+    private MapView mapa;
 
 
 
@@ -54,6 +57,7 @@ public class MapsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.maps_fragment, container, false);
+        mapa = (MapView) rootView.findViewById(R.id.mapaId);
 
 
 
@@ -68,6 +72,7 @@ public class MapsFragment extends Fragment {
 
         locationManager=(LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
+        localizacao = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
         //Check gps is enable or not
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
@@ -84,7 +89,7 @@ public class MapsFragment extends Fragment {
         }
 
         //Pega o mapa adicionada no arquivo activity_main.xml
-        MapView mapa = (MapView) rootView.findViewById(R.id.mapaId);
+
         //Fonte de imagens
         ///mapa.setTileSource(TileSourceFactory.MAPNIK);
         mapa.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
@@ -92,18 +97,43 @@ public class MapsFragment extends Fragment {
         //Cria um ponto de referência com base na latitude e longitude
         //setarLocalizacaoPadrao();
 
-        if(latitude!= null){
-            pontoInicial = new GeoPoint(latitude, longitude);
-
-        }else{
-            pontoInicial = new GeoPoint(-8.016276, -34.950909);
-            Toast.makeText(getActivity(),"Local não disponível",Toast.LENGTH_LONG).show();
-        }
 
 
 
 
 
+        pontoInicial = new GeoPoint(-8.016276, -34.950909);
+        marcarMapa();
+
+        localizacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(latitude!=null){
+                    pontoInicial = new GeoPoint(latitude, longitude);
+                    marcarMapa();
+
+                }else{
+                    Toast.makeText(getContext(),"Não foi possível localizar",Toast.LENGTH_SHORT).show();
+                }
+
+
+
+
+            }
+        });
+
+
+
+
+
+
+
+        return rootView;
+
+
+    }
+
+    private void marcarMapa() {
         IMapController mapController = mapa.getController();
         //Faz zoom no mapa
         mapController.setZoom(15);
@@ -117,14 +147,6 @@ public class MapsFragment extends Fragment {
         //Posição do ícone
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         mapa.getOverlays().add(startMarker);
-
-
-
-
-
-        return rootView;
-
-
     }
 
     private void getLocation() {
