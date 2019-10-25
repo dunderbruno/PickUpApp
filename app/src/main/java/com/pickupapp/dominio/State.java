@@ -3,8 +3,8 @@ package com.pickupapp.dominio;
 import java.util.List;
 
 public class State {
-    private String name;
     private long id;
+    private String name;
     private List<City> cities;
 
     public String getName() {
