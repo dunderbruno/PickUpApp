@@ -58,13 +58,11 @@ public class MapsFragment extends Fragment {
 
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            String[] permissoes = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            String[] permissoes = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
             requestPermissions(permissoes, PERMISSAO_REQUERIDA);
         }
-
-        ActivityCompat.requestPermissions(getActivity(),new String[]
-                {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSAO_REQUERIDA);
 
         Configuration.getInstance().setUserAgentValue(getActivity().getPackageName());
 
