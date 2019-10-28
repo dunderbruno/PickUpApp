@@ -423,6 +423,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         email = inflate.findViewById(R.id.inputEmailEspacos);
         radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
         valor = inflate.findViewById(R.id.inputValorEspacos);
+        telefone.addTextChangedListener(Mask.insert(Mask.CELULAR_MASK, telefone));
         valor.addTextChangedListener(new MonetaryMask(valor));
     }
 
@@ -434,6 +435,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         cidade = inflate.findViewById(R.id.inputCidadeEspacos);
         estado = inflate.findViewById(R.id.inputEstadoEspacos);
         cep = inflate.findViewById(R.id.inputCepEspacos);
+        cep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, cep));
     }
 
     private void setControleCadastro(View inflate) {
