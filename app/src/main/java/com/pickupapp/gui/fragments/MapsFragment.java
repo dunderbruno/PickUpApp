@@ -55,7 +55,6 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.maps_fragment, container, false);
         mapa = (MapView) rootView.findViewById(R.id.mapaId);
 
@@ -73,34 +72,9 @@ public class MapsFragment extends Fragment {
         locationManager=(LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         localizacao = (FloatingActionButton) rootView.findViewById(R.id.floatingActionButton);
-        //Check gps is enable or not
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-        {
-            //Write Function To enable gps
 
-            OnGPS();
-        }
-        else
-        {
-            //GPS is already On then
-
-            getLocation();
-        }
-
-        //Pega o mapa adicionada no arquivo activity_main.xml
-
-        //Fonte de imagens
-        ///mapa.setTileSource(TileSourceFactory.MAPNIK);
         mapa.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
-
-        //Cria um ponto de referência com base na latitude e longitude
-        //setarLocalizacaoPadrao();
-
-
-
-
-
 
         pontoInicial = new GeoPoint(-8.016276, -34.950909);
         marcarMapa();
@@ -108,25 +82,39 @@ public class MapsFragment extends Fragment {
         localizacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(latitude!=null){
-                    pontoInicial = new GeoPoint(latitude, longitude);
-                    marcarMapa();
+                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                {
+                    final AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
 
+                    builder.setMessage("Por favor, ative o GPS do seu dispositivo").setCancelable(false).setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getContext(),"Então não podemos localizar seu dispositivo.",Toast.LENGTH_SHORT).show();
+
+                            dialog.cancel();
+                        }
+                    });
+                    final AlertDialog alertDialog=builder.create();
+                    alertDialog.show();
                 }else{
-                    Toast.makeText(getContext(),"Não foi possível localizar",Toast.LENGTH_SHORT).show();
+                    if(getLocation()){
+                        pontoInicial = new GeoPoint(latitude, longitude);
+                        marcarMapa();
+
+                    }else{
+                        Toast.makeText(getContext(),"Erro. Dispositivo não pode ser encontrado.",Toast.LENGTH_SHORT).show();
+                    }             ;
+
+
                 }
-
-
-
 
             }
         });
-
-
-
-
-
-
 
         return rootView;
 
@@ -149,9 +137,26 @@ public class MapsFragment extends Fragment {
         mapa.getOverlays().add(startMarker);
     }
 
-    private void getLocation() {
+    private void novoMarcador(GeoPoint marcador, String titulo){
+
+        //Cria um marcador no mapa
+        Marker newMarker = new Marker(mapa);
+        newMarker.setPosition(marcador);
+        newMarker.setTitle(titulo);
+
+        //Posição do ícone
+        newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        mapa.getOverlays().add(newMarker);
+
+
+
+
+    }
+
+    private boolean getLocation() {
 
         //Check Permissions again
+        boolean sucess = true;
 
         if (ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
 
@@ -195,39 +200,18 @@ public class MapsFragment extends Fragment {
             }
             else
             {
-                Toast.makeText(getContext(), "Can't Get Your Location", Toast.LENGTH_SHORT).show();
+                sucess = false;
             }
 
             //Thats All Run Your App
         }
 
+        return sucess;
+
+
+
     }
-
-
-
-    private void OnGPS() {
-
-        final AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
-
-        builder.setMessage("Enable GPS").setCancelable(false).setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.cancel();
-            }
-        });
-        final AlertDialog alertDialog=builder.create();
-        alertDialog.show();
-    }
-
-
-
-
+    
 }
 
 
