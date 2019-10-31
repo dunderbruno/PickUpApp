@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,11 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -31,11 +39,24 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pickupapp.R;
+import com.pickupapp.dominio.Space;
+import com.pickupapp.dominio.adapter.SpaceAdapter;
+import com.pickupapp.infra.Sessao;
+import com.pickupapp.persistencia.SpaceInterface;
+import com.pickupapp.persistencia.retorno.Spots;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,6 +69,7 @@ public class MapsFragment extends Fragment {
     private GeoPoint pontoInicial;
     private FloatingActionButton localizacao;
     private MapView mapa;
+    private List<Space> spacesList;
 
 
 
@@ -203,13 +225,84 @@ public class MapsFragment extends Fragment {
                 sucess = false;
             }
 
-            //Thats All Run Your App
         }
 
         return sucess;
 
 
 
+    }
+
+    private void getSpacesList(){
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SpaceInterface spaceInterface = retrofit.create(SpaceInterface.class);
+        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
+        String auth = "Basic "
+                + Base64.encodeToString(credentials.getBytes(),
+                Base64.NO_WRAP);
+        String token = Sessao.getSessao(getContext()).getToken();
+        Call<Spots> call = null;
+        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+            call = spaceInterface.getMySpaces(auth, Sessao.getSessao(getContext()).getToken());
+        }else{
+            call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
+        }
+        call.enqueue(new Callback<Spots>() {
+            @Override
+            public void onResponse(Call<Spots> call, Response<Spots> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "onResponse: "+response);
+                    return;
+                }
+                Log.d("resposta", "onResponse: "+response.body());
+                Spots spaces = response.body();
+                spacesList = spaces.getSpaces();
+            }
+
+            @Override
+            public void onFailure(Call<Spots> call, Throwable t) {
+                Log.d("resposta", "onResponse: "+ t);
+                spacesList = null;
+            }
+        });
+
+    }
+
+    public LatLng getLocationFromAddress(String inputtedAddress) {
+
+        Geocoder coder = new Geocoder(getContext());
+        List<Address> address;
+        LatLng resLatLng = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(inputtedAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            if (address.size() == 0) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            resLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        return resLatLng;
     }
     
 }
