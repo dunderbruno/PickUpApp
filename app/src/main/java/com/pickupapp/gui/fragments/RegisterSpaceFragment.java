@@ -100,6 +100,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private EditText fimSegunda, fimTerca, fimQuarta, fimQuinta, fimSexta, fimSabado, fimDomingo;
     private ArrayList<byte[]> galeria = new ArrayList<byte[]>();
     private ArrayList<State> states;
+    private ArrayList<City> cities;
+    private int cidadeid = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +125,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             public void onClick(View v){
                 try {
                     if (validaHorarios()) {
-                        checkRadio();
                         final Space space = createSpace();
                         cadastrarEspaco(space);
                     }
@@ -143,6 +144,16 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 }else {
                     count[0] = 1;
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        cidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                cidadeid = i;
             }
 
             @Override
@@ -210,12 +221,13 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             public void onResponse(Call<CitysCall> call, Response<CitysCall> response) {
                 Log.d("resposta", String.valueOf(response.body().getCidades().isEmpty()));
                 CitysCall citysCall = response.body();
-                ArrayList<City> cities = citysCall.getCidades();
+                cities = citysCall.getCidades();
                 ArrayList<String> listString = new ArrayList<>();
                 cities.forEach((n) -> listString.add(n.getName()));
                 ArrayAdapter<String> cidadeAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 cidade.setAdapter(cidadeAdapter);
+                cidade.setSelection(0);
             }
 
             @Override
@@ -240,7 +252,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         fimSabado.addTextChangedListener(Mask.insert(Mask.HORA, fimSabado));
         fimDomingo.addTextChangedListener(Mask.insert(Mask.HORA, fimDomingo));
         telefone.addTextChangedListener(Mask.insert(Mask.CELULAR_MASK, telefone));
-        valor.addTextChangedListener(new MoneyTextWatcher(valor));
+//        valor.addTextChangedListener(new MoneyTextWatcher(valor));
         cep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, cep));
     }
 
@@ -632,14 +644,15 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         final String token = Sessao.getSessao(getContext()).getToken();
         final Map<String, String> params = new HashMap<String, String>();
         params.put("spot_name", space.getName());
-        params.put("city_id", String.valueOf(space.getAddress().getCity().getId()));
+        params.put("city_id", String.valueOf(cities.get(cidadeid).getId()));
         params.put("street", space.getAddress().getStreet());
-        params.put("cep", space.getAddress().getCep());
+        params.put("cep", Mask.unmask(space.getAddress().getCep()));
         params.put("number", String.valueOf(space.getAddress().getNumber()));
-        params.put("neighborhood", autocompleteBairro);
-        Log.d("cadastro", "cadastrarEspaco: "+autocompleteBairro);
+        String[] arrOfStr = autocompleteBairro.split(",", 2);
+        params.put("neighborhood", arrOfStr[0]);
+        Log.d("cadastro", "cadastrarEspaco: "+arrOfStr[0]);
         params.put("email", space.getEmail());
-        params.put("phone", space.getPhone());
+        params.put("phone", Mask.unmask(space.getPhone()));
         params.put("price", String.valueOf(space.getPriceHour()));
         params.put("ground_id", space.getSpaceType().getDescription());
         Call<SpotCall> call = spaceInterface.registerSpace(auth,token,params);
@@ -845,14 +858,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         }
     }
 
-    private void checkRadio(){
-        int radioButtonID = radioGroup.getCheckedRadioButtonId();
-        View radioButton = radioGroup.findViewById(radioButtonID);
-        int idx = radioGroup.indexOfChild(radioButton);
-        radioButon = (RadioButton) radioGroup.getChildAt(idx);
-        radioGroup.check(idx);
-    }
-
 //        //validação do autocomplete
 //        if (autocompleteBairro.isEmpty()){
 //            return false;
@@ -894,21 +899,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         address.setCity(city);
         address.setStreet(logradouro.getText().toString());
         return address;
-    }
-
-    private EnumSpaceType getType(String type){
-        if (type.equals("Society")){
-            return EnumSpaceType.SOCIETY;
-        }
-        else if (type.equals("Gramado")){
-            return EnumSpaceType.GRASS;
-        }
-        else if (type.equals("Terra")){
-            return EnumSpaceType.EARTH;
-        }
-        else{
-            return EnumSpaceType.COURT;
-        }
     }
 
     private void openAutoComplete() {
