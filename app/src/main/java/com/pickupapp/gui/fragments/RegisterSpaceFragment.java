@@ -1,6 +1,7 @@
 package com.pickupapp.gui.fragments;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -62,6 +63,7 @@ import com.pickupapp.persistencia.retorno.SpotCall;
 import com.pickupapp.persistencia.retorno.StatesCall;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -70,6 +72,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,7 +103,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private LinearLayout horarioSexta, horarioSabado, horarioDomingo;
     private EditText inicioSegunda, inicioTerca, inicioQuarta, inicioQuinta, inicioSexta, inicioSabado, inicioDomingo;
     private EditText fimSegunda, fimTerca, fimQuarta, fimQuinta, fimSexta, fimSabado, fimDomingo;
-    private ArrayList<byte[]> galeria = new ArrayList<byte[]>();
+    private ArrayList<Uri> galeria = new ArrayList<Uri>();
     private ArrayList<State> states;
     private ArrayList<City> cities;
     private int cidadeid = 0;
@@ -669,7 +674,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 SpotCall resposta = response.body();
                 space.setId(Long.parseLong(resposta.getSpot_id()));
                 Log.d("resposta", "cadastro space: "+resposta.getSpot_id());
-//                galeria.forEach((n) -> cadastrarFoto(String.valueOf(space.getId()), n));
+                galeria.forEach((n) -> cadastrarFoto(String.valueOf(space.getId()), n, String.valueOf(space.getId())));
                 if(segunda.isChecked()){
                     cadastrarFuncionamento("2",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
@@ -750,7 +755,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         });
     }
 
-    private void cadastrarFoto(String id, byte[] photo){
+    private void cadastrarFoto(String id, Uri photo, String spot){
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -763,10 +768,10 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 + Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
         final String token = Sessao.getSessao(getContext()).getToken();
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("spot_id", id);
-        params.put("image", new String(photo));
-        Call<SetCall> call = photoInterface.registrarPhoto(auth, token, params);
+        File file = new File(getRealPathFromURI(photo));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), getRealPathFromURI(photo));
+        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file",file.getName(),requestFile);
+        Call<SetCall> call = photoInterface.registrarPhoto(auth, token, multipartBody, spot);
         call.enqueue(new Callback<SetCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -802,8 +807,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        byte[] bitmapdata = stream.toByteArray();
-                        galeria.add(bitmapdata);
                         break;
                     case "1":
                         imageView1.setImageBitmap(bitmaps);
@@ -811,8 +814,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap1 = ((BitmapDrawable)d1).getBitmap();
                         ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
                         bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, stream1);
-                        byte[] bitmapdata1 = stream1.toByteArray();
-                        galeria.add(bitmapdata1);
                         break;
                     case "2":
                         imageView2.setImageBitmap(bitmaps);
@@ -820,8 +821,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap2 = ((BitmapDrawable)d2).getBitmap();
                         ByteArrayOutputStream stream2 = new ByteArrayOutputStream();
                         bitmap2.compress(Bitmap.CompressFormat.JPEG, 100, stream2);
-                        byte[] bitmapdata2 = stream2.toByteArray();
-                        galeria.add(bitmapdata2);
                         break;
                     case "3":
                         imageView3.setImageBitmap(bitmaps);
@@ -829,8 +828,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap3 = ((BitmapDrawable)d3).getBitmap();
                         ByteArrayOutputStream stream3 = new ByteArrayOutputStream();
                         bitmap3.compress(Bitmap.CompressFormat.JPEG, 100, stream3);
-                        byte[] bitmapdata3 = stream3.toByteArray();
-                        galeria.add(bitmapdata3);
                         break;
                     case "4":
                         imageView4.setImageBitmap(bitmaps);
@@ -838,8 +835,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap4 = ((BitmapDrawable)d4).getBitmap();
                         ByteArrayOutputStream stream4 = new ByteArrayOutputStream();
                         bitmap4.compress(Bitmap.CompressFormat.JPEG, 100, stream4);
-                        byte[] bitmapdata4 = stream4.toByteArray();
-                        galeria.add(bitmapdata4);
                         break;
                     case "5":
                         imageView5.setImageBitmap(bitmaps);
@@ -847,10 +842,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                         Bitmap bitmap5 = ((BitmapDrawable)d5).getBitmap();
                         ByteArrayOutputStream stream5 = new ByteArrayOutputStream();
                         bitmap5.compress(Bitmap.CompressFormat.JPEG, 100, stream5);
-                        byte[] bitmapdata5 = stream5.toByteArray();
-                        galeria.add(bitmapdata5);
                         break;
                 }
+                galeria.add(selectedImage);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -861,6 +855,25 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
 //        //validação do autocomplete
 //        if (autocompleteBairro.isEmpty()){
 //            return false;
+
+    public String getRealPathFromURI(Uri contentUri) {
+
+        Cursor cursor = null;
+        try {
+
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = getActivity().getContentResolver().query(contentUri,  proj, null, null, null);
+            cursor.moveToFirst();
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            return cursor.getString(column_index);
+        } finally {
+
+            if (cursor != null) {
+
+                cursor.close();
+            }
+        }
+    }
 
     private Space createSpace(){
         Space space = new Space();
