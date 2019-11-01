@@ -48,6 +48,7 @@ import com.pickupapp.dominio.User;
 import com.pickupapp.infra.EnumSpaceType;
 import com.pickupapp.infra.Mask;
 import com.pickupapp.infra.MonetaryMask;
+import com.pickupapp.infra.MoneyTextWatcher;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.AddressInterface;
@@ -62,6 +63,7 @@ import com.pickupapp.persistencia.retorno.StatesCall;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -117,11 +119,16 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         cadastrar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if (checkFields()) {
-                    checkRadio();
-                    final Space space = createSpace();
-                    cadastrarEspaco(space);
+                try {
+                    if (validaHorarios()) {
+                        checkRadio();
+                        final Space space = createSpace();
+                        cadastrarEspaco(space);
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
                 }
+
             }
         });
         imageOnClick();
@@ -212,6 +219,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         fimSexta.addTextChangedListener(Mask.insert(Mask.HORA, fimSexta));
         fimSabado.addTextChangedListener(Mask.insert(Mask.HORA, fimSabado));
         fimDomingo.addTextChangedListener(Mask.insert(Mask.HORA, fimDomingo));
+        telefone.addTextChangedListener(Mask.insert(Mask.CELULAR_MASK, telefone));
+        valor.addTextChangedListener(new MoneyTextWatcher(valor));
+        cep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, cep));
     }
 
     private void onClickSwitchs() {
@@ -335,8 +345,10 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         proximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dadosSpot.setVisibility(View.GONE);
-                dadosEndereco.setVisibility(View.VISIBLE);
+                if (validaDadosSpot() ){
+                    dadosSpot.setVisibility(View.GONE);
+                    dadosEndereco.setVisibility(View.VISIBLE);
+                }
             }
         });
         voltar.setOnClickListener(new View.OnClickListener() {
@@ -344,13 +356,16 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             public void onClick(View view) {
                 dadosEndereco.setVisibility(View.GONE);
                 dadosSpot.setVisibility(View.VISIBLE);
+
             }
         });
         proximo1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dadosEndereco.setVisibility(View.GONE);
-                dadosImagens.setVisibility(View.VISIBLE);
+                if (validaDadosEndereco()) {
+                    dadosEndereco.setVisibility(View.GONE);
+                    dadosImagens.setVisibility(View.VISIBLE);
+                }
             }
         });
         voltar1.setOnClickListener(new View.OnClickListener() {
@@ -376,6 +391,82 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         });
     }
 
+    private boolean validaDadosSpot(){
+        ValidacaoGui validacaoGui = new ValidacaoGui();
+        if (!validacaoGui.verificarTamanhoCampo(nomeEspaco.getText().toString(), 4, 30)){
+            nomeEspaco.setError("Campo obrigatório, mínimo 4 caracteres e máximo 30");
+            return false;
+        }
+       // else if (!validacaoGui.verificarValor(valor.getText().toString())){
+         //   valor.setError("O valor informado deve ser maior que 0");
+           // return false;
+        //}
+        else if (!validacaoGui.verificarCampoEmail(email.getText().toString())){
+            email.setError("Email inválido");
+            return false;
+        }
+        else if (!validacaoGui.verificarTamanhoCampo(telefone.getText().toString(), 15, 15)){
+            telefone.setError("Telefone inválido");
+            return false;}
+        return true;
+    }
+
+    private boolean validaHorarios() throws ParseException {
+        ValidacaoGui validacaoGui = new ValidacaoGui();
+        boolean result = true;
+        if (horarioDomingo.isShown()){
+            if(!validacaoGui.verificaHora(inicioDomingo, fimDomingo)){
+                result = false;
+            }
+        }
+        if (horarioSegunda.isShown()){
+            if (!validacaoGui.verificaHora(inicioSegunda,fimSegunda)){
+                result = false;
+            }
+        }
+        if (horarioTerca.isShown()){
+            if (!validacaoGui.verificaHora(inicioTerca,fimTerca)){
+                result = false;
+            }
+        }
+        if (horarioQuarta.isShown()){
+            if (!validacaoGui.verificaHora(inicioQuarta,fimQuarta)){
+                result = false;
+            }
+        }
+        if (horarioQuinta.isShown()){
+            if (!validacaoGui.verificaHora(inicioQuinta,fimQuinta)){
+                result = false;
+            }
+        }
+        if (horarioSexta.isShown()){
+            if (!validacaoGui.verificaHora(inicioSexta,fimSexta)){
+                result = false;
+            }
+        }
+        if (horarioSabado.isShown()){
+            if (!validacaoGui.verificaHora(inicioSabado,fimSabado)){
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    private boolean validaDadosEndereco(){
+        ValidacaoGui validacaoGui = new ValidacaoGui();
+        if (!validacaoGui.verificarTamanhoCampo(cep.getText().toString(),9,9)){
+            cep.setError("Cep inválido");
+            return false;
+        }
+        else if (!validacaoGui.verificarTamanhoCampo(logradouro.getText().toString(),1, 50)){
+            logradouro.setError("Logradouro inválido");
+            return false;
+        } else if (!validacaoGui.verificarTamanhoCampo(numero.getText().toString(), 1, 10)) {
+            numero.setError("Número inválido");
+            return false;
+        }
+        return true;
+    }
     private void setarVariaveis(View inflate) {
         setControleCadastro(inflate);
         setDadosEspaco(inflate);
@@ -423,8 +514,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         email = inflate.findViewById(R.id.inputEmailEspacos);
         radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
         valor = inflate.findViewById(R.id.inputValorEspacos);
-        telefone.addTextChangedListener(Mask.insert(Mask.CELULAR_MASK, telefone));
-        valor.addTextChangedListener(new MonetaryMask(valor));
     }
 
     private void setCamposEndereco(View inflate) {
@@ -435,7 +524,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         cidade = inflate.findViewById(R.id.inputCidadeEspacos);
         estado = inflate.findViewById(R.id.inputEstadoEspacos);
         cep = inflate.findViewById(R.id.inputCepEspacos);
-        cep.addTextChangedListener(Mask.insert(Mask.CEP_MASK, cep));
     }
 
     private void setControleCadastro(View inflate) {
@@ -744,43 +832,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         radioGroup.check(idx);
     }
 
-    private boolean checkFields(){
-        ValidacaoGui validacao = new ValidacaoGui();
-        if (!validacao.verificarTamanhoCampo(nomeEspaco.getText().toString())){
-            nomeEspaco.setError("Campo obrigatório");
-            return false;
-        }
-        if (!validacao.verificarTamanhoCampo(telefone.getText().toString())){
-            telefone.setError("Campo obrigatório");
-            return false;
-        }
-        if (!validacao.verificarTamanhoCampo(cep.getText().toString())){
-            cep.setError("Campo obrigatório");
-            return false;
-        }
-        if (!validacao.verificarCampoEmail(email.getText().toString())){
-            email.setError("Email obrigatório");
-            return false;
-        }
-        if (!validacao.verificarTamanhoCampo(logradouro.getText().toString())){
-            logradouro.setError("Campo obrigatório");
-            return false;
-        }
-        /*if (validacao.verificarTamanhoCampo(bairro.getText().toString())){
-            bairro.setError("Campo obrigatório");
-            return false;
-        }*/
-        if (!validacao.verificarTamanhoCampo(numero.getText().toString())){
-            numero.setError("Campo obrigatório");
-            return false;
-
-        }
 //        //validação do autocomplete
 //        if (autocompleteBairro.isEmpty()){
 //            return false;
-//        }
-        return true;
-    }
 
     private Space createSpace(){
         Space space = new Space();

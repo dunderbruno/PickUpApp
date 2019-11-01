@@ -2,6 +2,10 @@ package com.pickupapp.infra;
 
 import android.widget.EditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ValidacaoGui {
 
     public boolean validarCampoLogin(EditText login){
@@ -43,8 +47,8 @@ public class ValidacaoGui {
         return true;
     }
 
-    public boolean verificarTamanhoCampo(String campo) {
-        return campo.length()!=0;
+    public boolean verificarTamanhoCampo(String campo, int min, int max) {
+        return min <= campo.length() && campo.length() <= max;
     }
 
     public boolean verificarCampoEmail(String email) {
@@ -52,5 +56,30 @@ public class ValidacaoGui {
                 "/\\=\\?\\^_`\\{\\|\\}\\~]+@[A-Za-z0-9]+[A-Za-z0-9\\" +
                 "-\\.]+\\.[A-Za-z0-9\\-\\.]+[A-Za-z0-9]+)$";
         return email.matches(regex);
+    }
+
+    public boolean verificarValor(String valor){
+        String [] aux = valor.split(" ");
+        return Float.parseFloat(aux[1])>0;
+    }
+
+    public boolean verificaHora (EditText inicio, EditText fim) throws ParseException {
+        String StringInicio = inicio.getText().toString();
+        String StringFim = fim.getText().toString();
+        SimpleDateFormat simple = new SimpleDateFormat("HH:mm:ss");
+        simple.setLenient(false);
+        try{
+            Date dateInicio = simple.parse(StringInicio);
+            Date dateFim = simple.parse(StringFim);
+            if (dateFim.compareTo(dateInicio) == 1 ){
+                return true;
+            }
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        inicio.setError("Horário inválido");
+        fim.setError("Horário inválido");
+        return false;
     }
 }
