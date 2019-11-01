@@ -6,6 +6,7 @@ import com.pickupapp.dominio.City;
 import java.util.ArrayList;
 
 public class CitysCall {
+
     @SerializedName("cities")
     private ArrayList<City> cidades;
 

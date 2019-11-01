@@ -72,67 +72,12 @@
             android:textColor="#EB000000"
             android:textColorHint="@android:color/black" />
 
-        <RadioGroup
-            android:id="@+id/radioGroupEspacos"
+        <Spinner
+            android:id="@+id/tipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:text="@string/tipo_de_espa_o"
-                android:textColor="@android:color/black" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/radioGramadoEspacos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/gramado" />
-
-                    <RadioButton
-                        android:id="@+id/radioSocietyEspacos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/society" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/radioQuadraEspacos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/quadra" />
-
-                    <RadioButton
-                        android:id="@+id/radioTerraEspacos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/terra" />
-                </LinearLayout>
-            </LinearLayout>
-
-        </RadioGroup>
+            android:entries="@array/tipos_espacos"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"

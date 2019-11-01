@@ -12,17 +12,14 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface AddressInterface {
 
-    @POST("address")
-    Call<AddressCall> registerAddress(@Header("Authorization") String token,
-                                      @Header("x-access-token") String token1,
-                                      @Body Map<String,String> parameters);
-
-    @GET("city")
+    @GET("state/{state_id}/city")
     Call<CitysCall> getAllCity(@Header("Authorization") String token,
-                               @Header("x-access-token") String token1);
+                               @Header("x-access-token") String token1,
+                               @Path("state_id") String state);
 
     @GET("state")
     Call<StatesCall> getAllStates(@Header("Authorization") String token,

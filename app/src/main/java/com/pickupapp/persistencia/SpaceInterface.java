@@ -25,19 +25,6 @@ public interface SpaceInterface {
     Call<SpotCall> registerSpace(@Header("Authorization") String token,
                                  @Header("x-access-token") String token1,
                                  @Body Map<String,String> parameters);
-
-    @POST("spot/{spot_id}/address")
-    Call<SetCall> setSpaceAdress(@Header("Authorization") String token,
-                                 @Header("x-access-token") String token1,
-                                 @Path("spot_id") String param,
-                                 @Body Map<String,String> parameters);
-
-    @POST("spot/{spot_id}/contact")
-    Call<SetCall> setSpaceContact(@Header("Authorization") String token,
-                                 @Header("x-access-token") String token1,
-                                 @Path("spot_id") String param,
-                                 @Body Map<String,String> parameters);
-
     @GET("spot/my")
     Call<Spots> getMySpaces(@Header("Authorization") String token, @Header("x-access-token") String token1);
 

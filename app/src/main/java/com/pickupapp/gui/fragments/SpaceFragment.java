@@ -4,10 +4,13 @@ package com.pickupapp.gui.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
@@ -25,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SpaceFragment extends Fragment {
     private CircleImageView imagePerfil;
     private ImageSwitcher imageSwitcher;
+    private Button reservar;
 
     private int[] gallery = { R.drawable.campo
             , R.drawable.splash, R.drawable.soccerproject,
@@ -47,6 +51,17 @@ public class SpaceFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_space, container, false);
         imageSwitcher = inflate.findViewById(R.id.imageSwitcher);
+        reservar = inflate.findViewById(R.id.abrirCalendario);
+        reservar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CalendarFragment();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(getId(), fragment);
+                transaction.commit();
+            }
+        });
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {

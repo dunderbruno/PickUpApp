@@ -74,6 +74,12 @@
                     android:layout_weight="1"
                     android:text="@string/valor_por_hora" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/abrirCalendario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reservar" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

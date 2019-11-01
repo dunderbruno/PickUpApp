@@ -1,9 +1,10 @@
 package com.pickupapp.dominio;
 
 public class City {
+
     private long id;
+
     private String name;
-    private String state_id;
 
     public String getName() {
         return name;
@@ -21,11 +22,4 @@ public class City {
         this.id = id;
     }
 
-    public String getState_id() {
-        return state_id;
-    }
-
-    public void setState_id(String state_id) {
-        this.state_id = state_id;
-    }
 }

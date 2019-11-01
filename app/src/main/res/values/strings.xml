@@ -45,6 +45,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="quadra">Quadra</string>
+    <string name="errorTipo">Selecione o tipo do espaco!</string>
     <string name="valor_por_hora">Valor por hora</string>
     <string name="tipo_de_espa_o">Tipo de espaço:</string>
     <string name="gramado">Gramado</string>
@@ -77,8 +78,12 @@
         <item>Recife</item>
     </string-array>
 
-    <string-array name="cities_bahia">
-        <item>Salvador</item>
+    <string-array name="tipos_espacos">
+        <item>Tipo do Espaço</item>
+        <item>Quadra</item>
+        <item>Grama</item>
+        <item>Grama Sintetica</item>
+        <item>Terra</item>
     </string-array>
 
     <string-array name="cities_alagoas">

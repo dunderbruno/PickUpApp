@@ -1,7 +1,7 @@
 package com.pickupapp.infra;
 
 public enum EnumSpaceType {
-    SOCIETY("Society"), GRASS("Gramado"), EARTH("Terra"), COURT ("Quadra");
+    SOCIETY("1"), GRASS("2"), EARTH("3"), COURT ("4");
     private final String description;
 
     EnumSpaceType(String description){

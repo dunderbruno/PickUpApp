@@ -2,6 +2,7 @@ package com.pickupapp.gui.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -47,13 +49,12 @@ import com.pickupapp.dominio.State;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.EnumSpaceType;
 import com.pickupapp.infra.Mask;
-import com.pickupapp.infra.MonetaryMask;
 import com.pickupapp.infra.MoneyTextWatcher;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.AddressInterface;
-import com.pickupapp.persistencia.BookingInterface;
 import com.pickupapp.persistencia.PhotoInterface;
+import com.pickupapp.persistencia.ScheduleInterface;
 import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.CitysCall;
 import com.pickupapp.persistencia.retorno.SetCall;
@@ -80,6 +81,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private EditText nomeEspaco, telefone, email, logradouro, numero, valor, cep;
     private Spinner cidade;
     private Spinner estado;
+    private Spinner tipo;
     private ImageView imageView, imageView1, imageView2, imageView3, imageView4, imageView5;
     private Bitmap reducedImage;
     private RadioGroup radioGroup;
@@ -97,12 +99,12 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private EditText inicioSegunda, inicioTerca, inicioQuarta, inicioQuinta, inicioSexta, inicioSabado, inicioDomingo;
     private EditText fimSegunda, fimTerca, fimQuarta, fimQuinta, fimSexta, fimSabado, fimDomingo;
     private ArrayList<byte[]> galeria = new ArrayList<byte[]>();
+    private ArrayList<State> states;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.fragment_register_space, container, false);
-        setarListaCidades();
         setListaEstados();
         setarVariaveis(inflate);
         openAutoComplete();
@@ -131,6 +133,22 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
 
             }
         });
+        final int[] count = {0};
+        estado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(count[0] != 0){
+                    setarListaCidades(Math.toIntExact(states.get(i).getId()));
+                }else {
+                    count[0] = 1;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         imageOnClick();
         controlarRota();
         onClickSwitchs();
@@ -157,7 +175,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             @Override
             public void onResponse(Call<StatesCall> call, Response<StatesCall> response) {
                 StatesCall statesCall = response.body();
-                ArrayList<State> states = statesCall.getEstados();
+                states = statesCall.getEstados();
                 ArrayList<String> listString = new ArrayList<>();
                 states.forEach((n) -> listString.add(n.getName()));
                 ArrayAdapter<String> estadoAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
@@ -171,7 +189,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         });
     }
 
-    private void setarListaCidades() {
+    private void setarListaCidades(int i) {
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -184,11 +202,13 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 + Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
         final String token = Sessao.getSessao(getContext()).getToken();
-        Call<CitysCall> call = addressInterface.getAllCity(auth,token);
+        String state = String.valueOf(i);
+        Call<CitysCall> call = addressInterface.getAllCity(auth,token,state);
         call.enqueue(new Callback<CitysCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<CitysCall> call, Response<CitysCall> response) {
+                Log.d("resposta", String.valueOf(response.body().getCidades().isEmpty()));
                 CitysCall citysCall = response.body();
                 ArrayList<City> cities = citysCall.getCidades();
                 ArrayList<String> listString = new ArrayList<>();
@@ -512,7 +532,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         nomeEspaco = inflate.findViewById(R.id.inputNomeEspaco);
         telefone = inflate.findViewById(R.id.inputTelefoneEspacos);
         email = inflate.findViewById(R.id.inputEmailEspacos);
-        radioGroup = inflate.findViewById(R.id.radioGroupEspacos);
+        tipo = inflate.findViewById(R.id.tipo);
         valor = inflate.findViewById(R.id.inputValorEspacos);
     }
 
@@ -612,15 +632,16 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         final String token = Sessao.getSessao(getContext()).getToken();
         final Map<String, String> params = new HashMap<String, String>();
         params.put("spot_name", space.getName());
-        params.put("cidade", space.getAddress().getCity().getName());
-        params.put("estado", estado.getSelectedItem().toString());
+        params.put("city_id", String.valueOf(space.getAddress().getCity().getId()));
         params.put("street", space.getAddress().getStreet());
         params.put("cep", space.getAddress().getCep());
-        params.put("numero", String.valueOf(space.getAddress().getNumber()));
+        params.put("number", String.valueOf(space.getAddress().getNumber()));
+        params.put("neighborhood", autocompleteBairro);
         Log.d("cadastro", "cadastrarEspaco: "+autocompleteBairro);
-        params.put("bairro", "teste");
         params.put("email", space.getEmail());
-        params.put("telefone", space.getPhone());
+        params.put("phone", space.getPhone());
+        params.put("price", String.valueOf(space.getPriceHour()));
+        params.put("ground_id", space.getSpaceType().getDescription());
         Call<SpotCall> call = spaceInterface.registerSpace(auth,token,params);
         call.enqueue(new Callback<SpotCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -684,7 +705,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
+        ScheduleInterface bookingInterface = retrofit.create(ScheduleInterface.class);
         User usuario = Sessao.getSessao(getContext());
         String credentials = usuario.getUsername()+":"+
                 usuario.getPassword();
@@ -697,7 +718,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         params.put("opening_time", inicio);
         params.put("closing_time", fim);
         params.put("spot_id", id);
-        Call<SetCall> call = bookingInterface.registrarBooking(auth,token,params);
+        Call<SetCall> call = bookingInterface.registrarSchedule(auth,token,params);
         call.enqueue(new Callback<SetCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -841,9 +862,23 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         space.setName(nomeEspaco.getText().toString());
         space.setPhone(telefone.getText().toString());
         space.setEmail(email.getText().toString());
-//        space.setPriceHour(new BigDecimal(valor.getText().toString()));
+        space.setPriceHour(new BigDecimal(valor.getText().toString()));
         space.setAddress(createAddress());
-        space.setSpaceType(getType("Society"));
+        switch (tipo.getSelectedItem().toString()){
+            case "Tipo do Espaço":
+                TextView errorText = (TextView)tipo.getSelectedView();
+                errorText.setError("");
+                errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                errorText.setText(R.string.errorTipo);
+            case "Quadra":
+                space.setSpaceType(EnumSpaceType.COURT);
+            case "Grama":
+                space.setSpaceType(EnumSpaceType.GRASS);
+            case "Terra":
+                space.setSpaceType(EnumSpaceType.EARTH);
+            case "Grama Sintetica":
+                space.setSpaceType(EnumSpaceType.SOCIETY);
+        }
         return space;
     }
 
