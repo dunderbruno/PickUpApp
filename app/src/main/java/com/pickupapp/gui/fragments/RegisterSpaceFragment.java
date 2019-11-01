@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -106,6 +107,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     private ArrayList<Uri> galeria = new ArrayList<Uri>();
     private ArrayList<State> states;
     private ArrayList<City> cities;
+    private ProgressBar progressBar;
     private int cidadeid = 0;
 
     @Override
@@ -635,6 +637,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void cadastrarEspaco(final Space space) {
+        dadosFuncionamento.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -668,6 +672,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 if (!response.isSuccessful()){
                     Toast.makeText(getContext(),"Local Não Cadastrado",Toast.LENGTH_LONG).show();
                     Log.d("resposta", "cadastro space: "+response);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    dadosFuncionamento.setVisibility(View.VISIBLE);
                     return;
                 }
                 Toast.makeText(getContext(),"Local Cadastrado Com Sucesso",Toast.LENGTH_LONG).show();
@@ -703,6 +709,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                     cadastrarFuncionamento("1",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
+                progressBar.setVisibility(View.INVISIBLE);
                 Fragment fragment = new ListSpacesFragment();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
@@ -712,6 +719,8 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
 
             @Override
             public void onFailure(Call<SpotCall> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                dadosFuncionamento.setVisibility(View.VISIBLE);
                 Log.d("resposta", "cadastro space: "+t);
                 Toast.makeText(getContext(),"Local Não Cadastrado",Toast.LENGTH_LONG).show();
             }

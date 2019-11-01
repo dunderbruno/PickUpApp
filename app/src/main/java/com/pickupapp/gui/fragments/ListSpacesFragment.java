@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Space;
@@ -38,6 +39,7 @@ public class ListSpacesFragment extends Fragment {
     private List<Space> spacesList;
     private ListView lista;
     private ArrayAdapter<Space> adapter;
+    private ProgressBar progressBar;
 
     public ListSpacesFragment() {
         // Required empty public constructor
@@ -48,6 +50,14 @@ public class ListSpacesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View inflate = inflater.inflate(R.layout.fragment_list_spaces, container, false);
+        progressBar = inflate.findViewById(R.id.progressBarListSpots);
+        buscarSpots(inflate);
+        return inflate;
+
+    }
+
+    private void buscarSpots(View inflate) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -69,8 +79,10 @@ public class ListSpacesFragment extends Fragment {
             public void onResponse(Call<Spots> call, Response<Spots> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response);
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
+                progressBar.setVisibility(View.INVISIBLE);
                 Log.d("resposta", "onResponse: "+response.body());
                 Spots spaces = response.body();
                 lista = (ListView) inflate.findViewById(R.id.lista_spaces_fragment);
@@ -82,6 +94,7 @@ public class ListSpacesFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Fragment fragment = new SpaceFragment();
+                        SpaceFragment.spotId = String.valueOf(spacesList.get(position).getId());
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction transaction = fm.beginTransaction();
                         transaction.replace(getId(), fragment);
@@ -93,10 +106,10 @@ public class ListSpacesFragment extends Fragment {
             @Override
             public void onFailure(Call<Spots> call, Throwable t) {
                 Log.d("resposta", "onResponse: "+ t);
+                progressBar.setVisibility(View.INVISIBLE);
+
             }
         });
-        return inflate;
-
     }
 
     @Override

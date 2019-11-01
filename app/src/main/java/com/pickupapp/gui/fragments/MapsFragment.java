@@ -234,8 +234,6 @@ public class MapsFragment extends Fragment {
     }
 
     private void getSpacesList(){
-
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -270,7 +268,6 @@ public class MapsFragment extends Fragment {
                 spacesList = null;
             }
         });
-
     }
 
     public LatLng getLocationFromAddress(String inputtedAddress) {
