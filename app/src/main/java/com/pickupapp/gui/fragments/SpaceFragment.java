@@ -75,9 +75,9 @@ public class SpaceFragment extends Fragment {
         progressBar = inflate.findViewById(R.id.progressBarSpot);
         buscarSpot();
         imageSwitcher = inflate.findViewById(R.id.imageSwitcher);
-        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
-            reservar.setVisibility(View.GONE);
-        }
+//        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+//            reservar.setVisibility(View.GONE);
+//        }
         reservar = inflate.findViewById(R.id.abrirCalendario);
         reservar.setOnClickListener(new View.OnClickListener() {
             @Override
