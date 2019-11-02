@@ -1,8 +1,15 @@
 package com.pickupapp.gui.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,15 +29,18 @@ import android.widget.ViewSwitcher;
 
 import com.pickupapp.R;
 import com.pickupapp.infra.Sessao;
+import com.pickupapp.persistencia.PhotoInterface;
 import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.SpotCall;
 import com.pickupapp.persistencia.retorno.SpotCallGet;
+import com.pickupapp.persistencia.retorno.SpotPhotosCall;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * A simple {@link Fragment} subclass.
  */
 public class SpaceFragment extends Fragment {
-    private ImageSwitcher imageSwitcher;
+    private ImageView imageView;
     protected static String spotId;
     private Button reservar;
     private TextView nome;
@@ -49,11 +59,10 @@ public class SpaceFragment extends Fragment {
     private TextView preco;
     private ProgressBar progressBar;
 
-    private int[] gallery = { R.drawable.campo
-            , R.drawable.splash, R.drawable.soccerproject,
-            R.drawable.soccerproject1};
+    private Bitmap[] gallery = { };
 
     private int position;
+    private int posicaoIncercao = 0;
 
     private static final Integer DURATION = 2500;
 
@@ -73,8 +82,9 @@ public class SpaceFragment extends Fragment {
         endereco = inflate.findViewById(R.id.address_space_perfil);
         preco = inflate.findViewById(R.id.price_space_perfil);
         progressBar = inflate.findViewById(R.id.progressBarSpot);
+        imageView = inflate.findViewById(R.id.imagensSpot);
         buscarSpot();
-        imageSwitcher = inflate.findViewById(R.id.imageSwitcher);
+        getPhotos();
 //        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
 //            reservar.setVisibility(View.GONE);
 //        }
@@ -90,36 +100,76 @@ public class SpaceFragment extends Fragment {
                 transaction.commit();
             }
         });
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+        return inflate;
+    }
 
-            public View makeView() {
-                ImageView imageView = new ImageView(getContext());
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+    private void getPhotos() {
+        progressBar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PhotoInterface photoInterface = retrofit.create(PhotoInterface.class);
+        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
+        String auth = "Basic "
+                + Base64.encodeToString(credentials.getBytes(),
+                Base64.NO_WRAP);
+        String token = Sessao.getSessao(getContext()).getToken();
+        Call<SpotPhotosCall> call = photoInterface.getSpotPhotos(auth, token, spotId);
+        call.enqueue(new Callback<SpotPhotosCall>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(Call<SpotPhotosCall> call, Response<SpotPhotosCall> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "onResponse: "+response.message());
+                    progressBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                SpotPhotosCall spotphotosCall = response.body();
+                ArrayList photos = spotphotosCall.getPhotos();
+                if (!photos.isEmpty()){
+                    spotphotosCall.getPhotos().forEach((n) -> addPhoto(n.getImage()));
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+            }
 
-                FrameLayout.LayoutParams params = new ImageSwitcher.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-
-                imageView.setLayoutParams(params);
-                return imageView;
+            @Override
+            public void onFailure(Call<SpotPhotosCall> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+    }
+
+    private void addPhoto(String image) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PhotoInterface photoInterface = retrofit.create(PhotoInterface.class);
+        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
+        String auth = "Basic "
+                + Base64.encodeToString(credentials.getBytes(),
+                Base64.NO_WRAP);
+        String token = Sessao.getSessao(getContext()).getToken();
+        Call<ResponseBody> call = photoInterface.getPhoto(auth,token,image);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void run() {
-                imageSwitcher.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageSwitcher.setImageResource(gallery[position]);
-                        position++;
-                        if (position == gallery.length) {
-                            position = 0;
-                        }
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        // display the image data in a ImageView or save it
+                        Bitmap bm = BitmapFactory.decodeStream(response.body().byteStream());
+                        imageView.setImageBitmap(bm);
+                        gallery[posicaoIncercao] = bm;
                     }
-                }, 1000);
+                }
             }
-        }, 0, DURATION);
-        return inflate;
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+        posicaoIncercao += 1;
     }
 
     private void buscarSpot() {

@@ -19,13 +19,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageSwitcher
-                android:id="@+id/imageSwitcher"
-                android:layout_width="200sp"
-                android:layout_height="match_parent"
-                >
-
-            </ImageSwitcher>
+            <ImageView
+                android:id="@+id/imagensSpot"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                tools:src="@tools:sample/backgrounds/scenic[8]"
+                />
         </LinearLayout>
 
         <LinearLayout

@@ -226,7 +226,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<CitysCall> call, Response<CitysCall> response) {
-                Log.d("resposta", String.valueOf(response.body().getCidades().isEmpty()));
                 CitysCall citysCall = response.body();
                 cities = citysCall.getCidades();
                 ArrayList<String> listString = new ArrayList<>();
@@ -637,8 +636,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void cadastrarEspaco(final Space space) {
-        dadosFuncionamento.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -672,8 +669,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 if (!response.isSuccessful()){
                     Toast.makeText(getContext(),"Local Não Cadastrado",Toast.LENGTH_LONG).show();
                     Log.d("resposta", "cadastro space: "+response);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    dadosFuncionamento.setVisibility(View.VISIBLE);
                     return;
                 }
                 Toast.makeText(getContext(),"Local Cadastrado Com Sucesso",Toast.LENGTH_LONG).show();
@@ -709,7 +704,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                     cadastrarFuncionamento("1",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
                 }
-                progressBar.setVisibility(View.INVISIBLE);
                 Fragment fragment = new ListSpacesFragment();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
@@ -719,8 +713,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
 
             @Override
             public void onFailure(Call<SpotCall> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
-                dadosFuncionamento.setVisibility(View.VISIBLE);
                 Log.d("resposta", "cadastro space: "+t);
                 Toast.makeText(getContext(),"Local Não Cadastrado",Toast.LENGTH_LONG).show();
             }
@@ -752,9 +744,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             public void onResponse(Call<SetCall> call, Response<SetCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "cadastro Horario: "+response);
-                    return;
                 }
-                SetCall resposta = response.body();
             }
 
             @Override
@@ -778,8 +768,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 Base64.NO_WRAP);
         final String token = Sessao.getSessao(getContext()).getToken();
         File file = new File(getRealPathFromURI(photo));
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), getRealPathFromURI(photo));
-        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file",file.getName(),requestFile);
+        Log.d("resposta", "caminhoFoto: " + getRealPathFromURI(photo));
+        RequestBody requestFile = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(),requestFile);
         Call<SetCall> call = photoInterface.registrarPhoto(auth, token, multipartBody, spot);
         call.enqueue(new Callback<SetCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -860,10 +851,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             }
         }
     }
-
-//        //validação do autocomplete
-//        if (autocompleteBairro.isEmpty()){
-//            return false;
 
     public String getRealPathFromURI(Uri contentUri) {
 
