@@ -59,7 +59,7 @@ public class SpaceFragment extends Fragment {
     private TextView preco;
     private ProgressBar progressBar;
 
-    private Bitmap[] gallery = { };
+    private ArrayList<Bitmap> gallery = new ArrayList<>();
 
     private int position;
     private int posicaoIncercao = 0;
@@ -141,6 +141,7 @@ public class SpaceFragment extends Fragment {
     }
 
     private void addPhoto(String image) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -155,21 +156,22 @@ public class SpaceFragment extends Fragment {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressBar.setVisibility(View.INVISIBLE);
                 if (response.isSuccessful()) {
                     if (response.body() != null) {
                         // display the image data in a ImageView or save it
                         Bitmap bm = BitmapFactory.decodeStream(response.body().byteStream());
-                        imageView.setImageBitmap(bm);
-                        gallery[posicaoIncercao] = bm;
+                        imageView.setBackground(new BitmapDrawable(bm));
+                        gallery.add(bm);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
-        posicaoIncercao += 1;
     }
 
     private void buscarSpot() {
