@@ -51,7 +51,6 @@ import com.pickupapp.dominio.State;
 import com.pickupapp.dominio.User;
 import com.pickupapp.infra.EnumSpaceType;
 import com.pickupapp.infra.Mask;
-import com.pickupapp.infra.MoneyTextWatcher;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.infra.ValidacaoGui;
 import com.pickupapp.persistencia.AddressInterface;
@@ -913,7 +912,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         state.setName(estado.getSelectedItem().toString());
         City city = new City();
         city.setName(cidade.getSelectedItem().toString());
-        address.setCity(city);
+        address.setCityObj(city);
         address.setStreet(logradouro.getText().toString());
         return address;
     }

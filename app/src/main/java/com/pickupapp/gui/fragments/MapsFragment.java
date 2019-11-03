@@ -11,9 +11,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -79,7 +81,7 @@ public class MapsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.maps_fragment, container, false);
         mapa = (MapView) rootView.findViewById(R.id.mapaId);
-
+        getSpacesList();
 
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
@@ -245,12 +247,9 @@ public class MapsFragment extends Fragment {
                 Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
         Call<Spots> call = null;
-        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
-            call = spaceInterface.getMySpaces(auth, Sessao.getSessao(getContext()).getToken());
-        }else{
-            call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
-        }
+        call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
         call.enqueue(new Callback<Spots>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<Spots> call, Response<Spots> response) {
                 if (!response.isSuccessful()){
@@ -259,7 +258,10 @@ public class MapsFragment extends Fragment {
                 }
                 Log.d("resposta", "onResponse: "+response.body());
                 Spots spaces = response.body();
-                spacesList = spaces.getSpaces();
+                if (spaces != null) {
+                    spacesList = spaces.getSpaces();
+                    spacesList.forEach((n)->markLocations(n.getAddress().toString(), n.getName()));
+                }
             }
 
             @Override
@@ -268,6 +270,13 @@ public class MapsFragment extends Fragment {
                 spacesList = null;
             }
         });
+    }
+
+    private void markLocations(String local, String nome) {
+        LatLng latLng = getLocationFromAddress(local);
+        Log.d("resposta", "latitude: "+ latLng.latitude+ " longitude: "+ latLng.longitude);
+        GeoPoint geoPoint = new GeoPoint(latLng.latitude,latLng.longitude);
+        novoMarcador(geoPoint, nome);
     }
 
     public LatLng getLocationFromAddress(String inputtedAddress) {

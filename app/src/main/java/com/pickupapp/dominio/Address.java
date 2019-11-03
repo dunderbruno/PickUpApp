@@ -1,12 +1,18 @@
 package com.pickupapp.dominio;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Address {
+
     private long id;
-    private City city;
+    private City cityObj;
+    @SerializedName("city")
+    private String cityCall;
     private String street;
-    private String neighboorhood;
+    private String neighborhood;
     private int number;
     private String cep;
+    private String state;
 
     public long getId() {
         return id;
@@ -16,12 +22,12 @@ public class Address {
         this.id = id;
     }
 
-    public City getCity() {
-        return city;
+    public City getCityObj() {
+        return cityObj;
     }
 
-    public void setCity(City city) {
-        this.city = city;
+    public void setCityObj(City cityObj) {
+        this.cityObj = cityObj;
     }
 
     public String getStreet() {
@@ -33,11 +39,11 @@ public class Address {
     }
 
     public String getNeighboorhood() {
-        return neighboorhood;
+        return neighborhood;
     }
 
     public void setNeighboorhood(String neighboorhood) {
-        this.neighboorhood = neighboorhood;
+        this.neighborhood = neighboorhood;
     }
 
     public int getNumber() {
@@ -58,6 +64,22 @@ public class Address {
 
     @Override
     public String toString(){
-        return "Rua " + this.getStreet() + " número " + this.getNumber() + ", bairro " + this.getNeighboorhood();
+        return this.getStreet() + " " + this.getNumber() + ",  " + this.getNeighboorhood() + " - " + this.getCityCall()+ " - " + this.getState();
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCityCall() {
+        return cityCall;
+    }
+
+    public void setCityCall(String cityCall) {
+        this.cityCall = cityCall;
     }
 }
