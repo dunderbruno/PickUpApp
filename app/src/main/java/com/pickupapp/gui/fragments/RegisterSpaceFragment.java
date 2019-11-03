@@ -73,6 +73,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -675,7 +676,13 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 SpotCall resposta = response.body();
                 space.setId(Long.parseLong(resposta.getSpot_id()));
                 Log.d("resposta", "cadastro space: "+resposta.getSpot_id());
-                galeria.forEach((n) -> cadastrarFoto(String.valueOf(space.getId()), n, String.valueOf(space.getId())));
+                galeria.forEach((n) -> {
+                    try {
+                        cadastrarFoto(String.valueOf(space.getId()), n, String.valueOf(space.getId()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
                 if(segunda.isChecked()){
                     cadastrarFuncionamento("2",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
@@ -754,7 +761,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         });
     }
 
-    private void cadastrarFoto(String id, Uri photo, String spot){
+    private void cadastrarFoto(String id, Uri photo, String spot) throws IOException {
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -768,8 +775,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 Base64.NO_WRAP);
         final String token = Sessao.getSessao(getContext()).getToken();
         File file = new File(getRealPathFromURI(photo));
+        File compressedImageFile = new Compressor(getContext()).setQuality(50).compressToFile(file);
         Log.d("resposta", "caminhoFoto: " + getRealPathFromURI(photo));
-        RequestBody requestFile = RequestBody.create(MediaType.parse("*/*"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("*/*"), compressedImageFile);
         MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(),requestFile);
         Call<SetCall> call = photoInterface.registrarPhoto(auth, token, multipartBody, spot);
         call.enqueue(new Callback<SetCall>() {
