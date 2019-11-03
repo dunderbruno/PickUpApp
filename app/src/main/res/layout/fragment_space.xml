@@ -11,62 +11,159 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="#7DDB38"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_weight="3">
 
-            <ImageView
-                android:id="@+id/imagensSpot"
-                android:layout_width="200dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:src="@tools:sample/backgrounds/scenic[8]"
-                />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:weightSum="10">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="2"
-            android:gravity="start"
-            android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#7DDB38"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/name_space_perfil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/nome_do_espaco" />
+                    <ImageView
+                        android:id="@+id/imagensSpot"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:scaleType="fitXY"
+                        tools:src="@tools:sample/backgrounds/scenic[8]" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/address_space_perfil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/endere_o" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="80dp"
+                    android:gravity="start"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/price_space_perfil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/valor_por_hora" />
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dados do Local"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/abrirCalendario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@android:color/white"
-                android:padding="10dp"
-                android:text="Reservar"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/name_space_perfil"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/nome_do_espaco" />
+
+                        <TextView
+                            android:id="@+id/address_space_perfil"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/endere_o" />
+
+                        <TextView
+                            android:id="@+id/price_space_perfil"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/valor_por_hora" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="FUNCIONAMENTO"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/funcionamentoSegunda"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Segunda: 08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoTerca"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Terça:       08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoQuarta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Quarta:     08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoQuinta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Quinta:      08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoSexta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Sexta:        08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoSabado"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Sabado:    08:00:00 - 20:00:00" />
+
+                        <TextView
+                            android:id="@+id/funcionamentoDomingo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="Domingo: 08:00:00 - 20:00:00" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/abrirCalendario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@android:color/white"
+                        android:padding="10dp"
+                        android:text="Reservar"
+                        android:textColor="@android:color/black"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 
     <ProgressBar
@@ -76,4 +173,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:visibility="invisible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/reservarFloating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:clickable="false"
+        android:elevation="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/button_reservar"
+        app:backgroundTint="#00FFFFFF"
+        app:elevation="0dp"
+        app:fabCustomSize="120dp"
+        app:fabSize="auto"
+        app:maxImageSize="100dp"
+        app:rippleColor="#00FFFFFF" />
 </FrameLayout>

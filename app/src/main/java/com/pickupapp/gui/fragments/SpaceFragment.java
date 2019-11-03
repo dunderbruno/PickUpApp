@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pickupapp.R;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.PhotoInterface;
@@ -52,6 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class SpaceFragment extends Fragment {
     private ImageView imageView;
+    private FloatingActionButton reservarFloating;
     protected static String spotId;
     private Button reservar;
     private TextView nome;
@@ -88,6 +90,18 @@ public class SpaceFragment extends Fragment {
 //        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
 //            reservar.setVisibility(View.GONE);
 //        }
+        reservarFloating = inflate.findViewById(R.id.reservarFloating);
+        reservarFloating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CalendarFragment();
+                CalendarFragment.spotId = spotId;
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(getId(), fragment);
+                transaction.commit();
+            }
+        });
         reservar = inflate.findViewById(R.id.abrirCalendario);
         reservar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +118,6 @@ public class SpaceFragment extends Fragment {
     }
 
     private void getPhotos() {
-        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -122,7 +135,6 @@ public class SpaceFragment extends Fragment {
             public void onResponse(Call<SpotPhotosCall> call, Response<SpotPhotosCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response.message());
-                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 SpotPhotosCall spotphotosCall = response.body();
@@ -130,18 +142,15 @@ public class SpaceFragment extends Fragment {
                 if (!photos.isEmpty()){
                     spotphotosCall.getPhotos().forEach((n) -> addPhoto(n.getImage()));
                 }
-                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<SpotPhotosCall> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
 
     private void addPhoto(String image) {
-        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -192,17 +201,14 @@ public class SpaceFragment extends Fragment {
             public void onResponse(Call<SpotCallGet> call, Response<SpotCallGet> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response.message());
-                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 SpotCallGet spotCall = response.body();
                 nome.setText(spotCall.getName());
-                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<SpotCallGet> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
