@@ -29,6 +29,8 @@ import android.widget.ViewSwitcher;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pickupapp.R;
+import com.pickupapp.dominio.Schedule;
+import com.pickupapp.dominio.Space;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.PhotoInterface;
 import com.pickupapp.persistencia.SpaceInterface;
@@ -61,6 +63,8 @@ public class SpaceFragment extends Fragment {
     private TextView preco;
     private ProgressBar progressBar;
     private ImageView imagem1, imagem2, imagem3, imagem4, imagem5;
+    private TextView funcionamentoSegunda,funcionamentoTerca, funcionamentoQuarta,funcionamentoQuinta,
+                        funcionamentoSexta,funcionamentoSabado,funcionamentoDomingo;
     private int posicao = 0;
 
     private ArrayList<Bitmap> gallery = new ArrayList<>();
@@ -92,6 +96,13 @@ public class SpaceFragment extends Fragment {
         imagem3 = inflate.findViewById(R.id.imagensSpot3);
         imagem4 = inflate.findViewById(R.id.imagensSpot4);
         imagem5 = inflate.findViewById(R.id.imagensSpot5);
+        funcionamentoSegunda = inflate.findViewById(R.id.funcionamentoSegunda);
+        funcionamentoTerca = inflate.findViewById(R.id.funcionamentoTerca);
+        funcionamentoQuarta = inflate.findViewById(R.id.funcionamentoQuarta);
+        funcionamentoQuinta = inflate.findViewById(R.id.funcionamentoQuinta);
+        funcionamentoSexta = inflate.findViewById(R.id.funcionamentoSexta);
+        funcionamentoSabado = inflate.findViewById(R.id.funcionamentoSabado);
+        funcionamentoDomingo = inflate.findViewById(R.id.funcionamentoDomingo);
         buscarSpot();
         getPhotos();
 //        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
@@ -219,21 +230,61 @@ public class SpaceFragment extends Fragment {
                 + Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<SpotCallGet> call = spotInterface.getSpace(auth, Sessao.getSessao(getContext()).getToken(), spotId);
-        call.enqueue(new Callback<SpotCallGet>() {
+        Call<Space> call = spotInterface.getSpace(auth, Sessao.getSessao(getContext()).getToken(), spotId);
+        call.enqueue(new Callback<Space>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
-            public void onResponse(Call<SpotCallGet> call, Response<SpotCallGet> response) {
+            public void onResponse(Call<Space> call, Response<Space> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response.message());
                     return;
                 }
-                SpotCallGet spotCall = response.body();
+                Space spotCall = response.body();
                 nome.setText(spotCall.getName());
+                endereco.setText(spotCall.getAddress().toString());
+                String precot = "R$"+spotCall.getPriceHour().toString();
+                preco.setText(precot);
+                if (spotCall.getSchedule() != null){
+                    ArrayList<Schedule> schedules = spotCall.getSchedule();
+                    schedules.forEach((n)->showSchedule(n));
+                }
             }
 
             @Override
-            public void onFailure(Call<SpotCallGet> call, Throwable t) {
+            public void onFailure(Call<Space> call, Throwable t) {
             }
         });
+    }
+
+    private void showSchedule(Schedule n){
+        if(n.getWeek_day() == 2){
+            funcionamentoSegunda.setVisibility(View.VISIBLE);
+            String text = "Segunda: "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoSegunda.setText(text);
+        }else if(n.getWeek_day() == 3){
+            funcionamentoTerca.setVisibility(View.VISIBLE);
+            String text = "Terça:       "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoTerca.setText(text);
+        }else if(n.getWeek_day() == 4){
+            funcionamentoQuarta.setVisibility(View.VISIBLE);
+            String text = "Quarta:     "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoQuarta.setText(text);
+        }else if(n.getWeek_day() == 5){
+            funcionamentoQuinta.setVisibility(View.VISIBLE);
+            String text = "Quinta:      "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoQuinta.setText(text);
+        }else if(n.getWeek_day() == 6){
+            funcionamentoSexta.setVisibility(View.VISIBLE);
+            String text = "Sexta:        "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoSexta.setText(text);
+        }else if(n.getWeek_day() == 7){
+            funcionamentoSabado.setVisibility(View.VISIBLE);
+            String text = "Sabado:    "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoSabado.setText(text);
+        }else if(n.getWeek_day() == 1){
+            funcionamentoDomingo.setVisibility(View.VISIBLE);
+            String text = "Domingo: "+n.getOpening_time()+"-"+n.getClosing_time();
+            funcionamentoDomingo.setText(text);
+        }
     }
 }

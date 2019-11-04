@@ -18,7 +18,8 @@ public class Space {
     @SerializedName("price")
     private BigDecimal priceHour;
     private EnumSpaceType spaceType;
-    private ArrayList<Schedule> schedule;
+
+    private ArrayList<Schedule> schedules;
 
     public EnumSpaceType getSpaceType() {
         return spaceType;
@@ -78,10 +79,10 @@ public class Space {
     }
 
     public ArrayList<Schedule> getSchedule() {
-        return schedule;
+        return schedules;
     }
 
     public void setSchedule(ArrayList<Schedule> schedule) {
-        this.schedule = schedule;
+        this.schedules = schedule;
     }
 }

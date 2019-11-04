@@ -159,49 +159,56 @@
                             android:id="@+id/funcionamentoSegunda"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Segunda: 08:00:00 - 20:00:00" />
+                            android:text="Segunda: 08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoTerca"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Terça:       08:00:00 - 20:00:00" />
+                            android:text="Terça:       08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoQuarta"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Quarta:     08:00:00 - 20:00:00" />
+                            android:text="Quarta:     08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoQuinta"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Quinta:      08:00:00 - 20:00:00" />
+                            android:text="Quinta:      08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoSexta"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Sexta:        08:00:00 - 20:00:00" />
+                            android:text="Sexta:        08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoSabado"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Sabado:    08:00:00 - 20:00:00" />
+                            android:text="Sabado:    08:00:00 - 20:00:00"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/funcionamentoDomingo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="Domingo: 08:00:00 - 20:00:00" />
+                            android:text="Domingo: 08:00:00 - 20:00:00"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <Button
