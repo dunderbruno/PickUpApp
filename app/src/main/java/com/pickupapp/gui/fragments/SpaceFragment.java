@@ -60,6 +60,8 @@ public class SpaceFragment extends Fragment {
     private TextView endereco;
     private TextView preco;
     private ProgressBar progressBar;
+    private ImageView imagem1, imagem2, imagem3, imagem4, imagem5;
+    private int posicao = 0;
 
     private ArrayList<Bitmap> gallery = new ArrayList<>();
 
@@ -85,6 +87,11 @@ public class SpaceFragment extends Fragment {
         preco = inflate.findViewById(R.id.price_space_perfil);
         progressBar = inflate.findViewById(R.id.progressBarSpot);
         imageView = inflate.findViewById(R.id.imagensSpot);
+        imagem1 = inflate.findViewById(R.id.imagensSpot1);
+        imagem2 = inflate.findViewById(R.id.imagensSpot2);
+        imagem3 = inflate.findViewById(R.id.imagensSpot3);
+        imagem4 = inflate.findViewById(R.id.imagensSpot4);
+        imagem5 = inflate.findViewById(R.id.imagensSpot5);
         buscarSpot();
         getPhotos();
 //        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
@@ -170,8 +177,25 @@ public class SpaceFragment extends Fragment {
                     if (response.body() != null) {
                         // display the image data in a ImageView or save it
                         Bitmap bm = BitmapFactory.decodeStream(response.body().byteStream());
-                        imageView.setBackground(new BitmapDrawable(bm));
-                        gallery.add(bm);
+                        if (posicao == 0){
+                            imageView.setBackground(new BitmapDrawable(bm));
+                        }else if(posicao == 1){
+                            imagem1.setVisibility(View.VISIBLE);
+                            imagem1.setBackground(new BitmapDrawable(bm));
+                        }else if(posicao == 2){
+                            imagem2.setVisibility(View.VISIBLE);
+                            imagem2.setBackground(new BitmapDrawable(bm));
+                        }else if(posicao == 3){
+                            imagem3.setVisibility(View.VISIBLE);
+                            imagem3.setBackground(new BitmapDrawable(bm));
+                        }else if(posicao == 4){
+                            imagem4.setVisibility(View.VISIBLE);
+                            imagem4.setBackground(new BitmapDrawable(bm));
+                        }else if(posicao == 5){
+                            imagem5.setVisibility(View.VISIBLE);
+                            imagem5.setBackground(new BitmapDrawable(bm));
+                        }
+                        posicao+=1;
                     }
                 }
             }
