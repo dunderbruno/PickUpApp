@@ -41,20 +41,34 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/button_go_registerJogador"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@android:color/white"
-            android:text="@string/jogador" />
+            android:layout_marginTop="50dp">
 
-        <Button
-            android:id="@+id/button_go_registerLocador"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:text="@string/locador" />
+            <Button
+                android:id="@+id/button_go_registerArbitro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="@string/rbitro"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="25dp"/>
 
+            <Button
+                android:id="@+id/button_go_registerJogador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="@string/jogador"
+                android:layout_marginRight="50dp"/>
+
+            <Button
+                android:id="@+id/button_go_registerLocador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="@string/locador" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

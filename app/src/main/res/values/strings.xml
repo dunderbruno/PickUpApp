@@ -60,6 +60,7 @@
     <string name="pre_o">Preço</string>
     <string name="title_activity_drawer_jogador">title activity drawer jogador</string>
     <string name="menu_agallery">galerr</string>
+    <string name="rbitro">Árbitro</string>
     <string-array name="cities_pernambuco">
         <item>Jaboatão dos Guararapes</item>
         <item>Olinda</item>

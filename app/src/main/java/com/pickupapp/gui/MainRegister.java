@@ -10,7 +10,7 @@ import android.widget.Button;
 import com.pickupapp.R;
 
 public class MainRegister extends AppCompatActivity {
-    private Button jogador, locador;
+    private Button jogador, locador, arbitro;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,16 @@ public class MainRegister extends AppCompatActivity {
                 Intent i = new Intent(MainRegister.this, Register.class);
                 startActivity(i);
                 Register.tipoUsuario = "2";
+                finish();
+            }
+        });
+        arbitro = findViewById(R.id.button_go_registerArbitro);
+        arbitro.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent i = new Intent (MainRegister.this, Register.class);
+                startActivity(i);
+                Register.tipoUsuario = "3";
                 finish();
             }
         });
