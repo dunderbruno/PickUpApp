@@ -19,6 +19,16 @@
             android:title="@string/acessoaomapa" />
 
         <item
+            android:id="@+id/nav_new_teams"
+            android:icon="@drawable/ic_add_group"
+            android:title="@string/acessoaomapa" />
+
+        <item
+            android:id="@+id/nav_new_my_team"
+            android:icon="@drawable/ic_group"
+            android:title="@string/acessoaomapa" />
+
+        <item
             android:id="@+id/nav_logout_jogador"
             android:icon="@drawable/ic_logout"
             android:title="@string/sair" />
