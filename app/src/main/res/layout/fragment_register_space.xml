@@ -176,26 +176,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cidade_"
-                android:textColor="#EB000000"
-                android:textSize="18sp" />
-
-            <Spinner
-                android:id="@+id/inputCidadeEspacos"
-                android:layout_width="wrap_content"
-                android:layout_height="40sp"
-                android:textColor="#EB000000"
-                android:textColorHint="@android:color/black" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="3sp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/estado"
                 android:textColor="#EB000000"
                 android:textSize="18sp" />
@@ -207,6 +187,26 @@
                 android:textColor="#EB000000"
                 android:textColorHint="@android:color/black" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cidade_"
+                android:textColor="#EB000000"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/inputCidadeEspacos"
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:textColor="#EB000000"
+                android:textColorHint="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout

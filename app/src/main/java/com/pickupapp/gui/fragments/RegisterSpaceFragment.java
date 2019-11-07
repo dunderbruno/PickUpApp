@@ -117,6 +117,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         setListaEstados();
         setarVariaveis(inflate);
         openAutoComplete();
+        progressBar = inflate.findViewById(R.id.progressBarRegisterSpot);
         autocompleteSupportFragment.setHint("Bairro");
         autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -208,6 +209,9 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void setarListaCidades(int i) {
+        progressBar.setVisibility(View.VISIBLE);
+        voltar.setEnabled(false);
+        proximo1.setEnabled(false);
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -234,10 +238,16 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 cidade.setAdapter(cidadeAdapter);
                 cidade.setSelection(0);
+                progressBar.setVisibility(View.INVISIBLE);
+                voltar.setEnabled(true);
+                proximo1.setEnabled(true);
             }
 
             @Override
             public void onFailure(Call<CitysCall> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                voltar.setEnabled(true);
+                proximo1.setEnabled(true);
             }
         });
     }

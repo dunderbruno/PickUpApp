@@ -61,6 +61,8 @@
     <string name="title_activity_drawer_jogador">title activity drawer jogador</string>
     <string name="menu_agallery">galerr</string>
     <string name="rbitro">Árbitro</string>
+    <string name="buscartimes">Buscar Times</string>
+    <string name="meu_time">Meu Time</string>
     <string-array name="cities_pernambuco">
         <item>Jaboatão dos Guararapes</item>
         <item>Olinda</item>

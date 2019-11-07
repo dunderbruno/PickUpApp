@@ -21,6 +21,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.pickupapp.R;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
 import com.pickupapp.gui.fragments.MapsFragment;
+import com.pickupapp.gui.fragments.PerfilFragment;
 import com.pickupapp.gui.fragments.RegisterSpaceFragment;
 import com.pickupapp.gui.fragments.WelcomeFragment;
 import com.pickupapp.infra.Sessao;
@@ -72,10 +73,14 @@ public class DrawerJogador extends AppCompatActivity implements NavigationView.O
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_home_jogador){
-//            fragment = new ListSpacesFragment();
+            fragment = new PerfilFragment();
         }else if (id == R.id.nav_locais_jogador){
             fragment = new ListSpacesFragment();
         }else if (id == R.id.nav_new_maps_acess){
+            fragment = new MapsFragment();
+        }else if (id == R.id.nav_new_teams){
+            fragment = new MapsFragment();
+        }else if (id == R.id.nav_new_my_team){
             fragment = new MapsFragment();
         }else if (id == R.id.nav_logout_jogador) {
             new Sessao().clear(getApplicationContext());
