@@ -144,11 +144,10 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         });
         final int[] count = {0};
         estado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(count[0] != 0){
-                    setarListaCidades(Math.toIntExact(states.get(i).getId()));
+                    setarListaCidades(Integer.valueOf((int) states.get(i).getId()));
                 }else {
                     count[0] = 1;
                 }
@@ -190,13 +189,14 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         final String token = Sessao.getSessao(getContext()).getToken();
         Call<StatesCall> call = addressInterface.getAllStates(auth,token);
         call.enqueue(new Callback<StatesCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<StatesCall> call, Response<StatesCall> response) {
                 StatesCall statesCall = response.body();
                 states = statesCall.getEstados();
                 ArrayList<String> listString = new ArrayList<>();
-                states.forEach((n) -> listString.add(n.getName()));
+                for (State n : states) {
+                    listString.add(n.getName());
+                }
                 ArrayAdapter<String> estadoAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 estadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 estado.setAdapter(estadoAdapter);
@@ -227,13 +227,14 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         String state = String.valueOf(i);
         Call<CitysCall> call = addressInterface.getAllCity(auth,token,state);
         call.enqueue(new Callback<CitysCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<CitysCall> call, Response<CitysCall> response) {
                 CitysCall citysCall = response.body();
                 cities = citysCall.getCidades();
                 ArrayList<String> listString = new ArrayList<>();
-                cities.forEach((n) -> listString.add(n.getName()));
+                for (City n : cities) {
+                    listString.add(n.getName());
+                }
                 ArrayAdapter<String> cidadeAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 cidade.setAdapter(cidadeAdapter);
@@ -673,7 +674,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         params.put("ground_id", space.getSpaceType().getDescription());
         Call<SpotCall> call = spaceInterface.registerSpace(auth,token,params);
         call.enqueue(new Callback<SpotCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<SpotCall> call, Response<SpotCall> response) {
                 if (!response.isSuccessful()){
@@ -685,13 +685,13 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 SpotCall resposta = response.body();
                 space.setId(Long.parseLong(resposta.getSpot_id()));
                 Log.d("resposta", "cadastro space: "+resposta.getSpot_id());
-                galeria.forEach((n) -> {
+                for (Uri n : galeria) {
                     try {
                         cadastrarFoto(String.valueOf(space.getId()), n, String.valueOf(space.getId()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });
+                }
                 if(segunda.isChecked()){
                     cadastrarFuncionamento("2",inicioSegunda.getText().toString(),
                             fimSegunda.getText().toString(),String.valueOf(space.getId()));
@@ -755,7 +755,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         params.put("spot_id", id);
         Call<SetCall> call = bookingInterface.registrarSchedule(auth,token,params);
         call.enqueue(new Callback<SetCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<SetCall> call, Response<SetCall> response) {
                 if (!response.isSuccessful()){
@@ -790,7 +789,6 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(),requestFile);
         Call<SetCall> call = photoInterface.registrarPhoto(auth, token, multipartBody, spot);
         call.enqueue(new Callback<SetCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<SetCall> call, Response<SetCall> response) {
                 if (!response.isSuccessful()){
