@@ -146,7 +146,6 @@ public class CalendarFragment extends Fragment {
         String token = Sessao.getSessao(getContext()).getToken();
         Call<BookingsCall> call = bookingInterface.getBooking(auth, Sessao.getSessao(getContext()).getToken(), spotId);
         call.enqueue(new Callback<BookingsCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {
                 if (!response.isSuccessful()){
@@ -156,7 +155,9 @@ public class CalendarFragment extends Fragment {
                 BookingsCall bookingsCall = response.body();
                 ArrayList<Booking> bookings = bookingsCall.getBookings();
                 if (!bookings.isEmpty()){
-                    bookings.forEach((n) -> marcarCalendario(cv, n));
+                    for (Booking n : bookings) {
+                        marcarCalendario(cv, n);
+                    }
                 }
             }
 

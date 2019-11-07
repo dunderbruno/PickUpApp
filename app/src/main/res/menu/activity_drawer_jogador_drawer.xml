@@ -21,12 +21,12 @@
         <item
             android:id="@+id/nav_new_teams"
             android:icon="@drawable/ic_add_group"
-            android:title="@string/acessoaomapa" />
+            android:title="@string/buscartimes" />
 
         <item
             android:id="@+id/nav_new_my_team"
             android:icon="@drawable/ic_group"
-            android:title="@string/acessoaomapa" />
+            android:title="@string/meu_time" />
 
         <item
             android:id="@+id/nav_logout_jogador"

@@ -274,7 +274,6 @@ public class MapsFragment extends Fragment {
         Call<Spots> call = null;
         call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
         call.enqueue(new Callback<Spots>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<Spots> call, Response<Spots> response) {
                 if (!response.isSuccessful()){
@@ -285,7 +284,9 @@ public class MapsFragment extends Fragment {
                 Spots spaces = response.body();
                 if (spaces != null) {
                     spacesList = spaces.getSpaces();
-                    spacesList.forEach((n)->markLocations(n.getAddress().toString(), n));
+                    for (Space n : spacesList) {
+                        markLocations(n.getAddress().toString(), n);
+                    }
                 }
             }
 

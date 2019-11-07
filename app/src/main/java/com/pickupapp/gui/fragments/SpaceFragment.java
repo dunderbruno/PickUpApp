@@ -29,6 +29,7 @@ import android.widget.ViewSwitcher;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pickupapp.R;
+import com.pickupapp.dominio.Photo;
 import com.pickupapp.dominio.Schedule;
 import com.pickupapp.dominio.Space;
 import com.pickupapp.infra.Sessao;
@@ -81,7 +82,6 @@ public class SpaceFragment extends Fragment {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -149,7 +149,6 @@ public class SpaceFragment extends Fragment {
         String token = Sessao.getSessao(getContext()).getToken();
         Call<SpotPhotosCall> call = photoInterface.getSpotPhotos(auth, token, String.valueOf(spot.getId()));
         call.enqueue(new Callback<SpotPhotosCall>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<SpotPhotosCall> call, Response<SpotPhotosCall> response) {
                 if (!response.isSuccessful()){
@@ -159,7 +158,9 @@ public class SpaceFragment extends Fragment {
                 SpotPhotosCall spotphotosCall = response.body();
                 ArrayList photos = spotphotosCall.getPhotos();
                 if (!photos.isEmpty()){
-                    spotphotosCall.getPhotos().forEach((n) -> addPhoto(n.getImage()));
+                    for (Photo n : spotphotosCall.getPhotos()) {
+                        addPhoto(n.getImage());
+                    }
                 }
             }
 
@@ -227,7 +228,9 @@ public class SpaceFragment extends Fragment {
         preco.setText(precot);
         if (spot.getSchedule() != null){
             ArrayList<Schedule> schedules = spot.getSchedule();
-            schedules.forEach((n)->showSchedule(n));
+            for (Schedule n : schedules) {
+                showSchedule(n);
+            }
         }
     }
 
