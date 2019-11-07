@@ -72,6 +72,7 @@ public class MapsFragment extends Fragment {
     private FloatingActionButton localizacao;
     private MapView mapa;
     private List<Space> spacesList;
+    private int statusClick = 0;
 
 
 
@@ -161,16 +162,40 @@ public class MapsFragment extends Fragment {
         mapa.getOverlays().add(startMarker);
     }
 
-    private void novoMarcador(GeoPoint marcador, String titulo){
+    private void novoMarcador(GeoPoint marcador, Space espaco){
 
         //Cria um marcador no mapa
         Marker newMarker = new Marker(mapa);
         newMarker.setPosition(marcador);
-        newMarker.setTitle(titulo);
 
         //Posição do ícone
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         mapa.getOverlays().add(newMarker);
+        newMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(espaco.getName())
+                        .setMessage("Endereço: " +espaco.getAddress().toString()+ "\n \n" + "Valor Hora: "+espaco.getPriceHour() )
+                        .setPositiveButton("Reservar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Fragment fragment = new SpaceFragment();
+                                SpaceFragment.spot = espaco;
+                                FragmentManager fm = getFragmentManager();
+                                FragmentTransaction transaction = fm.beginTransaction();
+                                transaction.replace(getId(), fragment);
+                                transaction.commit();
+                            }
+                        })
+                        .setNegativeButton("Voltar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
+                    return false;
+            }
+        });
 
 
 
@@ -260,7 +285,7 @@ public class MapsFragment extends Fragment {
                 Spots spaces = response.body();
                 if (spaces != null) {
                     spacesList = spaces.getSpaces();
-                    spacesList.forEach((n)->markLocations(n.getAddress().toString(), n.getName()));
+                    spacesList.forEach((n)->markLocations(n.getAddress().toString(), n));
                 }
             }
 
@@ -272,11 +297,11 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    private void markLocations(String local, String nome) {
+    private void markLocations(String local, Space n) {
         LatLng latLng = getLocationFromAddress(local);
         Log.d("resposta", "latitude: "+ latLng.latitude+ " longitude: "+ latLng.longitude);
         GeoPoint geoPoint = new GeoPoint(latLng.latitude,latLng.longitude);
-        novoMarcador(geoPoint, nome);
+        novoMarcador(geoPoint, n);
     }
 
     public LatLng getLocationFromAddress(String inputtedAddress) {

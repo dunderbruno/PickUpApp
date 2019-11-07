@@ -56,7 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SpaceFragment extends Fragment {
     private ImageView imageView;
     private FloatingActionButton reservarFloating;
-    protected static String spotId;
+    protected static Space spot;
     private Button reservar;
     private TextView nome;
     private TextView endereco;
@@ -81,6 +81,7 @@ public class SpaceFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class SpaceFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new CalendarFragment();
-                CalendarFragment.spotId = spotId;
+                CalendarFragment.spotId = String.valueOf(spot.getId());
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
                 transaction.replace(getId(), fragment);
@@ -125,7 +126,7 @@ public class SpaceFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new CalendarFragment();
-                CalendarFragment.spotId = spotId;
+                CalendarFragment.spotId = String.valueOf(spot.getId());
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
                 transaction.replace(getId(), fragment);
@@ -146,7 +147,7 @@ public class SpaceFragment extends Fragment {
                 + Base64.encodeToString(credentials.getBytes(),
                 Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<SpotPhotosCall> call = photoInterface.getSpotPhotos(auth, token, spotId);
+        Call<SpotPhotosCall> call = photoInterface.getSpotPhotos(auth, token, String.valueOf(spot.getId()));
         call.enqueue(new Callback<SpotPhotosCall>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -218,42 +219,16 @@ public class SpaceFragment extends Fragment {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void buscarSpot() {
-        progressBar.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        SpaceInterface spotInterface = retrofit.create(SpaceInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String auth = "Basic "
-                + Base64.encodeToString(credentials.getBytes(),
-                Base64.NO_WRAP);
-        String token = Sessao.getSessao(getContext()).getToken();
-        Call<Space> call = spotInterface.getSpace(auth, Sessao.getSessao(getContext()).getToken(), spotId);
-        call.enqueue(new Callback<Space>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onResponse(Call<Space> call, Response<Space> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "onResponse: "+response.message());
-                    return;
-                }
-                Space spotCall = response.body();
-                nome.setText(spotCall.getName());
-                endereco.setText(spotCall.getAddress().toString());
-                String precot = "R$"+spotCall.getPriceHour().toString();
-                preco.setText(precot);
-                if (spotCall.getSchedule() != null){
-                    ArrayList<Schedule> schedules = spotCall.getSchedule();
-                    schedules.forEach((n)->showSchedule(n));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Space> call, Throwable t) {
-            }
-        });
+        nome.setText(spot.getName());
+        endereco.setText(spot.getAddress().toString());
+        String precot = "R$"+spot.getPriceHour().toString();
+        preco.setText(precot);
+        if (spot.getSchedule() != null){
+            ArrayList<Schedule> schedules = spot.getSchedule();
+            schedules.forEach((n)->showSchedule(n));
+        }
     }
 
     private void showSchedule(Schedule n){

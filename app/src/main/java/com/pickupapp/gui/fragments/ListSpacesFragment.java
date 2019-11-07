@@ -94,7 +94,7 @@ public class ListSpacesFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Fragment fragment = new SpaceFragment();
-                        SpaceFragment.spotId = String.valueOf(spacesList.get(position).getId());
+                        SpaceFragment.spot = spacesList.get(position);
                         FragmentManager fm = getFragmentManager();
                         FragmentTransaction transaction = fm.beginTransaction();
                         transaction.replace(getId(), fragment);
