@@ -4,99 +4,122 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".gui.Register">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical">
+    <EditText
+        android:id="@+id/inputNomeCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="106dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="14dp"
+        android:background="@layout/rounded_border_edittext"
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#29BC52"
-            android:contentDescription="@string/logo"
-            app:srcCompat="@drawable/soccerproject1" />
-    </LinearLayout>
+        android:ems="10"
+        android:hint="Nome"
+        android:inputType="text"
+        android:paddingLeft="10dp"
+        android:textColor="#63539E"
+        android:textColorHint="#63539E" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#7DDB38"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical">
+    <EditText
+        android:id="@+id/inputSobrenomeCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="18dp"
+        android:background="@layout/rounded_border_edittext"
+        android:ems="10"
 
-        <EditText
-            android:id="@+id/inputNomeCadastro"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:hint="@string/nome"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+        android:hint="Sobrenome"
+        android:inputType="text"
+        android:paddingLeft="10dp"
+        android:textColor="#63539E"
+        android:textColorHint="#63539E" />
 
-        <EditText
-            android:id="@+id/inputSobrenomeCadastro"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/sobrenome"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+    <EditText
+        android:id="@+id/inputLoginCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="16dp"
+        android:background="@layout/rounded_border_edittext"
+        android:ems="10"
 
-        <EditText
-            android:id="@+id/inputLoginCadastro"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/login"
-            android:inputType="textPersonName"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+        android:hint="e-mail"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="10dp"
+        android:textColor="#63539E"
+        android:textColorHint="#63539E" />
 
-        <EditText
-            android:id="@+id/inputSenhaCadastro"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/senha"
-            android:inputType="textPassword"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/inputSenhaCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="19dp"
+        android:background="@layout/rounded_border_edittext"
+        android:ems="10"
 
-            <Button
-                android:id="@+id/buttonVoltarCadastroSpot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:text="@string/voltar" />
+        android:hint="Senha"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:textColor="#63539E"
+        android:textColorHint="#63539E" />
 
-            <Button
-                android:id="@+id/buttonCadastrarCadastro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:text="@string/cadastrar_se" />
-        </LinearLayout>
-    </LinearLayout>
+    <Spinner
+        android:id="@+id/tipoDeUsuario"
+        android:layout_width="215dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="70dp"
+        android:entries="@array/tipo_usuario" />
+
+
+    <Button
+        android:id="@+id/buttonCadastrarCadastro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="34dp"
+        android:background="@layout/rounded_border_button"
+        android:text="CADASTRAR"
+
+        android:textColor="#FAFFFFFF" />
+
+    <TextView
+        android:id="@+id/buttonVoltarAcesso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="78dp"
+        android:text="Já tenho uma conta."
+        android:textColor="#63539E"
+        android:textSize="16dp"
+
+        android:textStyle="bold" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
 </LinearLayout>

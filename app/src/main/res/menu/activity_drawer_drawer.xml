@@ -19,11 +19,6 @@
         android:title="@string/cadastrarespaco" />
 
     <item
-        android:id="@+id/nav_new_maps_acess"
-        android:icon="@drawable/ic_map_black_24dp"
-        android:title="@string/acessoaomapa" />
-
-    <item
         android:id="@+id/nov_logout"
         android:icon="@drawable/ic_logout"
         android:title="@string/sair" />

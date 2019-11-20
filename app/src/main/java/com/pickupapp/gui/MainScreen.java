@@ -19,7 +19,7 @@ public class MainScreen extends AppCompatActivity {
         acessar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainScreen.this, MainLogin.class);
+                Intent i = new Intent(MainScreen.this, Login.class);
                 startActivity(i);
             }
         });
@@ -27,7 +27,7 @@ public class MainScreen extends AppCompatActivity {
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainScreen.this, MainRegister.class);
+                Intent i = new Intent(MainScreen.this, Register.class);
                 startActivity(i);
             }
         });

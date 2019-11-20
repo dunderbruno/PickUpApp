@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Group;
@@ -26,20 +28,22 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Login extends AppCompatActivity {
-    protected static String tipoUsuario;
-    private Button voltar, acessar;
+    private Button acessar;
     private EditText login, senha;
+    private Spinner tipoUsuario;
+    private TextView voltar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
         login = findViewById(R.id.inputLoginAcesso);
         senha = findViewById(R.id.inputSenhaAcesso);
+        tipoUsuario = findViewById(R.id.tipoDeUsuario2);
         voltar = findViewById(R.id.buttonVoltarAcesso);
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Login.this, MainLogin.class);
+                Intent i = new Intent(Login.this, Register.class);
                 startActivity(i);
                 finish();
             }
@@ -59,9 +63,20 @@ public class Login extends AppCompatActivity {
                     final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
-                    Group group = new Group();
-                    group.setGroup_name(tipoUsuario);
-                    usuario.setGroup(group);
+                    String tipoUser = "";
+                    TextView textView = (TextView)tipoUsuario.getSelectedView();
+                    String result = textView.getText().toString();
+                    switch (result){
+                        case "Jogador":
+                            tipoUser = "1";
+                            break;
+                        case "Locador":
+                            tipoUser = "2";
+                            break;
+                        case "Árbitro":
+                            tipoUser = "3";
+                            break;
+                    }
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("https://pickupbsiapi.herokuapp.com")
                             .addConverterFactory(GsonConverterFactory.create())
@@ -73,7 +88,8 @@ public class Login extends AppCompatActivity {
                             + Base64.encodeToString(credentials.getBytes(),
                             Base64.NO_WRAP);
                     String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.PODXncdn8smjXC-GZfhaMXIJ9M4fYAvwfZUT9xNgO3Y";
-                    Call<Token> call = userInterface.login(auth,token,tipoUsuario);
+                    Call<Token> call = userInterface.login(auth,token,tipoUser);
+                    String finalTipoUser = tipoUser;
                     call.enqueue(new Callback<Token>() {
                         @Override
                         public void onResponse(Call<Token> call, Response<Token> response) {
@@ -91,9 +107,9 @@ public class Login extends AppCompatActivity {
                             sessao.editSessao(usuario, getApplicationContext());
                             Log.d("resposta", "token: "+response.body());
                             Intent i = null;
-                            if (tipoUsuario.equals("1")){
+                            if (finalTipoUser.equals("1")){
                                 i = new Intent(Login.this, DrawerJogador.class);
-                            }else if (tipoUsuario.equals("2")){
+                            }else if (finalTipoUser.equals("2")){
                                 i = new Intent(Login.this, DrawerLocador.class);
                             }else{
                                 i = new Intent(Login.this, DrawerArbitro.class);

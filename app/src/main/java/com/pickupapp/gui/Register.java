@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pickupapp.R;
@@ -28,9 +30,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Register extends AppCompatActivity {
-    protected static String tipoUsuario;
     private Button voltar, cadastrar;
     private EditText nome, sobrenome, login, senha;
+    private Spinner tipoUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,15 +41,7 @@ public class Register extends AppCompatActivity {
         sobrenome = findViewById(R.id.inputSobrenomeCadastro);
         login = findViewById(R.id.inputLoginCadastro);
         senha = findViewById(R.id.inputSenhaCadastro);
-        voltar = findViewById(R.id.buttonVoltarCadastroSpot);
-        voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Register.this, MainRegister.class);
-                startActivity(i);
-                finish();
-            }
-        });
+        tipoUsuario = findViewById(R.id.tipoDeUsuario);
         cadastrar = findViewById(R.id.buttonCadastrarCadastro);
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +57,9 @@ public class Register extends AppCompatActivity {
                     usuario.setPerson(pessoa);
                     Group grupo = new Group();
                     usuario.setGroup(grupo);
-                    usuario.getGroup().setGroup_name(tipoUsuario);
+                    TextView textView = (TextView)tipoUsuario.getSelectedView();
+                    String result = textView.getText().toString();
+                    usuario.getGroup().setGroup_name(result);
                     cadastrarUsuario(usuario);
                 }
             }
@@ -72,7 +68,6 @@ public class Register extends AppCompatActivity {
 
     private void cadastrarUsuario(final User usuario) {
         cadastrar.setEnabled(false);
-        voltar.setEnabled(false);
         login.setEnabled(false);
         senha.setEnabled(false);
         nome.setEnabled(false);
@@ -87,7 +82,21 @@ public class Register extends AppCompatActivity {
         params.put("password", usuario.getPassword());
         params.put("name", usuario.getPerson().getName());
         params.put("surname", usuario.getPerson().getSurname());
-        params.put("group_id", tipoUsuario);
+        String tipoUser = "";
+        TextView textView = (TextView)tipoUsuario.getSelectedView();
+        String result = textView.getText().toString();
+        switch (result){
+            case "Jogador":
+                tipoUser = "1";
+                break;
+            case "Locador":
+                tipoUser = "2";
+                break;
+            case "Árbitro":
+                tipoUser = "3";
+                break;
+        }
+        params.put("group_id", tipoUser);
         Call<User> call = userInterface.register(params);
         call.enqueue(new Callback<User>() {
             @Override
@@ -95,7 +104,6 @@ public class Register extends AppCompatActivity {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "cadastro Usuario: "+response);
                     cadastrar.setEnabled(true);
-                    voltar.setEnabled(true);
                     login.setEnabled(true);
                     senha.setEnabled(true);
                     nome.setEnabled(true);
@@ -112,7 +120,6 @@ public class Register extends AppCompatActivity {
                 Log.d("resposta", "erro: "+t);
                 Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
                 cadastrar.setEnabled(true);
-                voltar.setEnabled(true);
                 login.setEnabled(true);
                 senha.setEnabled(true);
                 nome.setEnabled(true);

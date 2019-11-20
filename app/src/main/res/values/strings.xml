@@ -60,7 +60,6 @@
     <string name="estado">Estado</string>
     <string name="endere_o">Endereço</string>
     <string name="primeiro_nome">Primeiro_Nome</string>
-    <string name="primeiro_nome">Primeiro_Nome</string>
     <string name="email_list">Email_lista</string>
     <string name="pre_o">Preço</string>
     <string name="title_activity_drawer_jogador">title activity drawer jogador</string>
@@ -106,5 +105,11 @@
 
     <string-array name="states">
         <item>Pernambuco</item>
+    </string-array>
+
+    <string-array name="tipo_usuario">
+        <item>Jogador</item>
+        <item>Locador</item>
+        <item>Árbitro</item>
     </string-array>
 </resources>

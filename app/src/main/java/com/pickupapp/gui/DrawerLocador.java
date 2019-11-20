@@ -107,8 +107,6 @@ public class DrawerLocador extends AppCompatActivity
             changeFragment(new WelcomeFragment());
         }else if (id == R.id.nav_new_addspace) {
             changeFragment(new RegisterSpaceFragment());
-        }else if (id == R.id.nav_new_maps_acess){
-            changeFragment(new MapsFragment());
         }else if (id == R.id.nov_logout) {
             new Sessao().clear(getApplicationContext());
             Intent i = new Intent(DrawerLocador.this, Login.class);
