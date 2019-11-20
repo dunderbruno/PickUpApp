@@ -147,7 +147,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(count[0] != 0){
-                    setarListaCidades(Integer.valueOf((int) states.get(i).getId()));
+                    setarListaCidades((int) states.get(i-1).getId());
                 }else {
                     count[0] = 1;
                 }
@@ -194,6 +194,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 StatesCall statesCall = response.body();
                 states = statesCall.getEstados();
                 ArrayList<String> listString = new ArrayList<>();
+                listString.add("Selecione o estado");
                 for (State n : states) {
                     listString.add(n.getName());
                 }
@@ -232,6 +233,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
                 CitysCall citysCall = response.body();
                 cities = citysCall.getCidades();
                 ArrayList<String> listString = new ArrayList<>();
+                listString.add("Selecione a cidade");
                 for (City n : cities) {
                     listString.add(n.getName());
                 }
@@ -516,6 +518,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         }
         return true;
     }
+
     private void setarVariaveis(View inflate) {
         setControleCadastro(inflate);
         setDadosEspaco(inflate);

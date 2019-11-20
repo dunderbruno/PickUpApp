@@ -77,6 +77,8 @@ public class Login extends AppCompatActivity {
                             tipoUser = "3";
                             break;
                     }
+                    usuario.setGroup(new Group());
+                    usuario.getGroup().setGroup_name(tipoUser);
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("https://pickupbsiapi.herokuapp.com")
                             .addConverterFactory(GsonConverterFactory.create())
