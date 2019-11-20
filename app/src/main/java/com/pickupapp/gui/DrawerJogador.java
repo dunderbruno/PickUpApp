@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.pickupapp.R;
+import com.pickupapp.gui.fragments.ListArbiterFragment;
 import com.pickupapp.gui.fragments.ListPlayersFragment;
 import com.pickupapp.gui.fragments.ListSpacesFragment;
 import com.pickupapp.gui.fragments.MapsFragment;
@@ -87,6 +88,8 @@ public class DrawerJogador extends AppCompatActivity implements NavigationView.O
             fragment = new MapsFragment();
         }else if (id == R.id.nav_players){
             fragment = new ListPlayersFragment();
+        }else if (id == R.id.nav_arbitros){
+            fragment = new ListArbiterFragment();
         }else if (id == R.id.nav_logout_jogador) {
             new Sessao().clear(getApplicationContext());
             Intent i = new Intent(DrawerJogador.this, Login.class);
