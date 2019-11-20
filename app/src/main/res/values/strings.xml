@@ -108,6 +108,7 @@
     </string-array>
 
     <string-array name="tipo_usuario">
+        <item>Tipo de Usuario</item>
         <item>Jogador</item>
         <item>Locador</item>
         <item>Árbitro</item>

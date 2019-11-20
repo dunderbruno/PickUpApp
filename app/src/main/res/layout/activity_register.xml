@@ -81,6 +81,7 @@
 
     <Spinner
         android:id="@+id/tipoDeUsuario"
+        android:background="@layout/rounded_border_edittext"
         android:layout_width="215dp"
         android:layout_height="40dp"
         android:layout_marginStart="40dp"
