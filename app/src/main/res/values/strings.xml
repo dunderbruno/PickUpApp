@@ -10,6 +10,7 @@
     <string name="jogador">Jogador</string>
     <string name="locador">Locador</string>
     <string name="nome">Nome</string>
+    <string name="nome_usuario">Nome_Usuario</string>
     <string name="sobrenome">Sobrenome</string>
     <string name="login">Login</string>
     <string name="senha">Senha</string>
@@ -57,6 +58,8 @@
     <string name="sair">sair</string>
     <string name="estado">Estado</string>
     <string name="endere_o">Endereço</string>
+    <string name="primeiro_nome">Primeiro_Nome</string>
+    <string name="email_list">Email_lista</string>
     <string name="pre_o">Preço</string>
     <string name="title_activity_drawer_jogador">title activity drawer jogador</string>
     <string name="menu_agallery">galerr</string>
