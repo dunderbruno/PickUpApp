@@ -66,6 +66,7 @@
     <string name="rbitro">Árbitro</string>
     <string name="buscartimes">Buscar Times</string>
     <string name="meu_time">Meu Time</string>
+    <string name="lista_jogadores">Jogadores</string>
     <string-array name="cities_pernambuco">
         <item>Jaboatão dos Guararapes</item>
         <item>Olinda</item>

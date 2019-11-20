@@ -29,6 +29,11 @@
             android:title="@string/meu_time" />
 
         <item
+            android:id="@+id/nav_players"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="@string/lista_jogadores" />
+
+        <item
             android:id="@+id/nav_logout_jogador"
             android:icon="@drawable/ic_logout"
             android:title="@string/sair" />
