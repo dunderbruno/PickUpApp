@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +12,7 @@ import android.widget.EditText;
 import com.pickupapp.R;
 
 public class MainLogin extends AppCompatActivity {
-    private Button jogador, locador;
+    private Button jogador, locador, arbitro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,5 +38,16 @@ public class MainLogin extends AppCompatActivity {
                 finish();
             }
         });
+        arbitro = findViewById(R.id.button_go_LoginArbitro);
+        arbitro.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View view) {
+                Intent i = new Intent(MainLogin.this, Login.class);
+                startActivity(i);
+                Login.tipoUsuario = "3";
+                finish();
+            }
+        } );
+
     }
 }

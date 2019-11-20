@@ -93,8 +93,10 @@ public class Login extends AppCompatActivity {
                             Intent i = null;
                             if (tipoUsuario.equals("1")){
                                 i = new Intent(Login.this, DrawerJogador.class);
-                            }else {
+                            }else if (tipoUsuario.equals("2")){
                                 i = new Intent(Login.this, DrawerLocador.class);
+                            }else{
+                                i = new Intent(Login.this, DrawerArbitro.class);
                             }
                             startActivity(i);
                             finish();
