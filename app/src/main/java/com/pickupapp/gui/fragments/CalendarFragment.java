@@ -1,6 +1,8 @@
 package com.pickupapp.gui.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -49,10 +51,11 @@ import sun.bob.mcalendarview.vo.DateData;
  * A simple {@link Fragment} subclass.
  */
 public class CalendarFragment extends Fragment {
-    protected static String spotId;
+    protected static String spotId = "";
     private Button reservar;
     private EditText horaInicial, horaFinal;
     private DateData lastDate;
+    private ArrayList<Booking> bookings = null;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -68,6 +71,11 @@ public class CalendarFragment extends Fragment {
         reservar = inflate.findViewById(R.id.reservar);
         horaFinal = inflate.findViewById(R.id.horaFinal);
         horaInicial = inflate.findViewById(R.id.horaInicial);
+        if(Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+            reservar.setVisibility(View.GONE);
+            horaFinal.setVisibility(View.GONE);
+            horaInicial.setVisibility(View.GONE);
+        }
         cv.getMarkedDates().getAll().clear();
         final int[] count = {0};
         cv.setOnDateClickListener(new OnDateClickListener() {
@@ -79,6 +87,69 @@ public class CalendarFragment extends Fragment {
                 count[0] = 1;
                 cv.markDate(date);
                 lastDate = date;
+                boolean show = false;
+                StringBuilder horarios = new StringBuilder();
+                for (Booking n : bookings) {
+                    String[] arrOfStr = n.getDay().split(" ", 5);
+                    String mesa = arrOfStr[2];
+                    String dia = arrOfStr[1];
+                    String mes = "";
+                    String ano = arrOfStr[3];
+                    switch (mesa) {
+                        case "Jan":
+                            mes = "1";
+                            break;
+                        case "Feb":
+                            mes = "2";
+                            break;
+                        case "Mar":
+                            mes = "3";
+                            break;
+                        case "Apr":
+                            mes = "4";
+                            break;
+                        case "May":
+                            mes = "5";
+                            break;
+                        case "Jun":
+                            mes = "6";
+                            break;
+                        case "Jul":
+                            mes = "7";
+                            break;
+                        case "Ago":
+                            mes = "8";
+                            break;
+                        case "Sep":
+                            mes = "9";
+                            break;
+                        case "Oct":
+                            mes = "10";
+                            break;
+                        case "Nov":
+                            mes = "11";
+                            break;
+                        case "Dec":
+                            mes = "12";
+                            break;
+                    }
+                    if(dia.equals(String.valueOf(date.getDay()))&mes.equals(String.valueOf(date.getMonth()))&ano.equals(String.valueOf(date.getYear()))) {
+                        show = true;
+                        horarios.append(n.getStart_time()).append(" - ").append(n.getEnd_time()).append("\n");
+                    }
+                }
+                if (show) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Reservas desse dia")
+                            .setMessage(horarios.toString())
+                            .setNegativeButton("Voltar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .show();
+                }
+
                 Log.d("resposta", String.valueOf(date.getYear()));
                 Log.d("resposta", String.valueOf(date.getDay()));
                 Log.d("resposta", String.valueOf(date.getMonth()));
@@ -95,42 +166,103 @@ public class CalendarFragment extends Fragment {
     }
 
     private void reservarHorario() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String auth = "Basic "
-                + Base64.encodeToString(credentials.getBytes(),
-                Base64.NO_WRAP);
-        String token = Sessao.getSessao(getContext()).getToken();
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("spot_id",spotId);
-        String day = String.valueOf(lastDate.getYear())+"-"+lastDate.getMonthString()+"-"+lastDate.getDayString();
-        params.put("day",day);
-        params.put("start_time",horaInicial.getText().toString());
-        params.put("end_time",horaFinal.getText().toString());
-        Call<SetCall> call = bookingInterface.registerBooking(auth, Sessao.getSessao(getContext()).getToken(), params);
-        call.enqueue(new Callback<SetCall>() {
-            @Override
-            public void onResponse(Call<SetCall> call, Response<SetCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "onResponse: "+response);
-                    return;
+        String day = String.valueOf(lastDate.getYear()) + "-" + lastDate.getMonthString() + "-" + lastDate.getDayString();
+        if (validarReserva(day, horaInicial.getText().toString(), horaFinal.getText().toString())) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://pickupbsiapi.herokuapp.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
+            String credentials = Sessao.getSessao(getContext()).getUsername() + ":" + Sessao.getSessao(getContext()).getPassword();
+            String auth = "Basic "
+                    + Base64.encodeToString(credentials.getBytes(),
+                    Base64.NO_WRAP);
+            String token = Sessao.getSessao(getContext()).getToken();
+            final Map<String, String> params = new HashMap<String, String>();
+            params.put("spot_id", spotId);
+            params.put("day", day);
+            params.put("start_time", horaInicial.getText().toString());
+            params.put("end_time", horaFinal.getText().toString());
+            Call<SetCall> call = bookingInterface.registerBooking(auth, Sessao.getSessao(getContext()).getToken(), params);
+            call.enqueue(new Callback<SetCall>() {
+                @Override
+                public void onResponse(Call<SetCall> call, Response<SetCall> response) {
+                    if (!response.isSuccessful()) {
+                        Log.d("resposta", "onResponse: " + response);
+                        return;
+                    }
+                    Toast.makeText(getContext(), "Reservado com sucesso!", Toast.LENGTH_LONG).show();
+                    Fragment fragment = new WelcomeFragment();
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction transaction = fm.beginTransaction();
+                    transaction.replace(getId(), fragment);
+                    transaction.commit();
                 }
-                Toast.makeText(getContext(),"Reservado com sucesso!", Toast.LENGTH_LONG).show();
-                Fragment fragment = new WelcomeFragment();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction transaction = fm.beginTransaction();
-                transaction.replace(getId(), fragment);
-                transaction.commit();
-            }
 
-            @Override
-            public void onFailure(Call<SetCall> call, Throwable t) {
+                @Override
+                public void onFailure(Call<SetCall> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private boolean validarReserva(String day,String start, String finall) {
+        for (Booking n : bookings) {
+            String[] arrOfStr = n.getDay().split(" ", 5);
+            String mesa = arrOfStr[2];
+            String dia = arrOfStr[1];
+            String mes = "";
+            String ano = arrOfStr[3];
+            switch (mesa) {
+                case "Jan":
+                    mes = "1";
+                    break;
+                case "Feb":
+                    mes = "2";
+                    break;
+                case "Mar":
+                    mes = "3";
+                    break;
+                case "Apr":
+                    mes = "4";
+                    break;
+                case "May":
+                    mes = "5";
+                    break;
+                case "Jun":
+                    mes = "6";
+                    break;
+                case "Jul":
+                    mes = "7";
+                    break;
+                case "Ago":
+                    mes = "8";
+                    break;
+                case "Sep":
+                    mes = "9";
+                    break;
+                case "Oct":
+                    mes = "10";
+                    break;
+                case "Nov":
+                    mes = "11";
+                    break;
+                case "Dec":
+                    mes = "12";
+                    break;
             }
-        });
+            String[] date2 = day.split("-",5);
+            if(dia.equals(date2[2])&mes.equals(date2[1])&ano.equals(date2[0])) {
+                String[] tempo1 = n.getStart_time().split(":");
+                String[] tempo2 = start.split(":");
+                String[] tempofinal = finall.split(":");
+                if ((Integer.valueOf(tempo1[0]) >= Integer.valueOf(tempo2[0]))
+                        && (Integer.valueOf(tempo1[0]) <= Integer.valueOf(tempofinal[0]))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void searchSpotDates(MCalendarView cv) {
@@ -153,7 +285,7 @@ public class CalendarFragment extends Fragment {
                     return;
                 }
                 BookingsCall bookingsCall = response.body();
-                ArrayList<Booking> bookings = bookingsCall.getBookings();
+                bookings = bookingsCall.getBookings();
                 if (!bookings.isEmpty()){
                     for (Booking n : bookings) {
                         marcarCalendario(cv, n);

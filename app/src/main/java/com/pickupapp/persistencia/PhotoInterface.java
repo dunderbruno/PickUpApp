@@ -32,7 +32,6 @@ public interface PhotoInterface {
                                        @Path("spot_id") String spot);
 
     @GET("/photo/{filename}")
-    Call<ResponseBody> getPhoto(@Header("Authorization") String token,
-                                @Header("x-access-token") String token1,
+    Call<ResponseBody> getPhoto(@Header("x-access-token") String token1,
                                 @Path("filename") String photo);
 }

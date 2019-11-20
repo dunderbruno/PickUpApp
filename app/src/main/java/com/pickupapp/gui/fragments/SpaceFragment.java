@@ -32,6 +32,7 @@ import com.pickupapp.R;
 import com.pickupapp.dominio.Photo;
 import com.pickupapp.dominio.Schedule;
 import com.pickupapp.dominio.Space;
+import com.pickupapp.dominio.User;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.PhotoInterface;
 import com.pickupapp.persistencia.SpaceInterface;
@@ -106,10 +107,10 @@ public class SpaceFragment extends Fragment {
         funcionamentoDomingo = inflate.findViewById(R.id.funcionamentoDomingo);
         buscarSpot();
         getPhotos();
-//        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
-//            reservar.setVisibility(View.GONE);
-//        }
         reservarFloating = inflate.findViewById(R.id.reservarFloating);
+        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+            reservarFloating.hide();
+        }
         reservarFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,12 +177,8 @@ public class SpaceFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PhotoInterface photoInterface = retrofit.create(PhotoInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String auth = "Basic "
-                + Base64.encodeToString(credentials.getBytes(),
-                Base64.NO_WRAP);
-        String token = Sessao.getSessao(getContext()).getToken();
-        Call<ResponseBody> call = photoInterface.getPhoto(auth,token,image);
+        User usuario= Sessao.getSessao(getContext());
+        Call<ResponseBody> call = photoInterface.getPhoto(usuario.getToken(),image);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -220,7 +217,6 @@ public class SpaceFragment extends Fragment {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void buscarSpot() {
         nome.setText(spot.getName());
         endereco.setText(spot.getAddress().toString());
