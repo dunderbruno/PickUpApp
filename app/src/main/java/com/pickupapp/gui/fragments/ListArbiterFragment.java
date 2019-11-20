@@ -52,7 +52,7 @@ public class ListArbiterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View inflate = inflater.inflate(R.layout.fragment_list_arbiter, container, false);
-        progressBar = inflate.findViewById(R.id.progressBarListSpots);
+        progressBar = inflate.findViewById(R.id.progressBarListArbiters);
         buscarArbiters(inflate);
         return inflate;
 
@@ -87,7 +87,7 @@ public class ListArbiterFragment extends Fragment {
                 progressBar.setVisibility(View.INVISIBLE);
                 Log.d("resposta", "onResponse: "+response.body());
                 Spots spaces = response.body();
-                lista = (ListView) inflate.findViewById(R.id.lista_spaces_fragment);
+                lista = (ListView) inflate.findViewById(R.id.list_arbiters_fragment);
                 adapter = null;
                 // adapter = new ArbiterAdapter(getActivity(), spaces.getSpaces()); -- PEGAR ARBITROS
                 lista.setAdapter(adapter);
