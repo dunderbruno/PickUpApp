@@ -54,14 +54,13 @@ public class ListBookingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_list_players, container, false);
-        progressBar = inflate.findViewById(R.id.progressBarListPlayers);
+        buscarBookings(inflate);
         return inflate;
     }
 
 
 
-    private void buscarPlayers(View inflate) {
-        progressBar.setVisibility(View.VISIBLE);
+    private void buscarBookings(View inflate) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -69,7 +68,7 @@ public class ListBookingFragment extends Fragment {
         BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
         String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<BookingsCall> call = bookingInterface.getmyBooking(token, String.valueOf(Sessao.getSessao(getContext()).getId()));
+        Call<BookingsCall> call = bookingInterface.getmyBooking(token);
         call.enqueue(new Callback<BookingsCall>() {
             @Override
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {

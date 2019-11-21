@@ -14,40 +14,41 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_person_black_24dp" />
+            app:srcCompat="@drawable/ic_calendar" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-                <TextView
-                android:id="@+id/id_player_nic"
+
+            <TextView
+                android:id="@+id/nome_spot_booking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
 
-                android:text="@string/nome_usuario"
+                android:text="@string/nome_do_espaco"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/id_player_primeiro_nome"
+                android:id="@+id/horario_spot_booking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/primeiro_nome"
+                android:text="horario do espaço"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/id_nome" />
 
             <TextView
-                android:id="@+id/id_player_email"
+                android:id="@+id/data_spot_booking"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/email_list"
+                android:text="data do espaço"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/id_nome" />
 

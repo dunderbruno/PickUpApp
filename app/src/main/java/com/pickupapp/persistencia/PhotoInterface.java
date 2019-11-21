@@ -26,6 +26,12 @@ public interface PhotoInterface {
                                  @Part MultipartBody.Part file,
                                  @Path("spot_id") String spot);
 
+    @Multipart
+    @POST("user/{user_id}/photo")
+    Call<SetCall> registrarPhotoPlayer(@Header("x-access-token") String token1,
+                                 @Part MultipartBody.Part file,
+                                 @Path("user_id") String spot);
+
     @GET("/spot/{spot_id}/photo/list")
     Call<SpotPhotosCall> getSpotPhotos(@Header("Authorization") String token,
                                        @Header("x-access-token") String token1,

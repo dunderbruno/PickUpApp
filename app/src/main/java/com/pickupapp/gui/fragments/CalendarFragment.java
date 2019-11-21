@@ -271,12 +271,8 @@ public class CalendarFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String auth = "Basic "
-                + Base64.encodeToString(credentials.getBytes(),
-                Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<BookingsCall> call = bookingInterface.getBooking(auth, Sessao.getSessao(getContext()).getToken(), spotId);
+        Call<BookingsCall> call = bookingInterface.getBooking(token, spotId);
         call.enqueue(new Callback<BookingsCall>() {
             @Override
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {

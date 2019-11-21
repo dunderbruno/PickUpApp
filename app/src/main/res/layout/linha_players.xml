@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
                 <TextView
-                android:id="@+id/id_player_nic"
+                android:id="@+id/nome_pessoa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -32,7 +32,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/id_player_primeiro_nome"
+                android:id="@+id/primeiro_nome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/id_nome" />
 
             <TextView
-                android:id="@+id/id_player_email"
+                android:id="@+id/email_pessoa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"

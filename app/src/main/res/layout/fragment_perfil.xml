@@ -4,18 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".gui.fragments.SpaceFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="10">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="#7DDB38"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0"
+            android:layout_marginBottom="50dp"
+            android:layout_weight="0"
+            android:background="@android:color/white"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -24,79 +29,67 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:src="@drawable/soccerproject1"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"/>
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
             android:gravity="start|top"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/dados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="10dp"
+                android:text="Dados Jogador"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/editText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/nome_jogador"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="jogador teste"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/editText2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/contato"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Contato"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                <EditText
-                    android:id="@+id/editText3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:text="Salvar"
-                    android:textColor="@android:color/black" />
-            </LinearLayout>
-
+                android:layout_marginLeft="20dp"
+                android:text="teste@email.com"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/SalvarImagemJogador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_weight="0"
+            android:background="@layout/rounded_border_button"
+            android:text="Salvar"
+            android:textColor="#fff" />
 
     </LinearLayout>
 </FrameLayout>

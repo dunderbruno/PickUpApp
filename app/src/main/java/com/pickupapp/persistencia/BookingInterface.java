@@ -24,7 +24,6 @@ public interface BookingInterface {
                                   @Path("spot_id") String spot);
 
     @GET("/booking/my")
-    Call<BookingsCall> getmyBooking(@Header("x-access-token") String token1,
-                                  @Path("spot_id") String spot);
+    Call<BookingsCall> getmyBooking(@Header("x-access-token") String token1);
 
 }
