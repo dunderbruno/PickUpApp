@@ -31,8 +31,7 @@ public interface SpaceInterface {
     Call<Spots> getMySpaces(@Header("Authorization") String token, @Header("x-access-token") String token1);
 
     @GET("/spot/{spot_id}")
-    Call<Space> getSpace(@Header("Authorization") String token,
-                               @Header("x-access-token") String token1,
+    Call<Space> getSpace(@Header("x-access-token") String token1,
                                @Path("spot_id") String spot);
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".gui.fragments.ReservaFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:textAlignment="viewStart"
+        android:textDirection="anyRtl">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/spot_nome_reserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Espaço Teste"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/spot_endereco_reserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/endere_o"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/spot_horario_reserva"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="horario"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/arbitro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Árbitro: Teste"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_avaliar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@layout/rounded_border_button"
+            android:text="Avaliar"
+            android:textColor="#fff" />
+
+    </LinearLayout>
+
+</FrameLayout>

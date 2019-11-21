@@ -20,8 +20,11 @@ public interface BookingInterface {
                                   @Body Map<String,String> parameters);
 
     @GET("/spot/{spot_id}/booking")
-    Call<BookingsCall> getBooking(@Header("Authorization") String token,
-                                  @Header("x-access-token") String token1,
+    Call<BookingsCall> getBooking(@Header("x-access-token") String token1,
+                                  @Path("spot_id") String spot);
+
+    @GET("/booking/my")
+    Call<BookingsCall> getmyBooking(@Header("x-access-token") String token1,
                                   @Path("spot_id") String spot);
 
 }

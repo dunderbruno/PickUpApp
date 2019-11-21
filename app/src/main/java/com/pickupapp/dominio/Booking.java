@@ -1,8 +1,14 @@
 package com.pickupapp.dominio;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Booking {
     private String day;
     private String spot_id;
+
+    @SerializedName("spot_name")
+    private String spot_name;
+
     private String start_time;
     private String end_time;
 
@@ -36,5 +42,13 @@ public class Booking {
 
     public void setEnd_time(String end_time) {
         this.end_time = end_time;
+    }
+
+    public String getSpot_name() {
+        return spot_name;
+    }
+
+    public void setSpot_name(String spot_name) {
+        this.spot_name = spot_name;
     }
 }
