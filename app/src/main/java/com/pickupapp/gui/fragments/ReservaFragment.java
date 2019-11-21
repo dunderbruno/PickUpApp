@@ -43,7 +43,7 @@ public class ReservaFragment extends Fragment {
         avaliar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
         return inflate;

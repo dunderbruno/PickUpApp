@@ -19,6 +19,11 @@
             android:title="@string/acessoaomapa" />
 
         <item
+            android:id="@+id/nav_reservas"
+            android:icon="@drawable/ic_calendar"
+            android:title="@string/reservas" />
+
+        <item
             android:id="@+id/nav_new_teams"
             android:icon="@drawable/ic_add_group"
             android:title="@string/buscartimes" />
