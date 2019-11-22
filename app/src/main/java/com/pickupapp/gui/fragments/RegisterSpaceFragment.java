@@ -664,7 +664,7 @@ public class RegisterSpaceFragment extends Fragment implements AdapterView.OnIte
         final String token = Sessao.getSessao(getContext()).getToken();
         final Map<String, String> params = new HashMap<String, String>();
         params.put("spot_name", space.getName());
-        params.put("city_id", String.valueOf(cities.get(cidadeid).getId()));
+        params.put("city_id", String.valueOf(cities.get(cidadeid-1).getId()));
         params.put("street", space.getAddress().getStreet());
         params.put("cep", Mask.unmask(space.getAddress().getCep()));
         params.put("number", String.valueOf(space.getAddress().getNumber()));
