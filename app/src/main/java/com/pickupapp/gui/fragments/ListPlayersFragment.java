@@ -59,27 +59,18 @@ public class ListPlayersFragment extends Fragment {
 
 
     private void buscarPlayers(View inflate) {
-
-        //ALTERAR VARIÁVEIS
-        //DE RETORNO DO BANCO
-
-
         progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SpaceInterface spaceInterface = retrofit.create(SpaceInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String auth = "Basic "
-                + Base64.encodeToString(credentials.getBytes(),
-                Base64.NO_WRAP);
         String token = Sessao.getSessao(getContext()).getToken();
         Call<Spots> call = null;
         if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
-            call = spaceInterface.getMySpaces(auth, Sessao.getSessao(getContext()).getToken());
+            call = spaceInterface.getMySpaces(Sessao.getSessao(getContext()).getToken());
         }else{
-            call = spaceInterface.getSpaces(auth, Sessao.getSessao(getContext()).getToken());
+            call = spaceInterface.getSpaces(Sessao.getSessao(getContext()).getToken());
         }
         call.enqueue(new Callback<Spots>() {
             @Override
@@ -94,9 +85,6 @@ public class ListPlayersFragment extends Fragment {
                 Spots spaces = response.body();
                 lista = (ListView) inflate.findViewById(R.id.lista_players_fragment);
                 adapter = null;
-                //
-
-
                 //adapter = new PlayerAdapter(getActivity(), spaces.getSpaces());  -- getPlayers()
                 lista.setAdapter(adapter);
                 //spacesList = spaces.getSpaces();   -- getPlayers()

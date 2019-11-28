@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.pickupapp.R;
 import com.pickupapp.dominio.Booking;
 import com.pickupapp.dominio.Person;
+import com.pickupapp.dominio.User;
 import com.pickupapp.dominio.adapter.BookingAdapter;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.BookingInterface;
@@ -26,6 +27,7 @@ import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.BookingsCall;
 import com.pickupapp.persistencia.retorno.Spots;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,9 +68,13 @@ public class ListBookingFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
-        String credentials = Sessao.getSessao(getContext()).getUsername()+":"+Sessao.getSessao(getContext()).getPassword();
-        String token = Sessao.getSessao(getContext()).getToken();
-        Call<BookingsCall> call = bookingInterface.getmyBooking(token);
+        User user = Sessao.getSessao(getContext());
+        Call<BookingsCall> call;
+        if (user.getGroup().getGroup_name().equals("2")){
+            call = bookingInterface.getmyBookingSpots(user.getToken());
+        }else{
+            call = bookingInterface.getmyBooking(user.getToken());
+        }
         call.enqueue(new Callback<BookingsCall>() {
             @Override
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {
@@ -76,6 +82,7 @@ public class ListBookingFragment extends Fragment {
                     Log.d("resposta", "onResponse: "+response);
                     return;
                 }
+                Log.d("resposta", "onResponse: "+response);
                 BookingsCall bookingsCall = response.body();
                 bookings = bookingsCall.getBookings();
                 lista = (ListView) inflate.findViewById(R.id.lista_players_fragment);

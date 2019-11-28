@@ -254,10 +254,14 @@ public class CalendarFragment extends Fragment {
             String[] date2 = day.split("-",5);
             if(dia.equals(date2[2])&mes.equals(date2[1])&ano.equals(date2[0])) {
                 String[] tempo1 = n.getStart_time().split(":");
+                String[] tempofinal1 = n.getEnd_time().split(":");
+
                 String[] tempo2 = start.split(":");
                 String[] tempofinal = finall.split(":");
-                if ((Integer.valueOf(tempo1[0]) >= Integer.valueOf(tempo2[0]))
-                        && (Integer.valueOf(tempo1[0]) <= Integer.valueOf(tempofinal[0]))) {
+                if ((Integer.valueOf(tempo1[0]) <= Integer.valueOf(tempo2[0]))
+                        && (Integer.valueOf(tempo1[0]) <= Integer.valueOf(tempofinal[0]))
+                        &&(Integer.valueOf(tempofinal1[0]) >= Integer.valueOf(tempo2[0]))
+                        && (Integer.valueOf(tempofinal1[0]) >= Integer.valueOf(tempofinal[0]))) {
                     return false;
                 }
             }
