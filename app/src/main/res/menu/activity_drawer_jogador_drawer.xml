@@ -24,9 +24,9 @@
             android:title="@string/reservas" />
 
         <item
-            android:id="@+id/nav_new_teams"
+            android:id="@+id/nav_convites"
             android:icon="@drawable/ic_add_group"
-            android:title="@string/buscartimes" />
+            android:title="@string/visualizar_convites" />
 
         <item
             android:id="@+id/nav_new_my_team"
@@ -37,11 +37,6 @@
             android:id="@+id/nav_players"
             android:icon="@drawable/ic_person_add_black_24dp"
             android:title="@string/lista_jogadores" />
-
-        <item
-            android:id="@+id/nav_arbitros"
-            android:icon="@drawable/ic_pan_tool_black_24dp"
-            android:title="@string/lista_arbitros" />
 
         <item
             android:id="@+id/nav_logout_jogador"

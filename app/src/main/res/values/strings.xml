@@ -70,6 +70,7 @@
     <string name="lista_jogadores">Jogadores</string>
     <string name="lista_arbitros">Arbitros</string>
     <string name="reservas">Reservas</string>
+    <string name="visualizar_convites">Visualizar convites</string>
     <string-array name="cities_pernambuco">
         <item>Jaboatão dos Guararapes</item>
         <item>Olinda</item>

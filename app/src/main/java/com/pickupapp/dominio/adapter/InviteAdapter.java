@@ -8,19 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.pickupapp.R;
-
+import com.pickupapp.dominio.Invite;
 import com.pickupapp.dominio.Player;
-import com.pickupapp.dominio.User;
 
 import java.util.ArrayList;
 
-public class PlayerAdapter extends ArrayAdapter<Player> {
+public class InviteAdapter extends ArrayAdapter<Invite> {
 
     private final Context context;
-    private final ArrayList<Player> jogadores;
+    private final ArrayList<Invite> jogadores;
 
 
-    public PlayerAdapter(Context context, ArrayList<Player> jogadores) {
+    public InviteAdapter(Context context, ArrayList<Invite> jogadores) {
         super(context, R.layout.linha_spaces, jogadores);
         this.context = context;
         this.jogadores = jogadores;
@@ -34,11 +33,10 @@ public class PlayerAdapter extends ArrayAdapter<Player> {
         TextView primeiroNome = rowView.findViewById(R.id.nome_pessoa);
         TextView email = rowView.findViewById(R.id.email_pessoa);
 
-        nomeNick.setText(jogadores.get(position).getAverage_rating());
-        String primeiroNomeSet = jogadores.get(position).getName();
-        String segundooNomeSet = jogadores.get(position).getSurname();
-        primeiroNome.setText(primeiroNomeSet + " " + segundooNomeSet);
-        email.setText(jogadores.get(position).getMatches_count());
+        nomeNick.setText(jogadores.get(position).getBooking_id());
+        String primeiroNomeSet = jogadores.get(position).getInvite_id();
+        primeiroNome.setText(primeiroNomeSet);
+        email.setText(jogadores.get(position).getStatus());
         return rowView;
 
     }

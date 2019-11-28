@@ -24,4 +24,43 @@
         app:layout_constraintEnd_toEndOf="@+id/lista_players_fragment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lista_players_fragment" />
+
+    <LinearLayout
+        android:id="@+id/layoutconvite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecione o dia da reserva que deseja convidar o jogador:"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerBooking"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@layout/rounded_border_edittext" />
+
+        <Button
+            android:id="@+id/buttonConvidar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@layout/rounded_border_button"
+            android:text="Convidar"
+            android:textColor="#fff" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

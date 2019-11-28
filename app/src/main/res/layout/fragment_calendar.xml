@@ -5,53 +5,64 @@
     android:layout_height="match_parent"
     tools:context=".gui.fragments.CalendarFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <sun.bob.mcalendarview.MCalendarView
-            android:id="@+id/mcalendarView"
-            android:layout_width="wrap_content"
-            android:layout_height="350dp"
-            tools:context=".MainActivity">
-
-        </sun.bob.mcalendarview.MCalendarView>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical" >
 
-            <EditText
-                android:id="@+id/horaInicial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Hora Inicial"
-                android:inputType="time"
-                android:textColorHint="@android:color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/horaFinal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Hora Final"
-                android:inputType="time"
-                android:textColorHint="@android:color/black" />
+                <sun.bob.mcalendarview.MCalendarView
+                    android:id="@+id/mcalendarView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="350dp"
+                    tools:context=".MainActivity">
+
+                </sun.bob.mcalendarview.MCalendarView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/horaInicial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Hora Inicial"
+                        android:inputType="time"
+                        android:textColorHint="@android:color/black" />
+
+                    <EditText
+                        android:id="@+id/horaFinal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Hora Final"
+                        android:inputType="time"
+                        android:textColorHint="@android:color/black" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/reservar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/places_text_white_alpha_26"
+                    android:text="Reservar"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/reservar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/places_text_white_alpha_26"
-            android:text="Reservar"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

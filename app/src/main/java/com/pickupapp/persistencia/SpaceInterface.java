@@ -34,4 +34,6 @@ public interface SpaceInterface {
     Call<Space> getSpace(@Header("x-access-token") String token1,
                                @Path("spot_id") String spot);
 
+    @POST("/spot/rate")
+    Call<SetCall> rateSpace(@Header("x-access-token") String token,@Body Map<String, String> params);
 }

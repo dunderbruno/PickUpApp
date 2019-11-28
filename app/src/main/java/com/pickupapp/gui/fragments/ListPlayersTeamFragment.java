@@ -4,12 +4,6 @@ package com.pickupapp.gui.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,27 +17,23 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.pickupapp.R;
 import com.pickupapp.dominio.Booking;
-import com.pickupapp.dominio.Person;
 import com.pickupapp.dominio.Player;
 import com.pickupapp.dominio.User;
-import com.pickupapp.dominio.adapter.BookingAdapter;
 import com.pickupapp.dominio.adapter.PlayerAdapter;
-import com.pickupapp.dominio.adapter.SpaceAdapter;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.BookingInterface;
 import com.pickupapp.persistencia.InviteInterface;
 import com.pickupapp.persistencia.PlayerInterface;
-import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.BookingsCall;
 import com.pickupapp.persistencia.retorno.Players;
 import com.pickupapp.persistencia.retorno.SetCall;
-import com.pickupapp.persistencia.retorno.Spots;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -55,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListPlayersFragment extends Fragment {
+public class ListPlayersTeamFragment extends Fragment {
     private ArrayList<Player> playersList;
     private ListView lista;
     private ArrayAdapter<Player> adapter;
@@ -67,7 +57,7 @@ public class ListPlayersFragment extends Fragment {
     private Button convidar;
 
 
-    public ListPlayersFragment() {
+    public ListPlayersTeamFragment() {
 
     }
 
@@ -76,26 +66,26 @@ public class ListPlayersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View inflate = inflater.inflate(R.layout.fragment_list_players, container, false);
-        buscarBookings();
+        final View inflate = inflater.inflate(R.layout.fragment_list_players_team, container, false);
         progressBar = inflate.findViewById(R.id.progressBarListPlayers);
         spinner = inflate.findViewById(R.id.spinnerBooking);
-        convite = inflate.findViewById(R.id.layoutconvite);
-        convidar = inflate.findViewById(R.id.buttonConvidar);
-        lista = (ListView) inflate.findViewById(R.id.lista_players_fragment);
-        convidar.setOnClickListener(new View.OnClickListener() {
+        buscarBookings();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                enviarConvite();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                buscarPlayers(bookings.get(i).getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        buscarPlayers();
         return inflate;
     }
 
 
 
-    private void buscarPlayers() {
+    private void buscarPlayers(String booking_id) {
         progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
@@ -104,7 +94,7 @@ public class ListPlayersFragment extends Fragment {
         PlayerInterface playerInterface = retrofit.create(PlayerInterface.class);
         String token = Sessao.getSessao(getContext()).getToken();
         Call<Players> call = null;
-        call = playerInterface.getPlayers(Sessao.getSessao(getContext()).getToken());
+        call = playerInterface.getBookingPlayers(Sessao.getSessao(getContext()).getToken(), booking_id);
         call.enqueue(new Callback<Players>() {
             @Override
             public void onResponse(Call<Players> call, Response<Players> response) {
@@ -119,27 +109,6 @@ public class ListPlayersFragment extends Fragment {
                 adapter = new PlayerAdapter(getActivity(), spaces.getPlayers());
                 lista.setAdapter(adapter);
                 playersList = spaces.getPlayers();
-                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Convidar")
-                                .setMessage("Deseja convidar o jogador: "+playersList.get(position).getName()+" para o seu time?")
-                                .setPositiveButton("Convidar", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        jogador = playersList.get(position).getId();
-                                        convite.setVisibility(View.VISIBLE);
-                                        lista.setVisibility(View.INVISIBLE);
-                                    }
-                                })
-                                .setNegativeButton("Voltar", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                    }
-                                })
-                                .show();
-                    }
-                });
             }
 
             @Override
@@ -190,6 +159,7 @@ public class ListPlayersFragment extends Fragment {
     }
 
     private void buscarBookings() {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -207,20 +177,20 @@ public class ListPlayersFragment extends Fragment {
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response);
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 Log.d("resposta", "onResponse: "+response);
                 BookingsCall bookingsCall = response.body();
                 bookings = bookingsCall.getBookings();
                 ArrayList<String> listString = new ArrayList<>();
-                listString.add("Selecione a reserva");
                 for (Booking n : bookings) {
-                    listString.add(Integer.parseInt(n.getId()),n.getSpot_name()+", "+n.getDay()+", \n \n"+n.getStart_time()+"-"+n.getEnd_time());
+                    listString.add(n.getSpot_name()+", "+n.getDay()+", \n \n"+n.getStart_time()+"-"+n.getEnd_time());
                 }
                 ArrayAdapter<String> cidadeAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(cidadeAdapter);
-                spinner.setSelection(0);
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override

@@ -3,6 +3,7 @@ package com.pickupapp.dominio;
 import com.google.gson.annotations.SerializedName;
 
 public class Booking {
+    private String id;
     private String day;
     private String spot_id;
 
@@ -50,5 +51,13 @@ public class Booking {
 
     public void setSpot_name(String spot_name) {
         this.spot_name = spot_name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
