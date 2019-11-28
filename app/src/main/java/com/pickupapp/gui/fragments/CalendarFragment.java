@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Booking;
+import com.pickupapp.infra.Mask;
 import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.BookingInterface;
 import com.pickupapp.persistencia.SpaceInterface;
@@ -71,6 +72,8 @@ public class CalendarFragment extends Fragment {
         reservar = inflate.findViewById(R.id.reservar);
         horaFinal = inflate.findViewById(R.id.horaFinal);
         horaInicial = inflate.findViewById(R.id.horaInicial);
+        horaInicial.addTextChangedListener(Mask.insert(Mask.HORA, horaInicial));
+        horaFinal.addTextChangedListener(Mask.insert(Mask.HORA, horaFinal));
         if(Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
             reservar.setVisibility(View.GONE);
             horaFinal.setVisibility(View.GONE);
@@ -346,5 +349,6 @@ public class CalendarFragment extends Fragment {
         DateData date = new DateData(Integer.parseInt(ano),Integer.parseInt(mes),Integer.parseInt(dia));
         cv.markDate(date);
     }
+
 
 }
