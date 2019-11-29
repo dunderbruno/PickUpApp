@@ -21,7 +21,7 @@
     <item
         android:id="@+id/nav_list_reservar_spots"
         android:icon="@drawable/ic_calendar"
-        android:title="@string/cadastrarespaco" />
+        android:title="@string/reservas" />
 
     <item
         android:id="@+id/nov_logout"

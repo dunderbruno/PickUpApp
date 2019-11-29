@@ -27,7 +27,7 @@
             android:visibility="gone" />
 
         <ListView
-            android:id="@+id/lista_players_fragment"
+            android:id="@+id/lista_players_fragment_team"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout_editor_absoluteX="132dp"

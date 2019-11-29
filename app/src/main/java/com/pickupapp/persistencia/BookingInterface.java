@@ -26,6 +26,9 @@ public interface BookingInterface {
     @GET("/booking/my")
     Call<BookingsCall> getmyBooking(@Header("x-access-token") String token1);
 
+    @GET("/booking/my/invited")
+    Call<BookingsCall> getmyBookingInvited(@Header("x-access-token") String token1);
+
     @GET("/booking/my/owner")
     Call<BookingsCall> getmyBookingSpots(@Header("x-access-token") String token1);
 

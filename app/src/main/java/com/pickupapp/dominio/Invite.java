@@ -2,6 +2,7 @@ package com.pickupapp.dominio;
 
 public class Invite {
     private String booking_id;
+    private String spot_id;
     private String status;
     private String invite_id;
     private String player_id;
@@ -36,5 +37,13 @@ public class Invite {
 
     public void setPlayer_id(String player_id) {
         this.player_id = player_id;
+    }
+
+    public String getSpot_id() {
+        return spot_id;
+    }
+
+    public void setSpot_id(String spot_id) {
+        this.spot_id = spot_id;
     }
 }

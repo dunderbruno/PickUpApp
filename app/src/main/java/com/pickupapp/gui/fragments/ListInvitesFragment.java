@@ -18,11 +18,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.pickupapp.R;
 import com.pickupapp.dominio.Booking;
 import com.pickupapp.dominio.Invite;
 import com.pickupapp.dominio.Player;
+import com.pickupapp.dominio.Space;
 import com.pickupapp.dominio.User;
 import com.pickupapp.dominio.adapter.InviteAdapter;
 import com.pickupapp.dominio.adapter.PlayerAdapter;
@@ -30,6 +33,7 @@ import com.pickupapp.infra.Sessao;
 import com.pickupapp.persistencia.BookingInterface;
 import com.pickupapp.persistencia.InviteInterface;
 import com.pickupapp.persistencia.PlayerInterface;
+import com.pickupapp.persistencia.SpaceInterface;
 import com.pickupapp.persistencia.retorno.BookingsCall;
 import com.pickupapp.persistencia.retorno.Invites;
 import com.pickupapp.persistencia.retorno.Players;
@@ -116,9 +120,10 @@ public class ListInvitesFragment extends Fragment {
                                         aceitarConvite();
                                     }
                                 })
-                                .setNegativeButton("Voltar", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("Local", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
+                                        String idspot = invitesList.get(position).getSpot_id();
+                                        getSpace(idspot);
                                     }
                                 })
                                 .show();
@@ -135,6 +140,36 @@ public class ListInvitesFragment extends Fragment {
         });
     }
 
+    private void getSpace(String spotid) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SpaceInterface spaceInterface = retrofit.create(SpaceInterface.class);
+        String token = Sessao.getSessao(getContext()).getToken();
+        Call<Space> call = spaceInterface.getSpace(token, spotid);
+        call.enqueue(new Callback<Space>() {
+            @Override
+            public void onResponse(Call<Space> call, Response<Space> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "onResponse: "+response.message());
+                    return;
+                }
+                Space spot = response.body();
+                Fragment fragment = new SpaceFragment();
+                SpaceFragment.spot = spot;
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(getId(), fragment);
+                transaction.commit();
+            }
+
+            @Override
+            public void onFailure(Call<Space> call, Throwable t) {
+            }
+        });
+    }
+
     private void aceitarConvite() {
         progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
@@ -147,7 +182,7 @@ public class ListInvitesFragment extends Fragment {
         Map<String, String> params = new HashMap<String, String>();
         params.put("player_id", player);
         params.put("booking_id", booking);
-        params.put("playerinvite_id", booking);
+        params.put("playerinvite_id", invite);
         call = inviteInterface.acceptInvite(Sessao.getSessao(getContext()).getToken(), params);
         call.enqueue(new Callback<SetCall>() {
             @Override
@@ -160,6 +195,7 @@ public class ListInvitesFragment extends Fragment {
                 }
                 progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                buscarInvites();
             }
 
             @Override

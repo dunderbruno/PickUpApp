@@ -69,11 +69,15 @@ public class ListPlayersTeamFragment extends Fragment {
         final View inflate = inflater.inflate(R.layout.fragment_list_players_team, container, false);
         progressBar = inflate.findViewById(R.id.progressBarListPlayers);
         spinner = inflate.findViewById(R.id.spinnerBooking);
+        lista = inflate.findViewById(R.id.lista_players_fragment_team);
+        lista.setVisibility(View.VISIBLE);
         buscarBookings();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                buscarPlayers(bookings.get(i).getId());
+                if(i!=0){
+                    buscarPlayers(bookings.get(i-1).getId());
+                }
             }
 
             @Override
@@ -94,7 +98,7 @@ public class ListPlayersTeamFragment extends Fragment {
         PlayerInterface playerInterface = retrofit.create(PlayerInterface.class);
         String token = Sessao.getSessao(getContext()).getToken();
         Call<Players> call = null;
-        call = playerInterface.getBookingPlayers(Sessao.getSessao(getContext()).getToken(), booking_id);
+        call = playerInterface.getBookingPlayers(token, booking_id);
         call.enqueue(new Callback<Players>() {
             @Override
             public void onResponse(Call<Players> call, Response<Players> response) {
@@ -103,56 +107,18 @@ public class ListPlayersTeamFragment extends Fragment {
                     progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                Log.d("resposta", "onResponse: "+response.body());
-                Players spaces = response.body();
-                adapter = new PlayerAdapter(getActivity(), spaces.getPlayers());
+                progressBar.setVisibility(View.GONE);
+                Log.d("resposta", "onResponse: "+response.body().getPlayers().get(0).getName());
+                Players players = response.body();
+                adapter = new PlayerAdapter(getActivity(), players.getPlayers());
                 lista.setAdapter(adapter);
-                playersList = spaces.getPlayers();
+                playersList = players.getPlayers();
             }
 
             @Override
             public void onFailure(Call<Players> call, Throwable t) {
                 Log.d("resposta", "onResponse: "+ t);
-                progressBar.setVisibility(View.INVISIBLE);
-
-            }
-        });
-    }
-
-    private void enviarConvite() {
-        progressBar.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://pickupbsiapi.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        InviteInterface inviteInterface = retrofit.create(InviteInterface.class);
-        String token = Sessao.getSessao(getContext()).getToken();
-        Call<SetCall> call = null;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("player_id", jogador);
-        params.put("booking_id", String.valueOf(spinner.getSelectedItemId()));
-        call = inviteInterface.registerInvite(Sessao.getSessao(getContext()).getToken(), params);
-        call.enqueue(new Callback<SetCall>() {
-            @Override
-            public void onResponse(Call<SetCall> call, Response<SetCall> response) {
-                if (!response.isSuccessful()){
-                    Log.d("resposta", "onResponse: "+response);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(getContext(),"Ocorreu um erro no envio do convite!",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                progressBar.setVisibility(View.INVISIBLE);
-                convite.setVisibility(View.INVISIBLE);
-                lista.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<SetCall> call, Throwable t) {
-                Log.d("resposta", "onResponse: "+ t);
-                Toast.makeText(getContext(),"Ocorreu um erro no envio do convite!",Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
 
             }
         });
@@ -167,30 +133,28 @@ public class ListPlayersTeamFragment extends Fragment {
         BookingInterface bookingInterface = retrofit.create(BookingInterface.class);
         User user = Sessao.getSessao(getContext());
         Call<BookingsCall> call;
-        if (user.getGroup().getGroup_name().equals("2")){
-            call = bookingInterface.getmyBookingSpots(user.getToken());
-        }else{
-            call = bookingInterface.getmyBooking(user.getToken());
-        }
+        call = bookingInterface.getmyBookingInvited(user.getToken());
         call.enqueue(new Callback<BookingsCall>() {
             @Override
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response);
-                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
                 Log.d("resposta", "onResponse: "+response);
                 BookingsCall bookingsCall = response.body();
                 bookings = bookingsCall.getBookings();
                 ArrayList<String> listString = new ArrayList<>();
+                listString.add("Selecione uma reserva");
                 for (Booking n : bookings) {
                     listString.add(n.getSpot_name()+", "+n.getDay()+", \n \n"+n.getStart_time()+"-"+n.getEnd_time());
                 }
                 ArrayAdapter<String> cidadeAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(cidadeAdapter);
-                progressBar.setVisibility(View.INVISIBLE);
+                spinner.setSelection(0);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

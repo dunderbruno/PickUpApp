@@ -70,6 +70,9 @@ public class ReservaFragment extends Fragment {
         spotName.setText(booking.getSpot_name());
         String texto = booking.getStart_time()+" - "+booking.getEnd_time();
         bookingTime.setText(texto);
+        if (Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
+            avaliar.setVisibility(View.GONE);
+        }
         avaliar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
