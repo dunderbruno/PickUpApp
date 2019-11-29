@@ -147,7 +147,7 @@ public class ListInvitesFragment extends Fragment {
         Map<String, String> params = new HashMap<String, String>();
         params.put("player_id", player);
         params.put("booking_id", booking);
-        params.put("invite_id", booking);
+        params.put("playerinvite_id", booking);
         call = inviteInterface.acceptInvite(Sessao.getSessao(getContext()).getToken(), params);
         call.enqueue(new Callback<SetCall>() {
             @Override
