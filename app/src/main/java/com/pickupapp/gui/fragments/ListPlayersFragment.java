@@ -215,7 +215,7 @@ public class ListPlayersFragment extends Fragment {
                 ArrayList<String> listString = new ArrayList<>();
                 listString.add("Selecione a reserva");
                 for (Booking n : bookings) {
-                    listString.add(Integer.parseInt(n.getId()),n.getSpot_name()+", "+n.getDay()+", \n \n"+n.getStart_time()+"-"+n.getEnd_time());
+                    listString.add(n.getSpot_name()+", "+n.getDay()+", \n \n"+n.getStart_time()+"-"+n.getEnd_time());
                 }
                 ArrayAdapter<String> cidadeAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, listString);
                 cidadeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
