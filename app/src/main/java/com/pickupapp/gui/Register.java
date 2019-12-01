@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class Register extends AppCompatActivity {
     private Button voltar, cadastrar;
     private EditText nome, sobrenome, login, senha;
     private Spinner tipoUsuario;
+    private ProgressBar progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class Register extends AppCompatActivity {
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
                 boolean validacao = validarCampos();
                 if(validacao){
                     final User usuario = new User();
@@ -67,11 +70,6 @@ public class Register extends AppCompatActivity {
     }
 
     private void cadastrarUsuario(final User usuario) {
-        cadastrar.setEnabled(false);
-        login.setEnabled(false);
-        senha.setEnabled(false);
-        nome.setEnabled(false);
-        sobrenome.setEnabled(false);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -102,14 +100,11 @@ public class Register extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (!response.isSuccessful()){
+                    progress.setVisibility(View.INVISIBLE);
                     Log.d("resposta", "cadastro Usuario: "+response);
-                    cadastrar.setEnabled(true);
-                    login.setEnabled(true);
-                    senha.setEnabled(true);
-                    nome.setEnabled(true);
-                    sobrenome.setEnabled(true);
                     return;
                 }
+                progress.setVisibility(View.INVISIBLE);
                 Intent i = new Intent(Register.this, MainScreen.class);
                 startActivity(i);
                 finish();
@@ -119,11 +114,7 @@ public class Register extends AppCompatActivity {
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d("resposta", "erro: "+t);
                 Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
-                cadastrar.setEnabled(true);
-                login.setEnabled(true);
-                senha.setEnabled(true);
-                nome.setEnabled(true);
-                sobrenome.setEnabled(true);
+                progress.setVisibility(View.INVISIBLE);
             }
         });
     }
