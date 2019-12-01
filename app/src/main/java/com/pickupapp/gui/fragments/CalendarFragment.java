@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EdgeEffect;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class CalendarFragment extends Fragment {
     private EditText horaInicial, horaFinal;
     private DateData lastDate;
     private ArrayList<Booking> bookings = null;
+    private ProgressBar progressBar;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -72,6 +74,7 @@ public class CalendarFragment extends Fragment {
         reservar = inflate.findViewById(R.id.reservar);
         horaFinal = inflate.findViewById(R.id.horaFinal);
         horaInicial = inflate.findViewById(R.id.horaInicial);
+        progressBar = inflate.findViewById(R.id.progressBar);
         horaInicial.addTextChangedListener(Mask.insert(Mask.HORA, horaInicial));
         horaFinal.addTextChangedListener(Mask.insert(Mask.HORA, horaFinal));
         if(Sessao.getSessao(getContext()).getGroup().getGroup_name().equals("2")){
@@ -169,6 +172,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void reservarHorario() {
+        progressBar.setVisibility(View.VISIBLE);
         String day = String.valueOf(lastDate.getYear()) + "-" + lastDate.getMonthString() + "-" + lastDate.getDayString();
         if (validarReserva(day, horaInicial.getText().toString(), horaFinal.getText().toString())) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -192,8 +196,10 @@ public class CalendarFragment extends Fragment {
                 public void onResponse(Call<SetCall> call, Response<SetCall> response) {
                     if (!response.isSuccessful()) {
                         Log.d("resposta", "onResponse: " + response);
+                        progressBar.setVisibility(View.INVISIBLE);
                         return;
                     }
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Reservado com sucesso!", Toast.LENGTH_LONG).show();
                     Fragment fragment = new WelcomeFragment();
                     FragmentManager fm = getFragmentManager();
@@ -204,6 +210,7 @@ public class CalendarFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<SetCall> call, Throwable t) {
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             });
         }
@@ -273,6 +280,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void searchSpotDates(MCalendarView cv) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://pickupbsiapi.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -285,6 +293,7 @@ public class CalendarFragment extends Fragment {
             public void onResponse(Call<BookingsCall> call, Response<BookingsCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response);
+                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 BookingsCall bookingsCall = response.body();
@@ -294,10 +303,12 @@ public class CalendarFragment extends Fragment {
                         marcarCalendario(cv, n);
                     }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<BookingsCall> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
