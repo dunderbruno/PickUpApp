@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class Login extends AppCompatActivity {
     private EditText login, senha;
     private Spinner tipoUsuario;
     private TextView voltar;
+    private ProgressBar progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class Login extends AppCompatActivity {
         senha = findViewById(R.id.inputSenhaAcesso);
         tipoUsuario = findViewById(R.id.tipoDeUsuario2);
         voltar = findViewById(R.id.buttonVoltarAcesso);
+        progress = findViewById(R.id.progressBar);
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,17 +52,12 @@ public class Login extends AppCompatActivity {
             }
         });
         acessar = findViewById(R.id.buttonAcessarAcesso);
-        final FrameLayout progress = findViewById(R.id.progressBarHolder);
         acessar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
                 boolean validacao = validarCampos();
                 if(validacao){
-                    acessar.setEnabled(false);
-                    voltar.setEnabled(false);
-                    login.setEnabled(false);
-                    senha.setEnabled(false);
                     final User usuario =new User();
                     usuario.setUsername(login.getText().toString());
                     usuario.setPassword(senha.getText().toString());
@@ -97,10 +95,7 @@ public class Login extends AppCompatActivity {
                         public void onResponse(Call<Token> call, Response<Token> response) {
                             if (!response.isSuccessful()){
                                 Log.d("resposta", "login: "+response);
-                                acessar.setEnabled(true);
-                                voltar.setEnabled(true);
-                                login.setEnabled(true);
-                                senha.setEnabled(true);
+                                progress.setVisibility(View.INVISIBLE);
                                 return;
                             }
                             Token token = response.body();
@@ -116,6 +111,7 @@ public class Login extends AppCompatActivity {
                             }else{
                                 i = new Intent(Login.this, DrawerArbitro.class);
                             }
+                            progress.setVisibility(View.INVISIBLE);
                             startActivity(i);
                             finish();
                         }
@@ -123,10 +119,7 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<Token> call, Throwable t) {
                             Log.d("resposta", "erro: "+t);
-                            acessar.setEnabled(true);
-                            voltar.setEnabled(true);
-                            login.setEnabled(true);
-                            senha.setEnabled(true);
+                            progress.setVisibility(View.INVISIBLE);
                         }
                     });
                 }
