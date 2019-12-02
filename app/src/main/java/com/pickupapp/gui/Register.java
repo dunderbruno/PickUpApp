@@ -45,6 +45,7 @@ public class Register extends AppCompatActivity {
         senha = findViewById(R.id.inputSenhaCadastro);
         tipoUsuario = findViewById(R.id.tipoDeUsuario);
         cadastrar = findViewById(R.id.buttonCadastrarCadastro);
+        progress = findViewById(R.id.registerProgressBar);
         cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

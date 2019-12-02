@@ -101,6 +101,7 @@
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/loginProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center"

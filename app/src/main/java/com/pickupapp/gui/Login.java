@@ -42,7 +42,7 @@ public class Login extends AppCompatActivity {
         senha = findViewById(R.id.inputSenhaAcesso);
         tipoUsuario = findViewById(R.id.tipoDeUsuario2);
         voltar = findViewById(R.id.buttonVoltarAcesso);
-        progress = findViewById(R.id.progressBar);
+        progress = findViewById(R.id.loginProgressBar);
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
