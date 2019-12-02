@@ -56,6 +56,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
+                acessar.setEnabled(false);
                 boolean validacao = validarCampos();
                 if(validacao){
                     final User usuario =new User();
@@ -96,6 +97,7 @@ public class Login extends AppCompatActivity {
                             if (!response.isSuccessful()){
                                 Log.d("resposta", "login: "+response);
                                 progress.setVisibility(View.INVISIBLE);
+                                acessar.setEnabled(true);
                                 return;
                             }
                             Token token = response.body();
@@ -112,6 +114,7 @@ public class Login extends AppCompatActivity {
                                 i = new Intent(Login.this, DrawerArbitro.class);
                             }
                             progress.setVisibility(View.INVISIBLE);
+                            acessar.setEnabled(true);
                             startActivity(i);
                             finish();
                         }
@@ -120,6 +123,7 @@ public class Login extends AppCompatActivity {
                         public void onFailure(Call<Token> call, Throwable t) {
                             Log.d("resposta", "erro: "+t);
                             progress.setVisibility(View.INVISIBLE);
+                            acessar.setEnabled(true);
                         }
                     });
                 }

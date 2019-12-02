@@ -172,6 +172,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void reservarHorario() {
+        reservar.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         String day = String.valueOf(lastDate.getYear()) + "-" + lastDate.getMonthString() + "-" + lastDate.getDayString();
         if (validarReserva(day, horaInicial.getText().toString(), horaFinal.getText().toString())) {
@@ -197,9 +198,11 @@ public class CalendarFragment extends Fragment {
                     if (!response.isSuccessful()) {
                         Log.d("resposta", "onResponse: " + response);
                         progressBar.setVisibility(View.INVISIBLE);
+                        reservar.setEnabled(true);
                         return;
                     }
                     progressBar.setVisibility(View.INVISIBLE);
+                    reservar.setEnabled(true);
                     Toast.makeText(getContext(), "Reservado com sucesso!", Toast.LENGTH_LONG).show();
                     Fragment fragment = new WelcomeFragment();
                     FragmentManager fm = getFragmentManager();

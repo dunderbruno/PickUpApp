@@ -49,6 +49,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
+                cadastrar.setEnabled(false);
                 boolean validacao = validarCampos();
                 if(validacao){
                     final User usuario = new User();
@@ -101,6 +102,7 @@ public class Register extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (!response.isSuccessful()){
                     progress.setVisibility(View.INVISIBLE);
+                    cadastrar.setEnabled(true);
                     Log.d("resposta", "cadastro Usuario: "+response);
                     return;
                 }
@@ -115,6 +117,7 @@ public class Register extends AppCompatActivity {
                 Log.d("resposta", "erro: "+t);
                 Toast.makeText(getBaseContext(),"Não foi possivel realizar seu cadastro.",Toast.LENGTH_SHORT).show();
                 progress.setVisibility(View.INVISIBLE);
+                cadastrar.setEnabled(true);
             }
         });
     }
