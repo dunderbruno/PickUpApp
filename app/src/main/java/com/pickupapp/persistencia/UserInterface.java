@@ -2,6 +2,7 @@ package com.pickupapp.persistencia;
 
 import com.pickupapp.dominio.User;
 import com.pickupapp.persistencia.retorno.Token;
+import com.pickupapp.persistencia.retorno.UserCall;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public interface UserInterface {
 
     @GET("login")
     Call<Token> login(@Header("Authorization") String token, @Header("x-access-token") String token1, @Query("user_group") String group);
+
+    @GET("/user/username/{username}")
+    Call<UserCall> buscarId(@Path("username") String username);
 
     @POST("signup")
     Call<User> register(@Body Map<String,String> parameters);

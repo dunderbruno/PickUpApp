@@ -90,8 +90,7 @@ public class ListInvitesFragment extends Fragment {
                 .build();
         InviteInterface inviteInterface = retrofit.create(InviteInterface.class);
         String token = Sessao.getSessao(getContext()).getToken();
-        Call<Invites> call = null;
-        call = inviteInterface.getInvites(token);
+        Call<Invites> call = inviteInterface.getInvites(token);
         call.enqueue(new Callback<Invites>() {
             @Override
             public void onResponse(Call<Invites> call, Response<Invites> response) {

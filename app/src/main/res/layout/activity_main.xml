@@ -34,15 +34,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
+        app:layout_constraintVertical_bias="0.364" />
 
+    <Spinner
+        android:id="@+id/tipoDeUsuario2"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:background="@layout/rounded_border_edittext"
+        android:entries="@array/tipo_usuario"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAcessarAcesso"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputSenhaAcesso"
+        app:layout_constraintVertical_bias="0.265" />
 
     <EditText
         android:id="@+id/inputSenhaAcesso"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:background="@layout/rounded_border_edittext"
         android:ems="10"
         android:hint="Senha"
@@ -54,19 +66,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputLoginAcesso" />
-
-    <Spinner
-        android:id="@+id/tipoDeUsuario2"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:background="@layout/rounded_border_edittext"
-        android:entries="@array/tipo_usuario"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAcessarAcesso"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputSenhaAcesso"
-        app:layout_constraintVertical_bias="0.24000001" />
 
     <Button
         android:id="@+id/buttonAcessarAcesso"
@@ -82,7 +81,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputSenhaAcesso"
-        app:layout_constraintVertical_bias="0.317" />
+        app:layout_constraintVertical_bias="0.416" />
 
     <TextView
         android:id="@+id/buttonVoltarAcesso"
@@ -95,22 +94,26 @@
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonAcessarAcesso"
-        app:layout_constraintVertical_bias="0.22000003" />
+        app:layout_constraintVertical_bias="0.262" />
 
     <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
         android:id="@+id/loginProgressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center"
+        android:layout_marginBottom="19dp"
         android:indeterminate="true"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAcessarAcesso"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tipoDeUsuario2"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

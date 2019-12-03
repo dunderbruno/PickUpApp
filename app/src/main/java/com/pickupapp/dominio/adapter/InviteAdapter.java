@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pickupapp.R;
@@ -33,10 +34,14 @@ public class InviteAdapter extends ArrayAdapter<Invite> {
         TextView primeiroNome = rowView.findViewById(R.id.nome_pessoa);
         TextView email = rowView.findViewById(R.id.email_pessoa);
 
-        nomeNick.setText(jogadores.get(position).getBooking_id());
-        String primeiroNomeSet = jogadores.get(position).getInvite_id();
+        nomeNick.setText(jogadores.get(position).getSpot_name());
+        String primeiroNomeSet = "Convidado por "+ jogadores.get(position).getHost_name();
         primeiroNome.setText(primeiroNomeSet);
-        email.setText(jogadores.get(position).getStatus());
+        String status = "";
+        if ("true".equals(jogadores.get(position).getStatus())) {
+            status = "Convite Aceito";
+        }
+        email.setText(status);
         return rowView;
 
     }

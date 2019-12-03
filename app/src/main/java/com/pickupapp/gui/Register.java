@@ -108,7 +108,7 @@ public class Register extends AppCompatActivity {
                     return;
                 }
                 progress.setVisibility(View.INVISIBLE);
-                Intent i = new Intent(Register.this, MainScreen.class);
+                Intent i = new Intent(Register.this, Login.class);
                 startActivity(i);
                 finish();
             }

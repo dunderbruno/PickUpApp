@@ -77,6 +77,7 @@ public class ListPlayersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_list_players, container, false);
+        buscarPlayer();
         buscarBookings();
         progressBar = inflate.findViewById(R.id.progressBarListPlayers);
         spinner = inflate.findViewById(R.id.spinnerBooking);
@@ -93,6 +94,39 @@ public class ListPlayersFragment extends Fragment {
         return inflate;
     }
 
+    private void buscarPlayer() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://pickupbsiapi.herokuapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PlayerInterface playerInterface = retrofit.create(PlayerInterface.class);
+        String token = Sessao.getSessao(getContext()).getToken();
+        Call<Players> call = null;
+        call = playerInterface.getPlayers(Sessao.getSessao(getContext()).getToken());
+        call.enqueue(new Callback<Players>() {
+            @Override
+            public void onResponse(Call<Players> call, Response<Players> response) {
+                if (!response.isSuccessful()){
+                    Log.d("resposta", "onResponse: "+response);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.d("resposta", "onResponse: "+response.body());
+                Players spaces = response.body();
+                adapter = new PlayerAdapter(getActivity(), spaces.getPlayers());
+                lista.setAdapter(adapter);
+                playersList = spaces.getPlayers();
+            }
+
+            @Override
+            public void onFailure(Call<Players> call, Throwable t) {
+                Log.d("resposta", "onResponse: "+ t);
+                progressBar.setVisibility(View.INVISIBLE);
+
+            }
+        });
+    }
 
 
     private void buscarPlayers() {
@@ -161,7 +195,8 @@ public class ListPlayersFragment extends Fragment {
         String token = Sessao.getSessao(getContext()).getToken();
         Call<SetCall> call = null;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("player_id", jogador);
+        params.put("guest_id", jogador);
+        params.put("host_id", String.valueOf(Sessao.getSessao(getContext()).getId()));
         params.put("booking_id", String.valueOf(spinner.getSelectedItemId()));
         call = inviteInterface.registerInvite(Sessao.getSessao(getContext()).getToken(), params);
         call.enqueue(new Callback<SetCall>() {

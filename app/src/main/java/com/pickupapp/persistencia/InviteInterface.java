@@ -24,7 +24,7 @@ public interface InviteInterface {
     Call<SetCall> acceptInvite(@Header("x-access-token") String token1,
                                  @Body Map<String,String> parameters);
 
-    @GET("/players/invites/my")
+    @GET("/players/invites/guest")
     Call<Invites> getInvites(@Header("x-access-token") String token1);
 
 }
