@@ -40,6 +40,7 @@ import com.pickupapp.persistencia.retorno.BookingsCall;
 import com.pickupapp.persistencia.retorno.Players;
 import com.pickupapp.persistencia.retorno.SetCall;
 import com.pickupapp.persistencia.retorno.Spots;
+import com.pickupapp.persistencia.retorno.idCall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,7 @@ public class ListPlayersFragment extends Fragment {
     private String jogador;
     private LinearLayout convite;
     private Button convidar;
+    private String player_id;
 
 
     public ListPlayersFragment() {
@@ -100,30 +102,23 @@ public class ListPlayersFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PlayerInterface playerInterface = retrofit.create(PlayerInterface.class);
-        String token = Sessao.getSessao(getContext()).getToken();
-        Call<Players> call = null;
-        call = playerInterface.getPlayers(Sessao.getSessao(getContext()).getToken());
-        call.enqueue(new Callback<Players>() {
+        User sessao = Sessao.getSessao(getContext());
+        Call<idCall> call = playerInterface.getPlayerId(sessao.getToken(), String.valueOf(sessao.getId()));
+        call.enqueue(new Callback<idCall>() {
             @Override
-            public void onResponse(Call<Players> call, Response<Players> response) {
+            public void onResponse(Call<idCall> call, Response<idCall> response) {
                 if (!response.isSuccessful()){
                     Log.d("resposta", "onResponse: "+response);
-                    progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
-                progressBar.setVisibility(View.INVISIBLE);
                 Log.d("resposta", "onResponse: "+response.body());
-                Players spaces = response.body();
-                adapter = new PlayerAdapter(getActivity(), spaces.getPlayers());
-                lista.setAdapter(adapter);
-                playersList = spaces.getPlayers();
+                idCall spaces = response.body();
+                player_id = spaces.getPlayer_id();
             }
 
             @Override
-            public void onFailure(Call<Players> call, Throwable t) {
+            public void onFailure(Call<idCall> call, Throwable t) {
                 Log.d("resposta", "onResponse: "+ t);
-                progressBar.setVisibility(View.INVISIBLE);
-
             }
         });
     }
@@ -196,7 +191,7 @@ public class ListPlayersFragment extends Fragment {
         Call<SetCall> call = null;
         Map<String, String> params = new HashMap<String, String>();
         params.put("guest_id", jogador);
-        params.put("host_id", String.valueOf(Sessao.getSessao(getContext()).getId()));
+        params.put("host_id", player_id);
         params.put("booking_id", String.valueOf(spinner.getSelectedItemId()));
         call = inviteInterface.registerInvite(Sessao.getSessao(getContext()).getToken(), params);
         call.enqueue(new Callback<SetCall>() {

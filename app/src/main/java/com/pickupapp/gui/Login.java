@@ -101,8 +101,6 @@ public class Login extends AppCompatActivity {
                             Token token = response.body();
                             usuario.setToken(token.getToken());
                             buscarId(usuario);
-                            Log.d("resposta", "token: "+Sessao.getSessao(getApplicationContext()).getToken());
-
                         }
 
                         @Override

@@ -108,24 +108,33 @@ public class ListInvitesFragment extends Fragment {
                 lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("Convidar")
-                                .setMessage("Deseja Aceitar o convite?")
-                                .setPositiveButton("Aceitar", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        invite = invitesList.get(position).getInvite_id();
-                                        booking = invitesList.get(position).getBooking_id();
-                                        player = invitesList.get(position).getPlayer_id();
-                                        aceitarConvite();
-                                    }
-                                })
-                                .setNegativeButton("Local", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String idspot = invitesList.get(position).getSpot_id();
-                                        getSpace(idspot);
-                                    }
-                                })
-                                .show();
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext()).setTitle("Convite");
+                        if (invitesList.get(position).getStatus().equals("false")){
+                            alertDialog.setMessage("Deseja Aceitar o convite?")
+                                    .setPositiveButton("Aceitar", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            invite = invitesList.get(position).getInvite_id();
+                                            booking = invitesList.get(position).getBooking_id();
+                                            player = invitesList.get(position).getPlayer_id();
+                                            aceitarConvite();
+                                        }
+                                    })
+                                    .setNegativeButton("Local", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String idspot = invitesList.get(position).getSpot_id();
+                                            getSpace(idspot);
+                                        }
+                                    });
+                        }else {
+                            alertDialog.setMessage("Convite Aceito, visualize os dados do local.")
+                                    .setNegativeButton("Local", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String idspot = invitesList.get(position).getSpot_id();
+                                            getSpace(idspot);
+                                        }
+                                    });
+                        }
+                        alertDialog.show();
                     }
                 });
             }

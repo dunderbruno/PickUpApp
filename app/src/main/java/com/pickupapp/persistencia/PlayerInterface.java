@@ -1,6 +1,7 @@
 package com.pickupapp.persistencia;
 
 import com.pickupapp.persistencia.retorno.Players;
+import com.pickupapp.persistencia.retorno.idCall;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,9 @@ public interface PlayerInterface {
 
     @GET("players")
     Call<Players> getPlayers(@Header("x-access-token") String token1);
+
+    @GET("/players/{user_id}")
+    Call<idCall> getPlayerId(@Header("x-access-token") String token1, @Path("user_id") String userId);
 
     @GET("/booking/{booking_id}/players")
     Call<Players> getBookingPlayers(@Header("x-access-token") String token1,
